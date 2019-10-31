@@ -1,8 +1,13 @@
 CXXFLAGS = -std=c++11 -pedantic-errors -Wall -Wextra -g -O3 -march=native
 
-PROGS = 
+PROGS = comp
 
 all: $(PROGS)
+
+
+OBJS = bb.o bb-dom-tree.o insn.o flow-graph.o
+
+comp: $(OBJS)
 
 
 # Include file dependencies, which should be transitively used by
