@@ -142,17 +142,6 @@ public:
   }
 
 
-  // Return a text label for this block.  Only guaranteed to be unique
-  // with in its flow-graph.
-  //
-  std::string label () { std::string label ("BB"); label += _num; return label; }
-
-  // Return a string containing labels for all blocks in BLOCK_LIST,
-  // separated by a comma and space.
-  //
-  std::string block_list_labels (const std::list<BB *> &block_list);
-
-
   // Return the block to which control-flow in this block goes if
   // execution runs off the end of it.
   //

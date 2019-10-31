@@ -78,26 +78,3 @@ BB::remove_successor (BB *succ)
   _succs.remove (succ);
   succ->_preds.remove (this);
 }
-
-
-// Return a string containing labels for all blocks in BLOCK_LIST,
-// separated by a comma and space.
-//
-std::string
-BB::block_list_labels (const std::list<BB *> &block_list)
-{
-  std::string str;
-
-  bool first = true;
-  for (auto bb : block_list)
-    {
-      if (first)
-	first = false;
-      else
-	str += ", ";
-
-      str += bb->label ();
-    }
-
-  return str;
-}
