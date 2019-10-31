@@ -67,6 +67,7 @@ public:
   //
   BB (FlowGraph *flow_graph);
 
+
   // Return the flow graph this block belongs to.
   //
   FlowGraph *flow_graph () const { return _flow_graph; }
@@ -79,6 +80,10 @@ public:
   //
   void set_num (unsigned num) { _num = num; }
 
+
+  //
+  // Dominator-tree methods.
+  //
 
   // Return true if this block dominates BLOCK.
   //
@@ -121,7 +126,6 @@ public:
   {
     return member_to_enclosing_object (rev_dom_tree_node.dominator, &BB::rev_dom_tree_node);
   }
-
 
   // Calculate the forward dominator tree for all blocks in BLOCKS.
   //
