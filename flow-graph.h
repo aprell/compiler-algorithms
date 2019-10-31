@@ -60,7 +60,7 @@ private:
 
   // Maximum block number used in this flow graph so far.
   //
-  unsigned _max_block_num;
+  unsigned _max_block_num = 0;
 };
 
 
