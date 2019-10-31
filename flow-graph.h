@@ -19,11 +19,6 @@ public:
   void calc_reverse_dominators () { BB::calc_reverse_dominators (blocks); }
 
 
-  // Dump a text representation of the flow graph to OUT.
-  //
-  void dump (std::ostream &out);
-
-
   // Add new block to this flow graph.
   //
   void add_block (BB *block)
