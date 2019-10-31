@@ -14,6 +14,29 @@ BB::BB (FlowGraph *_flow_graph)
 }
 
 
+// Set the block to which control-flow in this block goes if
+// execution runs off the end of it to BLOCK.  BLOCK may be zero.
+//
+void
+BB::set_fall_through (BB *block)
+{
+  if (block != _fall_through)
+    {
+      if (_fall_through)
+	{
+	  succs.remove (_fall_through);
+	  _fall_through->preds.remove (this);
+	}
+      if (block)
+	{
+	  succs.push_back (block);
+	  block->preds.push_back (this);
+	}
+      _fall_through = block;
+    }
+}
+
+
 
 // Return a string containing labels for all blocks in BLOCK_LIST,
 // separated by a comma and space.

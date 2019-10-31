@@ -140,6 +140,17 @@ public:
   void dump (std::ostream &out);
 
 
+  // Return the block to which control-flow in this block goes if
+  // execution runs off the end of it.
+  //
+  BB *fall_through () const { return _fall_through; }
+
+  // Set the block to which control-flow in this block goes if
+  // execution runs off the end of it to BLOCK.  BLOCK may be zero.
+  //
+  void set_fall_through (BB *block);
+
+
   // Unique block number, assigned at block creation time.
   //
   unsigned num;
@@ -162,6 +173,11 @@ private:
   static void calc_doms (const std::list<BB *> &blocks,
 			 DomTreeNode BB::*dom_tree_node_member,
 			 std::list<BB *> BB::*pred_list_member);
+
+  // Where control-flow in this block goes if execution runs off the
+  // end of it.
+  //
+  BB *_fall_through;
 
   // Dominator-tree node for forward dominator tree.
   //
