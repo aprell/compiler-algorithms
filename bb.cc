@@ -101,26 +101,3 @@ BB::block_list_labels (const std::list<BB *> &block_list)
 
   return str;
 }
-
-
-// Dump a text representation of the flow graph to OUT.
-//
-void
-BB::dump (std::ostream &out)
-{
-  out << label () << ":\n";
-
-  if (! _preds.empty ())
-    out << "   # preds: " << block_list_labels (_preds) << '\n';
-
-  BB *dom = dominator ();
-  if (dom)
-    out << "   # dominator: " << dom->label () << '\n';
-
-  BB *rev_dom = reverse_dominator ();
-  if (rev_dom)
-    out << "   # reverse-dominator: " << rev_dom->label () << '\n';
-
-  if (! _succs.empty ())
-    out << "   # succs: " << block_list_labels (_succs) << '\n';
-}

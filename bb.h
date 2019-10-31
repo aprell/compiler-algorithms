@@ -153,11 +153,6 @@ public:
   std::string block_list_labels (const std::list<BB *> &block_list);
 
 
-  // Dump a text representation of this block to OUT.
-  //
-  void dump (std::ostream &out);
-
-
   // Return the block to which control-flow in this block goes if
   // execution runs off the end of it.
   //
