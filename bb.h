@@ -214,7 +214,7 @@ private:
 
   // Unique block number, assigned at block creation time.
   //
-  unsigned _num;
+  unsigned _num = 0;
 
   // Instructions in this block;
   //
@@ -223,11 +223,11 @@ private:
   // Where control-flow in this block goes if execution runs off the
   // end of it.
   //
-  BB *_fall_through;
+  BB *_fall_through = 0;
 
   // Flow graph this block belongs to.
   //
-  FlowGraph *_flow_graph;
+  FlowGraph *_flow_graph = 0;
 
 
   // Predecessor blocks of this block.
