@@ -131,14 +131,14 @@ public:
   //
   static void calc_dominators (const std::list<BB *> &blocks)
   {
-    calc_doms (blocks, &BB::fwd_dom_tree_node, &BB::preds);
+    calc_doms (blocks, &BB::fwd_dom_tree_node, &BB::_preds);
   }
 
   // Calculate the reverse dominator tree for all blocks in BLOCKS.
   //
   static void calc_reverse_dominators (const std::list<BB *> &blocks)
   {
-    calc_doms (blocks, &BB::rev_dom_tree_node, &BB::succs);
+    calc_doms (blocks, &BB::rev_dom_tree_node, &BB::_succs);
   }
 
 
@@ -189,13 +189,15 @@ public:
   void remove_insn (Insn *insn);
 
 
-  // Predecessor blocks of this block.
+  // Return a reference to a read-only list containing the predecessor
+  // blocks of this block.
   //
-  std::list<BB *> preds;
+  const std::list<BB *> &predecessors () const { return _preds; }
 
-  // Successor blocks of this block.
+  // Return a reference to a read-only list containing the successor
+  // blocks of this block.
   //
-  std::list<BB *> succs;
+  const std::list<BB *> &successors () const { return _succs; }
 
 
 private:
@@ -220,6 +222,16 @@ private:
   // Flow graph this block belongs to.
   //
   FlowGraph *_flow_graph;
+
+
+  // Predecessor blocks of this block.
+  //
+  std::list<BB *> _preds;
+
+  // Successor blocks of this block.
+  //
+  std::list<BB *> _succs;
+
 
   // Dominator-tree node for forward dominator tree.
   //

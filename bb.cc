@@ -65,8 +65,8 @@ BB::set_fall_through (BB *block)
 void
 BB::add_successor (BB *succ)
 {
-  succs.push_back (succ);
-  succ->preds.push_back (this);
+  _succs.push_back (succ);
+  succ->_preds.push_back (this);
 }
 
 // Remove a control flow edge between this block and the previous
@@ -75,8 +75,8 @@ BB::add_successor (BB *succ)
 void
 BB::remove_successor (BB *succ)
 {
-  succs.remove (succ);
-  succ->preds.remove (this);
+  _succs.remove (succ);
+  succ->_preds.remove (this);
 }
 
 
@@ -110,8 +110,8 @@ BB::dump (std::ostream &out)
 {
   out << label () << ":\n";
 
-  if (! preds.empty ())
-    out << "   # preds: " << block_list_labels (preds) << '\n';
+  if (! _preds.empty ())
+    out << "   # preds: " << block_list_labels (_preds) << '\n';
 
   BB *dom = dominator ();
   if (dom)
@@ -121,6 +121,6 @@ BB::dump (std::ostream &out)
   if (rev_dom)
     out << "   # reverse-dominator: " << rev_dom->label () << '\n';
 
-  if (! succs.empty ())
-    out << "   # succs: " << block_list_labels (succs) << '\n';
+  if (! _succs.empty ())
+    out << "   # succs: " << block_list_labels (_succs) << '\n';
 }
