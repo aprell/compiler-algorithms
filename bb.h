@@ -71,6 +71,15 @@ public:
   //
   FlowGraph *flow_graph () const { return _flow_graph; }
 
+  // Return this block's unique (within its flow-graph) number.
+  //
+  unsigned num () const { return _num; }
+
+  // Set this block's unique (within its flow-graph) number to NUM.
+  //
+  void set_num (unsigned num) { _num = num; }
+
+
   // Return true if this block dominates BLOCK.
   //
   bool dominates (BB *block)
@@ -132,7 +141,7 @@ public:
   // Return a text label for this block.  Only guaranteed to be unique
   // with in its flow-graph.
   //
-  std::string label () { std::string label ("BB"); label += num; return label; }
+  std::string label () { std::string label ("BB"); label += _num; return label; }
 
   // Return a string containing labels for all blocks in BLOCK_LIST,
   // separated by a comma and space.
@@ -176,10 +185,6 @@ public:
   void remove_insn (Insn *insn);
 
 
-  // Unique block number, assigned at block creation time.
-  //
-  unsigned num;
-
   // Predecessor blocks of this block.
   //
   std::list<BB *> preds;
@@ -194,6 +199,10 @@ private:
   static void calc_doms (const std::list<BB *> &blocks,
 			 DomTreeNode BB::*dom_tree_node_member,
 			 std::list<BB *> BB::*pred_list_member);
+
+  // Unique block number, assigned at block creation time.
+  //
+  unsigned _num;
 
   // Instructions in this block;
   //
