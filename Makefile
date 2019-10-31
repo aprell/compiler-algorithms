@@ -18,7 +18,7 @@ bb.o: bb.cc bb.h $(bb.h-DEPS)
 bb-dom-tree.o: bb-dom-tree.cc bb.h $(bb.h-DEPS)
 flow-graph.o: flow-graph.cc flow-graph.h $(flow-graph.h-DEPS)
 
-bitvec.o: bitvec.cc bitvec.h
+bitvec.o: bitvec.cc bitvec.h $(bitvec.h-DEPS)
 
 
 clean:
