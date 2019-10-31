@@ -152,14 +152,6 @@ public:
   //
   std::list<BB *> succs;
 
-  // Dominator-tree node for forward dominator tree.
-  //
-  DomTreeNode fwd_dom_tree_node;
-
-  // Dominator-tree node for reverse dominator tree.
-  //
-  DomTreeNode rev_dom_tree_node;
-
   // Flow graph this block belongs to.
   //
   FlowGraph *flow_graph;
@@ -170,6 +162,14 @@ private:
   static void calc_doms (const std::list<BB *> &blocks,
 			 DomTreeNode BB::*dom_tree_node_member,
 			 std::list<BB *> BB::*pred_list_member);
+
+  // Dominator-tree node for forward dominator tree.
+  //
+  DomTreeNode fwd_dom_tree_node;
+
+  // Dominator-tree node for reverse dominator tree.
+  //
+  DomTreeNode rev_dom_tree_node;
 
 };
 
