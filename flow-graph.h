@@ -12,11 +12,11 @@ public:
 
   // Calculate the forward dominator tree for all blocks in BLOCKS.
   //
-  void calc_dominators () { BB::calc_dominators (blocks); }
+  void calc_dominators () { BB::calc_dominators (_blocks); }
 
   // Calculate the reverse dominator tree for all blocks in BLOCKS.
   //
-  void calc_reverse_dominators () { BB::calc_reverse_dominators (blocks); }
+  void calc_reverse_dominators () { BB::calc_reverse_dominators (_blocks); }
 
 
   // Add new block to this flow graph.
@@ -24,8 +24,13 @@ public:
   void add_block (BB *block)
   {
     block->set_num (max_block_num++);
-    blocks.push_back (block);
+    _blocks.push_back (block);
   }
+
+  // Return a reference to a read-only list containing the blocks in
+  // this flow graph.
+  //
+  const std::list<BB *> &blocks () const { return _blocks; }
 
 
   unsigned max_block_num;
@@ -34,7 +39,12 @@ public:
 
   BB *exit;
 
-  std::list<BB *> blocks;
+
+private:
+
+  // List of basic blocks in this flow graph, in no particular order.
+  //
+  std::list<BB *> _blocks;
 };
 
 
