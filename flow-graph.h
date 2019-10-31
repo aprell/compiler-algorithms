@@ -51,11 +51,11 @@ private:
 
   // Entry block for this flow graph.  Cannot have any predecessors.
   //
-  BB *_entry_block;
+  BB *_entry_block = 0;
 
   // Exit block for this flow graph.  Cannot have any successors.
   //
-  BB *_exit_block;
+  BB *_exit_block = 0;
 
   // List of basic blocks in this flow graph, in no particular order.
   //
