@@ -200,6 +200,12 @@ public:
   const std::list<BB *> &successors () const { return _succs; }
 
 
+  // Return a reference to a read-only list containing the
+  // instructions in this block.
+  //
+  const std::list<Insn *> &insns () const { return _insns; }
+
+
 private:
   
   static void calc_doms (const std::list<BB *> &blocks,
