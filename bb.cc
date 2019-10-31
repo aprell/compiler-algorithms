@@ -1,6 +1,7 @@
 #include <ostream>
 
 #include "bb.h"
+#include "insn.h"
 
 #include "flow-graph.h"
 
@@ -11,6 +12,31 @@ BB::BB (FlowGraph *_flow_graph)
   : flow_graph (_flow_graph)
 {
   _flow_graph->add_block (this);
+}
+
+
+// Add the instruction INSN to the end of this block.
+//
+void
+BB::add_insn (Insn *insn)
+{
+  BB *old_block = insn->block ();
+
+  if (old_block)
+    old_block->remove_insn (insn);
+
+  _insns.push_back (insn);
+
+  insn->set_block (this);
+}
+
+// Remove the instruction INSN from this block.
+//
+void
+BB::remove_insn (Insn *insn)
+{
+  _insns.remove (insn);
+  insn->set_block (0);
 }
 
 

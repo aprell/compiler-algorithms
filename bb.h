@@ -8,6 +8,7 @@
 
 
 class FlowGraph;
+class Insn;
 
 
 class BB
@@ -151,6 +152,14 @@ public:
   void set_fall_through (BB *block);
 
 
+  // Add the instruction INSN to the end of this block.
+  //
+  void add_insn (Insn *insn);
+
+  // Remove the instruction INSN from this block.
+  //
+  void remove_insn (Insn *insn);
+
   // Unique block number, assigned at block creation time.
   //
   unsigned num;
@@ -173,6 +182,10 @@ private:
   static void calc_doms (const std::list<BB *> &blocks,
 			 DomTreeNode BB::*dom_tree_node_member,
 			 std::list<BB *> BB::*pred_list_member);
+
+  // Instructions in this block;
+  //
+  std::list<Insn *> _insns;
 
   // Where control-flow in this block goes if execution runs off the
   // end of it.
