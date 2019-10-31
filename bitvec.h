@@ -38,6 +38,10 @@ public:
   bool operator[] (unsigned index) const { return get (index); }
   Bitvec &operator|= (const Bitvec &other) { set (other); return *this; }
 
+  // Return the number of bits set.
+  //
+  unsigned count () const;
+
 
 private:
 
@@ -59,9 +63,13 @@ private:
   }
   
 
+  // Return the number of bits set in WORD.
+  //
+  static inline unsigned popcount (Word word);
+
+
   std::vector<Word> words;
 };
-
 
 
 #endif // __BITVEC_H__

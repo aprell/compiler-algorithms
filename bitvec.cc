@@ -1,3 +1,8 @@
+#if __cpp_lib_bitops
+# include <bit>
+#endif
+
+
 #include "bitvec.h"
 
 
@@ -38,3 +43,33 @@ void test4 (Bitvec &bv, unsigned idx)
 {
   bv.set (idx, true);
 }
+
+
+inline unsigned
+Bitvec::popcount (Word word)
+{
+#if __cpp_lib_bitops
+  return std::popcount (word);
+#else
+  unsigned count = 0;
+  while (word)
+    {
+      count++;
+      word &= (word - 1);
+    }
+  return count;
+#endif
+}  
+
+
+// Return the number of bits set.
+//
+unsigned
+Bitvec::count () const
+{
+  unsigned count = 0;
+  for (Word word : words)
+    count += popcount (word);
+  return count;
+}
+
