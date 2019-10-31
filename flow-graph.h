@@ -23,7 +23,7 @@ public:
   //
   void add_block (BB *block)
   {
-    block->set_num (max_block_num++);
+    block->set_num (_max_block_num++);
     _blocks.push_back (block);
   }
 
@@ -44,9 +44,6 @@ public:
   BB *exit_block () const { return _exit_block; }
 
 
-  unsigned max_block_num;
-
-
 private:
 
   // Entry block for this flow graph.  Cannot have any predecessors.
@@ -60,6 +57,10 @@ private:
   // List of basic blocks in this flow graph, in no particular order.
   //
   std::list<BB *> _blocks;
+
+  // Maximum block number used in this flow graph so far.
+  //
+  unsigned _max_block_num;
 };
 
 
