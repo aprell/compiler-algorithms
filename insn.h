@@ -15,11 +15,13 @@ public:
   //
   BB *block () const { return _block; }
 
-  // Asserts that this instruction is in block BLOCK.  Note that
-  // nothing else is done, so it's up to the caller to maintain any
-  // other invariants.
+  // Do instruction-specific setup after this instruction has been
+  // added to block BLOCK.  At the point this is called, this
+  // instruction is in BLOCK's instruction list, but nothing else has
+  // been done.
   //
-  void set_block (BB *block) { _block = block; }
+  virtual void set_block (BB *block) { _block = block; }
+
 
 private:
 
