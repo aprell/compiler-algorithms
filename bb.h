@@ -67,6 +67,10 @@ public:
   //
   BB (FlowGraph *flow_graph);
 
+  // Return the flow graph this block belongs to.
+  //
+  FlowGraph *flow_graph () const { return _flow_graph; }
+
   // Return true if this block dominates BLOCK.
   //
   bool dominates (BB *block)
@@ -184,10 +188,6 @@ public:
   //
   std::list<BB *> succs;
 
-  // Flow graph this block belongs to.
-  //
-  FlowGraph *flow_graph;
-
 
 private:
   
@@ -203,6 +203,10 @@ private:
   // end of it.
   //
   BB *_fall_through;
+
+  // Flow graph this block belongs to.
+  //
+  FlowGraph *_flow_graph;
 
   // Dominator-tree node for forward dominator tree.
   //

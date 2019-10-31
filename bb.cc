@@ -8,10 +8,10 @@
 
 // Make a new block in flow graph FLOW_GRAPH.
 //
-BB::BB (FlowGraph *_flow_graph)
-  : flow_graph (_flow_graph)
+BB::BB (FlowGraph *flow_graph)
+  : _flow_graph (flow_graph)
 {
-  _flow_graph->add_block (this);
+  flow_graph->add_block (this);
 }
 
 
