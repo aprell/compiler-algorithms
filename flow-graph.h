@@ -33,14 +33,29 @@ public:
   const std::list<BB *> &blocks () const { return _blocks; }
 
 
+  // Return the entry block for this flow graph, which cannot have any
+  // predecessors.
+  //
+  BB *entry_block () const { return _entry_block; }
+
+  // Return the exit block for this flow graph, which cannot have any
+  // successors.
+  //
+  BB *exit_block () const { return _exit_block; }
+
+
   unsigned max_block_num;
-
-  BB *entry;
-
-  BB *exit;
 
 
 private:
+
+  // Entry block for this flow graph.  Cannot have any predecessors.
+  //
+  BB *_entry_block;
+
+  // Exit block for this flow graph.  Cannot have any successors.
+  //
+  BB *_exit_block;
 
   // List of basic blocks in this flow graph, in no particular order.
   //
