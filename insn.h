@@ -22,12 +22,17 @@ public:
   //
   virtual void set_block (BB *block) { _block = block; }
 
+  // Return true if this is a branch instruction, that is, if it may
+  // affect control-flow.
+  //
+  virtual bool is_branch_insn () { return false; }
+
 
 private:
 
   // The block this instruction is in.
   //
-  BB *_block;
+  BB *_block = 0;
 };
 
 
