@@ -49,19 +49,35 @@ BB::set_fall_through (BB *block)
   if (block != _fall_through)
     {
       if (_fall_through)
-	{
-	  succs.remove (_fall_through);
-	  _fall_through->preds.remove (this);
-	}
+	remove_successor (_fall_through);
+
       if (block)
-	{
-	  succs.push_back (block);
-	  block->preds.push_back (this);
-	}
+	add_successor (block);
+
       _fall_through = block;
     }
 }
 
+
+// Add a new control flow edge reflecting that SUCC is now a
+// successor of this block.
+///
+void
+BB::add_successor (BB *succ)
+{
+  succs.push_back (succ);
+  succ->preds.push_back (this);
+}
+
+// Remove a control flow edge between this block and the previous
+// successor block SUCC.
+///
+void
+BB::remove_successor (BB *succ)
+{
+  succs.remove (succ);
+  succ->preds.remove (this);
+}
 
 
 // Return a string containing labels for all blocks in BLOCK_LIST,

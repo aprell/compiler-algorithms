@@ -152,6 +152,17 @@ public:
   void set_fall_through (BB *block);
 
 
+  // Add a new control flow edge reflecting that SUCC is now a
+  // successor of this block.
+  ///
+  void add_successor (BB *succ);
+
+  // Remove a control flow edge between this block and the previous
+  // successor block SUCC.
+  ///
+  void remove_successor (BB *succ);
+
+
   // Add the instruction INSN to the end of this block.
   //
   void add_insn (Insn *insn);
@@ -159,6 +170,7 @@ public:
   // Remove the instruction INSN from this block.
   //
   void remove_insn (Insn *insn);
+
 
   // Unique block number, assigned at block creation time.
   //
