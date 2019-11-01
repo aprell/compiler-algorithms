@@ -42,7 +42,7 @@ private:
 
     // Parent in dominator tree.
     //
-    DomTreeNode *dominator;
+    DomTreeNode *dominator = 0;
 
     // Children in dominator tree.
     //
@@ -57,7 +57,7 @@ private:
 
     // Depth in the dominator tree, with the root as 0.
     //
-    unsigned depth;
+    unsigned depth = 0;
   };
 
 
