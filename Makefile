@@ -19,10 +19,10 @@ flow-graph.h-DEPS = bb.h $(bb.h-DEPS)
 # Object file dependencies, basically the corresponding source file
 # plus any include files it uses.
 #
+flow-graph.o: flow-graph.cc flow-graph.h $(flow-graph.h-DEPS)
 bb.o: bb.cc bb.h $(bb.h-DEPS) insn.h $(insn.h-DEPS)
 bb-dom-tree.o: bb-dom-tree.cc bb.h $(bb.h-DEPS)
 insn.o: insn.cc insn.h $(insn.h-DEPS) bb.h $(bb.h-DEPS)
-flow-graph.o: flow-graph.cc flow-graph.h $(flow-graph.h-DEPS)
 
 bitvec.o: bitvec.cc bitvec.h $(bitvec.h-DEPS)
 
