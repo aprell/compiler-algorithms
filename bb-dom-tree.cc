@@ -105,6 +105,7 @@ BB::calc_doms (const std::list<BB *> &blocks,
   bool change = true;
   while (change)
     {
+      change = false;
       for (auto bb : blocks)
 	{
 	  // Remember the previous dominator.
@@ -116,7 +117,7 @@ BB::calc_doms (const std::list<BB *> &blocks,
 	  DomTreeNode *new_dom = 0;
 	  for (auto prev : bb->*pred_list_member)
 	    {
-	      DomTreeNode *prev_dom = (prev->*dom_tree_node_member).dominator;
+	      DomTreeNode *prev_dom = &(prev->*dom_tree_node_member);
 	      if (! new_dom)
 		new_dom = prev_dom;
 	      else
