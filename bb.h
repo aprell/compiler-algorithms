@@ -2,7 +2,6 @@
 #define __BB_H__
 
 #include <list>
-#include <string>
 
 #include "memtoobj.h"
 
