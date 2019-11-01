@@ -23,7 +23,7 @@ public:
   //
   void add_block (BB *block)
   {
-    block->set_num (_max_block_num++);
+    block->set_num (++_max_block_num);
     _blocks.push_back (block);
   }
 
