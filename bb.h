@@ -117,14 +117,22 @@ public:
   //
   BB *dominator () const
   {
-    return member_to_enclosing_object (fwd_dom_tree_node.dominator, &BB::fwd_dom_tree_node);
+    DomTreeNode *dom_node = fwd_dom_tree_node.dominator;
+    if (dom_node)
+      return member_to_enclosing_object (dom_node, &BB::fwd_dom_tree_node);
+    else
+      return 0;
   }
 
   // Return this block's immedately dominating block, or zero if none.
   //
   BB *reverse_dominator () const
   {
-    return member_to_enclosing_object (rev_dom_tree_node.dominator, &BB::rev_dom_tree_node);
+    DomTreeNode *rev_dom_node = rev_dom_tree_node.dominator;
+    if (rev_dom_node)
+      return member_to_enclosing_object (rev_dom_node, &BB::rev_dom_tree_node);
+    else
+      return 0;
   }
 
   // Calculate the forward dominator tree for all blocks in BLOCKS.
