@@ -38,10 +38,21 @@ public:
   //
   BB *entry_block () const { return _entry_block; }
 
+  // Set the entry block for this flow graph, which cannot have any
+  // predecessors.
+  //
+  void set_entry_block (BB *block) { _entry_block = block; }
+
+
   // Return the exit block for this flow graph, which cannot have any
   // successors.
   //
   BB *exit_block () const { return _exit_block; }
+
+  // Set the exit block for this flow graph, which cannot have any
+  // successors.
+  //
+  void set_exit_block (BB *block) { _exit_block = block; }
 
 
 private:
