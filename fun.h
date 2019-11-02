@@ -1,5 +1,5 @@
-#ifndef __FLOW_GRAPH_H__
-#define __FLOW_GRAPH_H__
+#ifndef __FUN_H__
+#define __FUN_H__
 
 #include <ios>
 
@@ -9,7 +9,7 @@
 class Reg;
 
 
-class FlowGraph
+class Fun
 {
 public:
 
@@ -22,7 +22,7 @@ public:
   void calc_reverse_dominators () { BB::calc_reverse_dominators (_blocks); }
 
 
-  // Add new block to this flow graph.
+  // Add new block to this function.
   //
   void add_block (BB *block)
   {
@@ -31,66 +31,66 @@ public:
   }
 
   // Return a reference to a read-only list containing the blocks in
-  // this flow graph.
+  // this function.
   //
   const std::list<BB *> &blocks () const { return _blocks; }
 
 
-  // Return the entry block for this flow graph, which cannot have any
+  // Return the entry block for this function, which cannot have any
   // predecessors.
   //
   BB *entry_block () const { return _entry_block; }
 
-  // Set the entry block for this flow graph, which cannot have any
+  // Set the entry block for this function, which cannot have any
   // predecessors.
   //
   void set_entry_block (BB *block) { _entry_block = block; }
 
 
-  // Return the exit block for this flow graph, which cannot have any
+  // Return the exit block for this function, which cannot have any
   // successors.
   //
   BB *exit_block () const { return _exit_block; }
 
-  // Set the exit block for this flow graph, which cannot have any
+  // Set the exit block for this function, which cannot have any
   // successors.
   //
   void set_exit_block (BB *block) { _exit_block = block; }
 
 
-  // Add REG to this flow graph.  Subsquently, the flow graph now owns
+  // Add REG to this function.  Subsquently, the function now owns
   // it, and is responsible for deallocating it.
   //
   void add_reg (Reg *reg) { _regs.push_back (reg); }
 
   // Return a reference to a read-only list containing the registers
-  // in this flow graph.
+  // in this function.
   //
   const std::list<Reg *> &regs () const { return _regs; }
 
 
 private:
 
-  // Entry block for this flow graph.  Cannot have any predecessors.
+  // Entry block for this function.  Cannot have any predecessors.
   //
   BB *_entry_block = 0;
 
-  // Exit block for this flow graph.  Cannot have any successors.
+  // Exit block for this function.  Cannot have any successors.
   //
   BB *_exit_block = 0;
 
-  // List of basic blocks in this flow graph, in no particular order.
+  // List of basic blocks in this function, in no particular order.
   //
   std::list<BB *> _blocks;
 
-  // Registers used in this flow graph.
+  // Registers used in this function.
   //
   std::list<Reg *> _regs;
 
-  // Maximum block number used in this flow graph so far.
+  // Maximum block number used in this function so far.
   //
   unsigned _max_block_num = 0;
 };
 
 
-#endif // __FLOW_GRAPH_H__
+#endif // __FUN_H__

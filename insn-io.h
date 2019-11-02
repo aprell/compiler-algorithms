@@ -7,7 +7,7 @@
 
 
 class Insn;
-class FlowGraphDumper;
+class FunDumper;
 
 
 // A class for outputting text representations of isns.
@@ -16,7 +16,7 @@ class InsnDumper
 {
 public:
 
-  InsnDumper (FlowGraphDumper &flow_graph_dumper);
+  InsnDumper (FunDumper &fun_dumper);
 
   // Write a text representation of INSN.
   //
@@ -25,9 +25,9 @@ public:
 
 private:
 
-  // Dumper for the flow graph we're associated with.
+  // Dumper for the function we're associated with.
   //
-  FlowGraphDumper &flow_graph_dumper;
+  FunDumper &fun_dumper;
 
 
 private:

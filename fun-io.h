@@ -1,5 +1,5 @@
-#ifndef __FLOW_GRAPH_IO_H__
-#define __FLOW_GRAPH_IO_H__
+#ifndef __FUN_IO_H__
+#define __FUN_IO_H__
 
 #include <string>
 
@@ -7,20 +7,20 @@
 #include "bb-io.h"
 
 
-class FlowGraph;
+class Fun;
 
 
-// A class for outputting text representations of a flow graph.
+// A class for outputting text representations of a function.
 //
-class FlowGraphDumper
+class FunDumper
 {
 public:
 
-  FlowGraphDumper (std::ostream &out);
+  FunDumper (std::ostream &out);
 
-  // Write a text representation of FLOW_GRAPH.
+  // Write a text representation of FUN.
   //
-  void dump (FlowGraph *flow_graph);
+  void dump (Fun *fun);
 
 
   // Return a text label for BLOCK.
@@ -53,4 +53,4 @@ public:
 };
 
 
-#endif // __FLOW_GRAPH_IO_H__
+#endif // __FUN_IO_H__

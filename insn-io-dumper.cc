@@ -7,13 +7,13 @@
 
 #include "cond-branch-insn.h"
 
-#include "flow-graph-io.h"
+#include "fun-io.h"
 
 #include "insn-io.h"
 
 
-InsnDumper::InsnDumper (FlowGraphDumper &_flow_graph_dumper)
-  : flow_graph_dumper (_flow_graph_dumper) 
+InsnDumper::InsnDumper (FunDumper &_fun_dumper)
+  : fun_dumper (_fun_dumper) 
 {
   setup_dump_meths ();
 }
@@ -43,7 +43,7 @@ InsnDumper::dump_cond_branch (Insn *insn)
   if (! cond_branch_insn)
     invalid_dump_method (insn, "CondBranchInsn");
 
-  std::ostream &out = flow_graph_dumper.out;
+  std::ostream &out = fun_dumper.out;
   BB *target = cond_branch_insn->target ();
   out << "if (";
   Reg *cond = cond_branch_insn->condition ();
@@ -53,7 +53,7 @@ InsnDumper::dump_cond_branch (Insn *insn)
     out << "0";
   out << ") goto ";
   if (target)
-    out << flow_graph_dumper.block_label (target);
+    out << fun_dumper.block_label (target);
   else
     out << "-";
 }

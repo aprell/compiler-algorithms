@@ -3,7 +3,7 @@
 
 
 class BB;
-class FlowGraphDumper;
+class FunDumper;
 
 
 // A class for outputting text representations of a basic block.
@@ -12,7 +12,7 @@ class BBDumper
 {
 public:
 
-  BBDumper (FlowGraphDumper &flow_graph_dumper);
+  BBDumper (FunDumper &fun_dumper);
 
   // Write a text representation of BLOCK.
   //
@@ -21,9 +21,9 @@ public:
 
 private:
 
-  // Dumper for the flow graph we're associated with.
+  // Dumper for the function we're associated with.
   //
-  FlowGraphDumper &flow_graph_dumper;
+  FunDumper &fun_dumper;
 };
 
 

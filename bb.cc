@@ -3,15 +3,15 @@
 #include "bb.h"
 #include "insn.h"
 
-#include "flow-graph.h"
+#include "fun.h"
 
 
-// Make a new block in flow graph FLOW_GRAPH.
+// Make a new block in function FUN.
 //
-BB::BB (FlowGraph *flow_graph)
-  : _flow_graph (flow_graph)
+BB::BB (Fun *fun)
+  : _fun (fun)
 {
-  flow_graph->add_block (this);
+  fun->add_block (this);
 }
 
 

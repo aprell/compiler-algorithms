@@ -6,7 +6,7 @@
 #include "memtoobj.h"
 
 
-class FlowGraph;
+class Fun;
 class Insn;
 
 
@@ -62,20 +62,20 @@ private:
 
 public:
 
-  // Make a new block in flow graph FLOW_GRAPH.
+  // Make a new block in function FUN.
   //
-  BB (FlowGraph *flow_graph);
+  BB (Fun *fun);
 
 
-  // Return the flow graph this block belongs to.
+  // Return the function this block belongs to.
   //
-  FlowGraph *flow_graph () const { return _flow_graph; }
+  Fun *fun () const { return _fun; }
 
-  // Return this block's unique (within its flow-graph) number.
+  // Return this block's unique (within its fun) number.
   //
   unsigned num () const { return _num; }
 
-  // Set this block's unique (within its flow-graph) number to NUM.
+  // Set this block's unique (within its function) number to NUM.
   //
   void set_num (unsigned num) { _num = num; }
 
@@ -216,9 +216,9 @@ private:
   //
   BB *_fall_through = 0;
 
-  // Flow graph this block belongs to.
+  // function this block belongs to.
   //
-  FlowGraph *_flow_graph = 0;
+  Fun *_fun = 0;
 
 
   // Predecessor blocks of this block.

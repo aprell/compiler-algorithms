@@ -3,30 +3,30 @@
 #include <deque>
 
 #include "reg.h"
-#include "flow-graph.h"
+#include "fun.h"
 
-#include "flow-graph-io.h"
+#include "fun-io.h"
 
 
-FlowGraphDumper::FlowGraphDumper (std::ostream &_out)
+FunDumper::FunDumper (std::ostream &_out)
   : out (_out), insn_dumper (*this), block_dumper (*this)
 {
 }
 
 
-// Write a text representation of FLOW_GRAPH.
+// Write a text representation of FUN.
 //
 void
-FlowGraphDumper::dump (FlowGraph *flow_graph)
+FunDumper::dump (Fun *fun)
 {
   // Mention which registers are defined here.
   //
-  if (! flow_graph->regs ().empty ())
+  if (! fun->regs ().empty ())
     {
       out << "   regs ";
 
       bool first = true;
-      for (auto reg : flow_graph->regs ())
+      for (auto reg : fun->regs ())
 	{
 	  if (first)
 	    first = false;
@@ -46,16 +46,16 @@ FlowGraphDumper::dump (FlowGraph *flow_graph)
   //
   std::deque<BB *> dump_queue;
 
-  // The exit block in the flow graph.  We treat this specially so
+  // The exit block in the function.  We treat this specially so
   // that it's dumped last.
   //
-  BB *exit_block = flow_graph->exit_block ();
+  BB *exit_block = fun->exit_block ();
 
   // Start out by dumping the entry point.
   //
-  dump_queue.push_back (flow_graph->entry_block ());
+  dump_queue.push_back (fun->entry_block ());
 
-  // Dump the flow graph in depth-first order, avoiding loops by just
+  // Dump the function in depth-first order, avoiding loops by just
   // ignoring any block we've already dumped.
   //
   while (! dump_queue.empty ())
@@ -82,7 +82,7 @@ FlowGraphDumper::dump (FlowGraph *flow_graph)
 // Return a text label for BLOCK.
 //
 std::string
-FlowGraphDumper::block_label (const BB *block)
+FunDumper::block_label (const BB *block)
 {
   std::string label ("_");
   label += std::to_string (block->num ());
@@ -94,7 +94,7 @@ FlowGraphDumper::block_label (const BB *block)
 // separated by a comma and space.
 //
 std::string
-FlowGraphDumper::block_list_labels (const std::list<BB *> &block_list)
+FunDumper::block_list_labels (const std::list<BB *> &block_list)
 {
   std::string str;
 
