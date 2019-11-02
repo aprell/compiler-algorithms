@@ -6,6 +6,9 @@
 #include "bb.h"
 
 
+class Reg;
+
+
 class FlowGraph
 {
 public:
@@ -55,6 +58,17 @@ public:
   void set_exit_block (BB *block) { _exit_block = block; }
 
 
+  // Add REG to this flow graph.  Subsquently, the flow graph now owns
+  // it, and is responsible for deallocating it.
+  //
+  void add_reg (Reg *reg) { _regs.push_back (reg); }
+
+  // Return a reference to a read-only list containing the registers
+  // in this flow graph.
+  //
+  const std::list<Reg *> &regs () const { return _regs; }
+
+
 private:
 
   // Entry block for this flow graph.  Cannot have any predecessors.
@@ -68,6 +82,10 @@ private:
   // List of basic blocks in this flow graph, in no particular order.
   //
   std::list<BB *> _blocks;
+
+  // Registers used in this flow graph.
+  //
+  std::list<Reg *> _regs;
 
   // Maximum block number used in this flow graph so far.
   //
