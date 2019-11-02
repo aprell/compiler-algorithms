@@ -1,10 +1,10 @@
-#ifndef __FUN_IO_H__
-#define __FUN_IO_H__
+#ifndef __FUN_TEXT_WRITER_H__
+#define __FUN_TEXT_WRITER_H__
 
 #include <string>
 
-#include "insn-io.h"
-#include "bb-io.h"
+#include "insn-text-writer.h"
+#include "bb-text-writer.h"
 
 
 class Fun;
@@ -12,15 +12,15 @@ class Fun;
 
 // A class for outputting text representations of a function.
 //
-class FunDumper
+class FunTextWriter
 {
 public:
 
-  FunDumper (std::ostream &out);
+  FunTextWriter (std::ostream &out);
 
   // Write a text representation of FUN.
   //
-  void dump (Fun *fun);
+  void write (Fun *fun);
 
 
   // Return a text label for BLOCK.
@@ -35,22 +35,22 @@ public:
 
   //
   // The following data members are all public, and reflect common
-  // state during dumping.
+  // state during writing.
   //
 
 
-  // Streamer we're dumping to.
+  // Stream we're writing to.
   //
   std::ostream &out;
 
-  // Dumper for insns.
+  // Text writer for insns.
   //
-  InsnDumper insn_dumper;
+  InsnTextWriter insn_writer;
 
-  // Dumper for blocks.
+  // Text writer for blocks.
   //
-  BBDumper block_dumper;
+  BBTextWriter block_writer;
 };
 
 
-#endif // __FUN_IO_H__
+#endif // __FUN_TEXT_WRITER_H__
