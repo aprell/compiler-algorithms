@@ -3,11 +3,12 @@
 #include "cond-branch-insn.h"
 
 
-// Make a new conditional-branch instruction, which may transfer
-// control to TARGET, optionally appending it to block BLOCK.
+// Make a new conditional-branch instruction, which transfers control
+// to TARGET if COND contains a non-zero value, optionally appending
+// it to block BLOCK.
 //
-CondBranchInsn::CondBranchInsn (BB *target, BB *block)
-  : Insn (block)
+CondBranchInsn::CondBranchInsn (Reg *cond, BB *target, BB *block)
+  : Insn (block), _cond (cond)
 {
   if (target)
     set_target (target);
