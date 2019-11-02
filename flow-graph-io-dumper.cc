@@ -1,7 +1,8 @@
-#include <ios>
+#include <ostream>
 #include <unordered_set>
 #include <deque>
 
+#include "reg.h"
 #include "flow-graph.h"
 
 #include "flow-graph-io.h"
@@ -18,6 +19,25 @@ FlowGraphDumper::FlowGraphDumper (std::ostream &_out)
 void
 FlowGraphDumper::dump (FlowGraph *flow_graph)
 {
+  // Mention which registers are defined here.
+  //
+  if (! flow_graph->regs ().empty ())
+    {
+      out << "   regs ";
+
+      bool first = true;
+      for (auto reg : flow_graph->regs ())
+	{
+	  if (first)
+	    first = false;
+	  else
+	    out << ", ";
+	  out << reg->name ();
+	}
+
+      out << '\n';
+    }
+
   // A record of which blocks we've already dumped.
   //
   std::unordered_set<BB *> dumped_blocks;

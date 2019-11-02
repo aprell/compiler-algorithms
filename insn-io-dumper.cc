@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "bb.h"
+#include "reg.h"
 
 #include "cond-branch-insn.h"
 
@@ -44,7 +45,13 @@ InsnDumper::dump_cond_branch (Insn *insn)
 
   std::ostream &out = flow_graph_dumper.out;
   BB *target = cond_branch_insn->target ();
-  out << "if (...cond...) goto ";
+  out << "if (";
+  Reg *cond = cond_branch_insn->condition ();
+  if (cond)
+    out << cond->name ();
+  else
+    out << "0";
+  out << ") goto ";
   if (target)
     out << flow_graph_dumper.block_label (target);
   else

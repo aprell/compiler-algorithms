@@ -34,12 +34,13 @@ cond-branch-insn.o: cond-branch-insn.cc			\
 flow-graph-io-dumper.o: flow-graph-io-dumper.cc		\
 	flow-graph-io.h $(flow-graph-io.h-DEPS)		\
 	flow-graph.h $(flow-graph.h-DEPS)		\
-	cond-branch-insn.h $(cond-branch-insn.h-DEPS)	\
-	bb.h $(bb.h-DEPS)
+	reg.h $(reg.h-DEPS)
 bb-io-dumper.o: bb-io-dumper.cc bb-io.h $(bb-io.h-DEPS) \
 	insn-io.h $(insn-io.h-DEPS) flow-graph-io.h $(flow-graph-io.h-DEPS)
 insn-io-dumper.o: insn-io-dumper.cc insn-io.h $(insn-io.h-DEPS)	\
-	flow-graph-io.h $(flow-graph-io.h-DEPS)
+	flow-graph-io.h $(flow-graph-io.h-DEPS)			\
+	cond-branch-insn.h $(cond-branch-insn.h-DEPS)		\
+	reg.h $(reg.h-DEPS) bb.h $(bb.h-DEPS)
 
 bitvec.o: bitvec.cc bitvec.h $(bitvec.h-DEPS)
 
