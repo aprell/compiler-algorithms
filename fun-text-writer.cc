@@ -66,19 +66,18 @@ FunTextWriter::write (Fun *fun)
       BB *block = write_queue.front ();
       write_queue.pop_front ();
 
-      block_writer.write (block);
-
       written_blocks.insert (block);
 
       for (auto succ : block->successors ())
 	if (succ != exit_block && written_blocks.find (succ) == written_blocks.end ())
 	  write_queue.push_back (succ);
-    }
 
-  // Now if we haven't written the final exit block, do so.
-  //
-  if (exit_block && written_blocks.find (exit_block) == written_blocks.end ())
-    block_writer.write (exit_block);
+      // Insert the exit block into the queue if we're finally done.
+      if (block != exit_block && exit_block && write_queue.empty ())
+	write_queue.push_back (exit_block);
+
+      block_writer.write (block, write_queue.front ());
+    }
 
   out << "}\n";
 }
