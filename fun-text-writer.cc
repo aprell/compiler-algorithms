@@ -55,7 +55,8 @@ FunTextWriter::write (Fun *fun)
 
   // Start out by writing the entry point.
   //
-  write_queue.push_back (fun->entry_block ());
+  if (fun->entry_block ())
+    write_queue.push_back (fun->entry_block ());
 
   // Write the function in depth-first order, avoiding loops by just
   // ignoring any block we've already written.
