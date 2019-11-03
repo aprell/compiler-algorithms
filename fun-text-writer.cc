@@ -23,22 +23,8 @@ FunTextWriter::write (Fun *fun)
 
   // Mention which registers are defined here.
   //
-  if (! fun->regs ().empty ())
-    {
-      out << "   regs ";
-
-      bool first = true;
-      for (auto reg : fun->regs ())
-	{
-	  if (first)
-	    first = false;
-	  else
-	    out << ", ";
-	  out << reg->name ();
-	}
-
-      out << '\n';
-    }
+  for (auto reg : fun->regs ())
+    out << "   reg " << reg->name () << '\n';
 
   // A record of which blocks we've already written.
   //
