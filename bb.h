@@ -80,6 +80,11 @@ public:
   void set_num (unsigned num) { _num = num; }
 
 
+  // Return true if this block is empty (contains no insns).
+  //
+  bool is_empty () const { return _insns.empty (); }
+
+
   //
   // Dominator-tree methods.
   //
