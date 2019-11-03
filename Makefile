@@ -5,7 +5,7 @@ PROGS = comp
 all: $(PROGS)
 
 
-OBJS = bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
+OBJS = fun.o bb.o bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o
 
 comp: $(OBJS)
@@ -29,6 +29,7 @@ fun-text-writer.h-DEPS = insn-text-writer.h $(insn-text-writer.h-DEPS)	\
 # plus any include files it uses.
 #
 
+fun.o: fun.cc fun.h $(fun.h-DEPS)
 bb.o: bb.cc bb.h $(bb.h-DEPS) insn.h $(insn.h-DEPS)
 bb-dom-tree.o: bb-dom-tree.cc bb.h $(bb.h-DEPS)
 insn.o: insn.cc insn.h $(insn.h-DEPS) bb.h $(bb.h-DEPS)
