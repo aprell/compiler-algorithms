@@ -26,9 +26,9 @@ FunTextWriter::write (Fun *fun)
   for (auto reg : fun->regs ())
     out << "   reg " << reg->name () << '\n';
 
-  // A record of which blocks we've already written.
+  // A record of which blocks we've queued to be written.
   //
-  std::unordered_set<BB *> written_blocks;
+  std::unordered_set<BB *> queued_blocks;
 
   // A queue of blocks needing to be written.
   //
@@ -42,7 +42,10 @@ FunTextWriter::write (Fun *fun)
   // Start out by writing the entry point.
   //
   if (fun->entry_block ())
-    write_queue.push_back (fun->entry_block ());
+    {
+      write_queue.push_back (fun->entry_block ());
+      queued_blocks.insert (fun->entry_block ());
+    }
 
   // Write the function in depth-first order, avoiding loops by just
   // ignoring any block we've already written.
@@ -52,17 +55,35 @@ FunTextWriter::write (Fun *fun)
       BB *block = write_queue.front ();
       write_queue.pop_front ();
 
-      written_blocks.insert (block);
+      BB *fall_through = block->fall_through ();
 
+      // Prefer fall-through block next.
+      //
+      if (fall_through
+	  && fall_through != exit_block
+	  && queued_blocks.count (fall_through) == 0)
+	{
+	  write_queue.push_front (fall_through);
+	  queued_blocks.insert (fall_through);
+	}
+
+      // Try to emit successor blocks
       for (auto succ : block->successors ())
-	if (succ != exit_block && written_blocks.find (succ) == written_blocks.end ())
-	  write_queue.push_back (succ);
+	if (succ != exit_block
+	    && succ != fall_through
+	    && queued_blocks.count (succ) == 0)
+	  {
+	    write_queue.push_back (succ);
+	    queued_blocks.insert (succ);
+	  }
 
       // Insert the exit block into the queue if we're finally done.
       if (block != exit_block && exit_block && write_queue.empty ())
 	write_queue.push_back (exit_block);
 
-      block_writer.write (block, write_queue.front ());
+      BB *next_block = write_queue.empty () ? 0 : write_queue.front ();
+
+      block_writer.write (block, next_block);
     }
 
   out << "}\n";
