@@ -19,6 +19,8 @@ FunTextWriter::FunTextWriter (std::ostream &_out)
 void
 FunTextWriter::write (Fun *fun)
 {
+  out << "{\n";
+
   // Mention which registers are defined here.
   //
   if (! fun->regs ().empty ())
@@ -76,6 +78,8 @@ FunTextWriter::write (Fun *fun)
   //
   if (exit_block && written_blocks.find (exit_block) == written_blocks.end ())
     block_writer.write (exit_block);
+
+  out << "}\n";
 }
 
 
