@@ -1,5 +1,6 @@
 #include <fstream>
 
+#include "fun.h"
 #include "bb.h"
 
 #include "fun-text-writer.h"
@@ -26,6 +27,13 @@ BBTextWriter::write (BB *block, BB *next_block)
   InsnTextWriter &insn_writer = fun_writer.insn_writer;
 
   out << fun_writer.block_label (block) << ":\n";
+
+  Fun *fun = block->fun ();
+
+  if (block == fun->entry_block ())
+    out << "   # entry\n";
+  if (block == fun->exit_block ())
+    out << "   # exit\n";
 
   if (! block->predecessors ().empty ())
     out << "   # preds: "

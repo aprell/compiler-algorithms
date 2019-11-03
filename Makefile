@@ -43,7 +43,8 @@ fun-text-writer.o: fun-text-writer.cc			\
 bb-text-writer.o: bb-text-writer.cc			\
 	bb-text-writer.h $(bb-text-writer.h-DEPS)	\
 	insn-text-writer.h $(insn-text-writer.h-DEPS)	\
-	fun-text-writer.h $(fun-text-writer.h-DEPS)
+	fun-text-writer.h $(fun-text-writer.h-DEPS)	\
+	fun.h $(fun.h-DEPS) bb.h $(bb.h-DEPS)
 insn-text-writer.o: insn-text-writer.cc			\
 	insn-text-writer.h $(insn-text-writer.h-DEPS)	\
 	fun-text-writer.h $(fun-text-writer.h-DEPS)	\
