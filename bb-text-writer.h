@@ -14,9 +14,12 @@ public:
 
   BBTextWriter (FunTextWriter &fun_writer);
 
-  // Write a text representation of BLOCK.
+
+  // Write a text representation of BLOCK.  If NEXT_BLOCK is non-zero,
+  // it is the next block that will be written; this is used to suppress
+  // a goto statement between adjacent blocks.
   //
-  void write (BB *block);
+  void write (BB *block, BB *next_block = 0);
 
 
 private:
