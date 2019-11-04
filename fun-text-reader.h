@@ -11,6 +11,7 @@
 
 
 class Fun;
+class TextReaderInp;
 
 
 // A class for reading a text representations of a function.
@@ -19,7 +20,7 @@ class FunTextReader
 {
 public:
 
-  FunTextReader (std::istream &in);
+  FunTextReader (TextReaderInp &inp);
 
 
   // Read a text representation of a function, and return the new function..
@@ -27,107 +28,13 @@ public:
   Fun *read ();
 
 
-  // Read a new line, and return true if successful.
-  //
-  bool read_line ();
-
-  // Return the next unread character in the current line.
-  //
-  char peek () { return is_eol () ? 0 : cur_line[cur_line_offs]; }
-
-  // If the character CH is the next unread character, do nothing,
-  // otherwise signal an error.
-  //
-  void expect (char ch);
-
-  // If the keyword KEYW follows the current position, skip it, 
-  // otherwise signal an error.
-  //
-  void expect (const char *keyw);
-
-  // If the character CH is the next unread character, skip it, and
-  // return true, otherwise return false;,
-  //
-  bool skip (char ch);
-
-  // If the keyword KEYW follows the current position, skip it, and
-  // return true, otherwise return false.
-  //
-  bool skip (const char *keyw);
-
-  // Read and return an unsigned integer, or signal an error if none
-  // can be read.
-  //
-  unsigned read_unsigned ();
-
-  // Read and return an identifier name (/[_a-zA-Z][_a-zA-Z0-9]*/), or
-  // signal an error if none.
-  //
-  std::string read_id ();
-
   // Read a block label.
   //
-  BB *read_label () { return label_block (read_id ()); }
+  BB *read_label () { return label_block (inp.read_id ()); }
 
   // Read a register (which must exist).
   //
   Reg *read_reg ();
-
-  // Return true if CH can start an identifier.
-  //
-  bool is_id_start_char (char ch)
-  {
-    return
-      ch == '_'
-      || (ch >= 'a' && ch <= 'z')
-      || (ch >= 'A' && ch <= 'Z');
-  }
-
-  // Return true if CH can continue an identifier.
-  //
-  bool is_id_cont_char (char ch)
-  {
-    return
-      ch == '_'
-      || (ch >= 'a' && ch <= 'z')
-      || (ch >= 'A' && ch <= 'Z')
-      || (ch >= '0' && ch <= '9');
-  }
-
-  // Return true if CH is a whitespace character.
-  //
-  bool is_whitespace (char ch)
-  {
-    return ch == ' ' || ch == '\t';
-  }
-
-  // Skip any whitespace characters.
-  //
-  void skip_whitespace ()
-  {
-    while (! is_eol () && is_whitespace (peek ()))
-      read_char ();
-  }
-
-
-  // Read and return a character.
-  //
-  char read_char () { return is_eol () ? 0 : cur_line[cur_line_offs++]; }
-
-
-  // Return true if we're at the end of the current line.
-  //
-  bool is_eol () const { return cur_line_offs == cur_line.length (); }
-
-
-  // Throw an exception containing the error message ERR.
-  //
-  [[noreturn]] void parse_error (const std::string &err) const;
-
-
-  // Return a string showing the current line and parse position.
-  //
-  std::string cur_line_parse_desc () const;
 
 
   // Return the block corresponding to the label LABEL.  If no such
@@ -140,11 +47,6 @@ public:
   // The following data members are all public, and reflect common
   // state during writing.
   //
-
-
-  // Stream we're writing to.
-  //
-  std::istream &in;
 
   // Text reader for insns.
   //
@@ -175,18 +77,12 @@ private:
   BB *cur_block = 0;
 
 
-  // Current line we're parsing.
-  //
-  std::string cur_line;
-
-  // Offset into CUR_LINE.
-  //
-  unsigned cur_line_offs;
-
   std::unordered_map<std::string, BB *> labeled_blocks;
 
   std::unordered_map<std::string, Reg *> registers;
 
+
+  TextReaderInp &inp;
 };
 
 

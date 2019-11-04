@@ -5,11 +5,13 @@
 
 #include "cond-branch-insn.h"
 
+#include "text-reader-inp.h"
+
 #include "fun-text-reader.h"
 
 
-FunTextReader::FunTextReader (std::istream &_in)
-  : in (_in), insn_reader (*this), block_reader (*this)
+FunTextReader::FunTextReader (TextReaderInp &_inp)
+  : insn_reader (*this), block_reader (*this), inp (_inp)
 {
 }
 
@@ -43,38 +45,31 @@ FunTextReader::read ()
 void
 FunTextReader::parse_fun ()
 {
-  read_line ();
-  expect ('{');
+  inp.read_new_line ();
+  inp.expect ('{');
 
   bool first_block = true;
 
-  while (read_line ())
+  while (inp.read_new_line ())
     {
-      if (skip ('}'))
+      if (inp.skip ('}'))
 	break;
-
-      unsigned len = cur_line.length ();
-      while (len > 0 && is_whitespace (cur_line[len - 1]))
-	len--;
 
       // Comment line
       //
-      if (skip ('#'))
+      if (inp.skip ('#'))
 	continue;
 
       // Label (starts a new block)
       //
-      if (len > 0 && cur_line[len - 1] == ':')
+      if (inp.skip_eol (':'))
 	{
 	  BB *prev_block = cur_block;
 
-	  std::string lab_id = read_id ();
-	  cur_block = label_block (lab_id);
-	  //	  cur_block = read_label ();
-	  expect (':');
+	  cur_block = read_label ();
 
 	  if (! cur_block->is_empty ())
-	    parse_error (std::string ("duplicate label _") + std::to_string (cur_block->num ()));
+	    inp.parse_error (std::string ("duplicate label _") + std::to_string (cur_block->num ()));
 
 	  if (prev_block)
 	    prev_block->set_fall_through (cur_block);
@@ -91,17 +86,17 @@ FunTextReader::parse_fun ()
       // All other command forms start with an ID, which may be a
       // register name or a command name.
       //
-      std::string id = read_id ();
+      std::string id = inp.read_id ();
 
       // Register declaration
       //
-      if (id == "reg" && peek () != ':')
+      if (id == "reg" && inp.peek () != ':')
 	{
-	  std::string reg_name = read_id ();
+	  std::string reg_name = inp.read_id ();
 
 	  Reg *&reg = registers[reg_name];
 	  if (reg)
-	    parse_error (std::string ("Duplicate register declaration \"") + id + "\"");
+	    inp.parse_error (std::string ("Duplicate register declaration \"") + id + "\"");
 	  reg = new Reg (reg_name);
 
 	  cur_fun->add_reg (reg);
@@ -112,12 +107,14 @@ FunTextReader::parse_fun ()
       // For everything after this point, a block is expected.
       //
       if (! cur_block)
-	parse_error ("Expected label");
+	inp.parse_error ("Expected label");
 
       // Assignment, of the form "REG := ..."
       //
-      if (peek () == ':')
+      if (inp.peek () == ':')
 	{
+	  inp.expect ('=');
+
 	  continue;
 	}
 
@@ -136,10 +133,10 @@ FunTextReader::parse_fun ()
       //
       if (id == "if")
 	{
-	  expect ('(');
+	  inp.expect ('(');
 	  Reg *cond = read_reg ();
-	  expect (')');
-	  expect ("goto");
+	  inp.expect (')');
+	  inp.expect ("goto");
 
 	  BB *target = read_label ();
 
@@ -169,170 +166,18 @@ FunTextReader::parse_fun ()
 }
 
 
-// Read a new line, and return true if successful.
-//
-bool
-FunTextReader::read_line ()
-{
-  if (std::getline (in, cur_line))
-    {
-      cur_line_offs = 0;
-      return true;
-    }
-  else
-    return false;
-}
-
-
-// If the character CH is the next unread character, skip it,
-// otherwise signal an error.
-//
-void
-FunTextReader::expect (char ch)
-{
-  if (! skip (ch))
-    parse_error (std::string ("Expected '") + ch + "'");
-}
-
-// If the keyword KEYW follows the current position, skip it, 
-// otherwise signal an error.
-//
-void
-FunTextReader::expect (const char *keyw)
-{
-  if (! skip (keyw))
-    parse_error (std::string ("Expected \"") + keyw + "\"");
-}
-
-
-// If the character CH is the next unread character, skip it, and
-// return true, otherwise return false.
-//
-bool
-FunTextReader::skip (char ch)
-{
-  skip_whitespace ();
-
-  if (peek () == ch)
-    {
-      read_char ();
-      return true;
-    }
-  else
-    {
-      return false;
-    }
-}
-
-// If the keyword KEYW follows the current position, skip it, and
-// return true, otherwise return false.
-//
-bool
-FunTextReader::skip (const char *keyw)
-{
-  skip_whitespace ();
-
-  unsigned keyw_len = strlen (keyw);
-
-  if (cur_line_offs + keyw_len > cur_line.length ())
-    return false;
-
-  if (is_id_cont_char (cur_line[cur_line_offs + keyw_len]))
-    return false;
-
-  for (unsigned i = 0; i < keyw_len; i++)
-    if (cur_line[cur_line_offs + i] != keyw[i])
-      return false;
-
-  cur_line_offs += keyw_len;
-
-  return true;
-}
-
-
-// Read and return an unsigned integer, or signal an error if none
-// can be read.
-//
-unsigned
-FunTextReader::read_unsigned ()
-{
-  skip_whitespace ();
-
-  char ch = peek ();
-  if (ch >= '0' && ch <= '9')
-    {
-      unsigned num = 0;
-      do
-	num = num * 10 + (read_char () - '0');
-      while ((ch = peek ()) >= '0' && ch <= '9');
-      return num;
-    }
-  else
-    {
-      parse_error ("Expected unsigned integer");
-    }
-}
-
-// Read and return an identifier name (/[_a-zA-Z][_a-zA-Z0-9]*/), or
-// signal an error if none.
-//
-std::string
-FunTextReader::read_id ()
-{
-  skip_whitespace ();
-
-  char ch = peek ();
-  if (is_id_start_char (ch))
-    {
-      std::string id;
-      do
-	id += read_char ();
-      while (is_id_cont_char (peek ()));
-      return id;
-    }
-  else
-    {
-      parse_error ("Expected identifier");
-    }
-}
-
-
 // Read a register (which must exist) .
 //
 Reg *
 FunTextReader::read_reg ()
 {
-  std::string reg_name = read_id ();
+  std::string reg_name = inp.read_id ();
 
   auto reg_it = registers.find (reg_name);
   if (reg_it == registers.end ())
-    parse_error (std::string ("Unknown register \"") + reg_name + "\"");
+    inp.parse_error (std::string ("Unknown register \"") + reg_name + "\"");
 
   return reg_it->second;
-}
-
-
-// Throw an exception containing the error message ERR.
-//
-void
-FunTextReader::parse_error (const std::string &err) const
-{
-  throw std::runtime_error (cur_line_parse_desc () + "Parse error: " + err);
-}
-
-
-// Return a string showing the current line and parse position.
-//
-std::string
-FunTextReader::cur_line_parse_desc () const
-{
-  std::string desc (cur_line);
-  desc += '\n';
-  for (unsigned i = 0; i < cur_line_offs; i++)
-    desc += ' ';
-  desc += '^';
-  desc += '\n';
-  return desc;
 }
 
 

@@ -7,6 +7,7 @@ all: $(PROGS)
 
 OBJS = fun.o bb.o bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o	\
+	text-reader-inp.o						\
 	fun-text-reader.o insn-text-reader.o bb-text-reader.o
 
 comp: $(OBJS)
@@ -17,12 +18,21 @@ comp: $(OBJS)
 # dependent source files.
 #
 
-bb.h-DEPS = memtoobj.h $(memtoobj.h-DEPS)
 fun.h-DEPS = bb.h $(bb.h-DEPS)
+bb.h-DEPS = memtoobj.h $(memtoobj.h-DEPS)
+insn.h-DEPS = 
 cond-branch-insn.h-DEPS = insn.h $(insn.h-DEPS)
 
 fun-text-writer.h-DEPS = insn-text-writer.h $(insn-text-writer.h-DEPS)	\
 	bb-text-writer.h $(bb-text-writer.h-DEPS)
+bb-text-writer.h-DEPS =
+insn-text-writer.h-DEPS = 
+
+text-reader-inp.h-DEPS = 
+fun-text-reader.h-DEPS = insn-text-reader.h $(insn-text-reader.h-DEPS) \
+	bb-text-reader.h $(bb-text-reader.h-DEPS)
+bb-text-reader.h-DEPS =
+insn-text-reader.h-DEPS = 
 
 
 #
@@ -52,6 +62,8 @@ insn-text-writer.o: insn-text-writer.cc			\
 	cond-branch-insn.h $(cond-branch-insn.h-DEPS)	\
 	reg.h $(reg.h-DEPS) bb.h $(bb.h-DEPS)
 
+text-reader-inp.o: text-reader-inp.cc			\
+	text-reader-inp.h $(text-reader-inp.h-DEPS)
 fun-text-reader.o: fun-text-reader.cc			\
 	fun-text-reader.h $(fun-text-reader.h-DEPS)	\
 	fun.h $(fun.h-DEPS)				\
