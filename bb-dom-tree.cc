@@ -106,27 +106,50 @@ BB::calc_doms (const std::list<BB *> &blocks,
   while (change)
     {
       change = false;
-      for (auto bb : blocks)
+      for (auto block : blocks)
 	{
-	  // Remember the previous dominator.
-	  //
-	  DomTreeNode *old_dom = (bb->*dom_tree_node_member).dominator;
+	  DomTreeNode *block_node = &(block->*dom_tree_node_member);
 
-	  // Calculate a new one.
+	  // Remember the previous dominator set for BLOCK.
+	  //
+	  DomTreeNode *old_dom = block_node->dominator;
+
+	  // The newly calculated dominator set.
 	  //
 	  DomTreeNode *new_dom = 0;
-	  for (auto prev : bb->*pred_list_member)
+
+	  // Go through all BLOCK's predecessors.
+	  //
+	  for (auto pred : block->*pred_list_member)
 	    {
-	      DomTreeNode *prev_dom = &(prev->*dom_tree_node_member);
-	      if (! new_dom)
-		new_dom = prev_dom;
-	      else
-		new_dom = new_dom->common_ancestor (prev_dom);
+	      DomTreeNode *pred_node = &(pred->*dom_tree_node_member);
+
+	      // If it wouldn't form a loop, try to update NEW_DOM
+	      // based on PRED.
+	      //
+	      if (! block_node->is_ancestor_of (pred_node))
+		{
+		  if (! new_dom)
+		    // PRED is the first predecessor, so the dominator
+		    // set represented by NEW_DOM is the same as
+		    // PRED's dominator set.
+		    //
+		    new_dom = pred_node;
+		  else
+		    // Otherwise, take the intersection of PRED's
+		    // dominator set with previously NEW_DOM (which
+		    // currently represents the dominator set found
+		    // for all predecessors of BLOCK so far).
+		    //
+		    new_dom = new_dom->common_ancestor (pred_node);
+		}
 	    }
 
+	  // If the dominator set has changed, remember that.
+	  //
 	  if (new_dom != old_dom)
 	    {
-	      (bb->*dom_tree_node_member).set_dominator (new_dom);
+	      block_node->set_dominator (new_dom);
 	      change = true;
 	    }
 	}
