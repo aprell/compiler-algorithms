@@ -154,6 +154,20 @@ public:
   }
 
 
+  // Return the dominance frontier of this block: all blocks which are
+  // immediate successors of some block dominated by this block, but
+  // are not dominated by this block themselves.
+  //
+  std::list<BB *> dominance_frontier () const
+  {
+    std::list<BB *> frontier;
+    extend_dominance_frontier (&fwd_dom_tree_node,
+			       &BB::fwd_dom_tree_node, &BB::_succs,
+			       frontier);
+    return frontier;
+  }
+
+
   // Return the block to which control-flow in this block goes if
   // execution runs off the end of it.
   //
@@ -207,6 +221,23 @@ private:
   static void calc_doms (const std::list<BB *> &blocks,
 			 DomTreeNode BB::*dom_tree_node_member,
 			 std::list<BB *> BB::*pred_list_member);
+
+  // Helper method used by BB::dominance_frontier method.
+  //
+  // Walk this node's dominator tree using dominator node members
+  // DOM_TREE_NODE_MEMBER, and for every dominated node, add to
+  // FRONTIER any successor of that node, using SUCC_LIST_MEMBER to
+  // get the successors list, which is not a descendent of
+  // DOM_TREE_ROOT.
+  //
+  // Nodes are only added to FRONTIER once, duplicates are ignored.
+  //
+  void extend_dominance_frontier (const DomTreeNode *dom_tree_root,
+				  DomTreeNode BB::*dom_tree_node_member,
+				  std::list<BB *> BB::*succ_list_member,
+				  std::list<BB *> &frontier)
+    const;
+
 
   // Unique block number, assigned at block creation time.
   //
