@@ -57,7 +57,7 @@ FunTextReader::parse_fun ()
 
       // Comment line
       //
-      if (inp.skip ('#'))
+      if (inp.skip ('#') || inp.at_eol ())
 	continue;
 
       // Label (starts a new block)
