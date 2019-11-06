@@ -56,9 +56,9 @@ BBTextWriter::write (BB *block, BB *next_block)
   if (block->fall_through () && block->fall_through () != next_block)
     out << "   goto " << fun_writer.block_label (block->fall_through ()) << '\n';
 
-  BB *rev_dom = block->reverse_dominator ();
+  BB *rev_dom = block->post_dominator ();
   if (rev_dom)
-    out << "   # reverse-dominator: "
+    out << "   # post-dominator: "
 	<< fun_writer.block_label (rev_dom)
 	<< '\n';
 

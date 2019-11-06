@@ -19,7 +19,7 @@ public:
 
   // Calculate the reverse dominator tree for all blocks in BLOCKS.
   //
-  void calc_reverse_dominators () { BB::calc_reverse_dominators (_blocks); }
+  void calc_reverse_dominators () { BB::calc_post_dominators (_blocks); }
 
 
   // Add new block to this function.

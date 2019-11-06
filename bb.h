@@ -103,18 +103,18 @@ public:
     return block->fwd_dom_tree_node.is_ancestor_of (&fwd_dom_tree_node);
   }
 
-  // Return true if this block reverse-dominates BLOCK.
+  // Return true if this block post-dominates BLOCK.
   //
-  bool reverse_dominates (BB *block)
+  bool post_dominates (BB *block)
   {
-    return rev_dom_tree_node.is_ancestor_of (&block->rev_dom_tree_node);
+    return bwd_dom_tree_node.is_ancestor_of (&block->bwd_dom_tree_node);
   }
 
-  // Return true if this block is reverse-dominated by BLOCK.
+  // Return true if this block is post-dominated by BLOCK.
   //
-  bool is_reverse_dominated_by (BB *block)
+  bool is_post_dominated_by (BB *block)
   {
-    return block->rev_dom_tree_node.is_ancestor_of (&rev_dom_tree_node);
+    return block->bwd_dom_tree_node.is_ancestor_of (&bwd_dom_tree_node);
   }
 
   // Return this block's immedately dominating block, or zero if none.
@@ -130,11 +130,11 @@ public:
 
   // Return this block's immedately dominating block, or zero if none.
   //
-  BB *reverse_dominator () const
+  BB *post_dominator () const
   {
-    DomTreeNode *rev_dom_node = rev_dom_tree_node.dominator;
-    if (rev_dom_node)
-      return member_to_enclosing_object (rev_dom_node, &BB::rev_dom_tree_node);
+    DomTreeNode *bwd_dom_node = bwd_dom_tree_node.dominator;
+    if (bwd_dom_node)
+      return member_to_enclosing_object (bwd_dom_node, &BB::bwd_dom_tree_node);
     else
       return 0;
   }
@@ -146,11 +146,11 @@ public:
     calc_doms (blocks, &BB::fwd_dom_tree_node, &BB::_preds);
   }
 
-  // Calculate the reverse dominator tree for all blocks in BLOCKS.
+  // Calculate the post dominator tree for all blocks in BLOCKS.
   //
-  static void calc_reverse_dominators (const std::list<BB *> &blocks)
+  static void calc_post_dominators (const std::list<BB *> &blocks)
   {
-    calc_doms (blocks, &BB::rev_dom_tree_node, &BB::_succs);
+    calc_doms (blocks, &BB::bwd_dom_tree_node, &BB::_succs);
   }
 
 
@@ -239,9 +239,9 @@ private:
   //
   DomTreeNode fwd_dom_tree_node;
 
-  // Dominator-tree node for reverse dominator tree.
+  // Dominator-tree node for post dominator tree.
   //
-  DomTreeNode rev_dom_tree_node;
+  DomTreeNode bwd_dom_tree_node;
 
 };
 
