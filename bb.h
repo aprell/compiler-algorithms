@@ -31,7 +31,7 @@ private:
     // Return true if this dominator tree node is an ancestor of
     // OTHER, i.e., we dominate OTHER.
     //
-    bool is_ancestor_of (DomTreeNode *other)
+    bool is_ancestor_of (const DomTreeNode *other) const
     {
       while (other && other->depth > depth)
 	other = other->dominator;
@@ -91,28 +91,28 @@ public:
 
   // Return true if this block dominates BLOCK.
   //
-  bool dominates (BB *block)
+  bool dominates (BB *block) const
   {
     return fwd_dom_tree_node.is_ancestor_of (&block->fwd_dom_tree_node);
   }
 
   // Return true if this block is dominated by BLOCK.
   //
-  bool is_dominated_by (BB *block)
+  bool is_dominated_by (BB *block) const
   {
     return block->fwd_dom_tree_node.is_ancestor_of (&fwd_dom_tree_node);
   }
 
   // Return true if this block post-dominates BLOCK.
   //
-  bool post_dominates (BB *block)
+  bool post_dominates (BB *block) const
   {
     return bwd_dom_tree_node.is_ancestor_of (&block->bwd_dom_tree_node);
   }
 
   // Return true if this block is post-dominated by BLOCK.
   //
-  bool is_post_dominated_by (BB *block)
+  bool is_post_dominated_by (BB *block) const
   {
     return block->bwd_dom_tree_node.is_ancestor_of (&bwd_dom_tree_node);
   }
