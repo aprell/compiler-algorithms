@@ -42,9 +42,14 @@ BBTextWriter::write (BB *block, BB *next_block)
 
   BB *dom = block->dominator ();
   if (dom)
-    out << "   # dominator: "
-	<< fun_writer.block_label (dom)
-	<< '\n';
+    {
+      out << "   # dominator: "
+	  << fun_writer.block_label (dom)
+	  << '\n';
+      out << "   # dominance frontier: "
+	  << fun_writer.block_list_labels (block->dominance_frontier ())
+	  << '\n';
+    }
 
   for (auto insn : block->insns ())
     {
