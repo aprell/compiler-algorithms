@@ -1,6 +1,6 @@
 #include <stdexcept>
 #include <string>
-#include <iostream>
+#include <ostream>
 
 #include "bb.h"
 #include "reg.h"
