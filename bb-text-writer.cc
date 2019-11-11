@@ -1,4 +1,4 @@
-#include <fstream>
+#include <ostream>
 
 #include "fun.h"
 #include "bb.h"
