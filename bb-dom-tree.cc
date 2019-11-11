@@ -1,4 +1,3 @@
-#include <deque>
 
 #include "bb.h"
 
@@ -17,6 +16,7 @@
 //  while changes in any Dom(n)
 //      for each n in N - {n0}:
 //          Dom(n) = {n} union with intersection over Dom(p) for all p in pred(n)
+//
 
 
 

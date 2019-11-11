@@ -1,4 +1,10 @@
-#include <ostream>
+// bb.cc -- IR basic blocks
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-10-28
+//
 
 #include "bb.h"
 #include "insn.h"
