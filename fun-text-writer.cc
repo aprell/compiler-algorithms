@@ -1,3 +1,11 @@
+// fun-text-writer.cc -- Text-format output of an IR function
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-11-02
+//
+
 #include <ostream>
 #include <unordered_set>
 #include <deque>

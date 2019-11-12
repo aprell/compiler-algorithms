@@ -1,3 +1,11 @@
+// insn-text-writer.cc -- Text-format output of an IR instruction
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-11-02
+//
+
 #include <stdexcept>
 #include <string>
 #include <ostream>

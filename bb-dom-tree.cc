@@ -1,3 +1,10 @@
+// bb-dom-tree.cc -- IR basic block dominator calculation
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-10-28
+//
 
 #include "bb.h"
 

@@ -1,5 +1,14 @@
+// insn-text-reader.h -- Text-format input of an IR instruction
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-11-03
+//
+
 #ifndef __INSN_TEXT_READER_H__
 #define __INSN_TEXT_READER_H__
+
 
 class Insn;
 class FunTextReader;

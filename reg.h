@@ -1,3 +1,11 @@
+// reg.h -- IR registers
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-11-01
+//
+
 #ifndef __REG_H__
 #define __REG_H__
 

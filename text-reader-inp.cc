@@ -1,3 +1,11 @@
+// text-reader-inp.cc -- Input source for IR text-format input classes
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-11-03
+//
+
 #include "text-reader-inp.h"
 
 

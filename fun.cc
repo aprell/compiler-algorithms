@@ -1,3 +1,11 @@
+// fun.cc -- IR functions
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-11-02
+//
+
 #include <deque>
 
 #include "fun.h"

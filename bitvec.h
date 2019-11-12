@@ -1,3 +1,11 @@
+// bitvec.h -- Fast bit vectors, for use as sets
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-10-28
+//
+
 #ifndef __BITVEC_H__
 #define __BITVEC_H__
 

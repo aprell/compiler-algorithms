@@ -1,3 +1,11 @@
+// insn-text-writer.h -- Text-format output of an IR instruction
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-11-02
+//
+
 #ifndef __INSN_TEXT_WRITER_H__
 #define __INSN_TEXT_WRITER_H__
 

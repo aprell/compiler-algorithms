@@ -1,3 +1,11 @@
+// bb.h -- IR basic blocks
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-10-28
+//
+
 #ifndef __BB_H__
 #define __BB_H__
 

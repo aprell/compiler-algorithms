@@ -1,3 +1,11 @@
+// fun-text-reader.h -- Text-format input of an IR function
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-11-03
+//
+
 #ifndef __FUN_TEXT_READER_H__
 #define __FUN_TEXT_READER_H__
 

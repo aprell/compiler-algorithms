@@ -1,3 +1,11 @@
+// insn.h -- IR instructions
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-10-30
+//
+
 #ifndef __INSN_H__
 #define __INSN_H__
 

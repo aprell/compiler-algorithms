@@ -1,3 +1,11 @@
+// bitvec.cc -- Fast bit vectors, for use as sets
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-10-28
+//
+
 #if __cpp_lib_bitops
 # include <bit>
 #endif

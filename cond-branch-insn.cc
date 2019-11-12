@@ -1,3 +1,11 @@
+// cond-branch-insn.cc -- IR conditional branch instructions
+//
+// Copyright © 2019  Miles Bader
+//
+// Author: Miles Bader <snogglethorpe@gmail.com>
+// Created: 2019-10-31
+//
+
 #include "bb.h"
 
 #include "cond-branch-insn.h"
