@@ -13,6 +13,8 @@
 class BB;
 
 
+// IR instruction, representing a single operation in a flow graph.
+//
 class Insn
 {
 public:

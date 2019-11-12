@@ -16,6 +16,9 @@
 class Reg;
 
 
+// IR conditional branch instruction, representing a conditional
+// control-flow change.
+//
 class CondBranchInsn : public Insn
 {
 public:

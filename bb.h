@@ -18,6 +18,8 @@ class Fun;
 class Insn;
 
 
+// IR basic block in a flow graph.
+//
 class BB
 {
 private:

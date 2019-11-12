@@ -12,6 +12,14 @@
 
 #include <cstdint>
     
+
+// Given a pointer, MEMBER, to a member inside an object, and a
+// corresponding C++ pointer-to-member, MEMBER_PTR, for that member
+// inside a specific class, return a pointer to the enclosing object
+// of the same class.
+//
+// Note that this will not do anything sensible on a NULL pointer.
+//
 template <class T, typename M>
 static inline constexpr T
 *member_to_enclosing_object (M *member, const M T::*member_ptr)

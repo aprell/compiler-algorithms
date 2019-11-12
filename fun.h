@@ -17,6 +17,9 @@
 class Reg;
 
 
+// IR function, containing a flow graph, a description of resources
+// used by the function, and the function's interface.
+//
 class Fun
 {
 public:

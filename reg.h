@@ -12,7 +12,7 @@
 #include <string>
 
 
-// A "register" representing a value/storage-location.
+// IR register, representing a value/storage-location.
 //
 class Reg
 {

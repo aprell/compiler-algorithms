@@ -13,10 +13,12 @@
 #include <string>
 
 
+// A text input source for *TextReader classes, adds somewhat
+// higher-level methods on top of a stream to do line-by-line input.
+//
 class TextReaderInp
 {
 public:
-
 
   TextReaderInp (std::istream &inp_stream)
     : _inp_stream (inp_stream)
