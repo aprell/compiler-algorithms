@@ -9,6 +9,22 @@
 #include "bb.h"
 
 
+// Dtor tries to maintain the tree.
+//
+BB::DomTreeNode::~DomTreeNode ()
+{
+  // Remove this node from the tree it's in
+
+  for (auto dominee : dominatees)
+    {
+      dominee->dominator = dominator;
+
+      if (dominator)
+	dominator->dominatees.push_front (dominee);
+    }
+}
+
+
 //
 // From Wikipedia:
 //

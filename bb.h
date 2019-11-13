@@ -28,6 +28,10 @@ private:
   {
   public:
 
+    // Dtor tries to maintain the tree.
+    //
+    ~DomTreeNode ();
+
     // Assert that this node is immediately dominated by the dominator
     // tree node DOM.
     //
