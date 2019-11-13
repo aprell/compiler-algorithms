@@ -78,8 +78,10 @@ insn-text-reader.o: insn-text-reader.cc			\
 	cond-branch-insn.h $(cond-branch-insn.h-DEPS)	\
 	reg.h $(reg.h-DEPS) bb.h $(bb.h-DEPS)
 
-bitvec.o: bitvec.cc bitvec.h $(bitvec.h-DEPS)
+check-assertion.o: check-assertion.cc			\
+	check-assertion.h $(check-assertion.h-DEPS)
 
+bitvec.o: bitvec.cc bitvec.h $(bitvec.h-DEPS)
 
 clean:
 	rm -f $(PROGS) *.o
