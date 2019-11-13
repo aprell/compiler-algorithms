@@ -11,6 +11,13 @@
 #include "fun.h"
 
 
+Fun::~Fun ()
+{
+  while (! _blocks.empty ())
+    delete _blocks.front ();
+}
+
+
 // Remove BLOCK from this function.
 //
 void

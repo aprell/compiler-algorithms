@@ -24,6 +24,9 @@ class Fun
 {
 public:
 
+  ~Fun ();
+
+
   // Calculate the forward dominator tree for all blocks in BLOCKS.
   //
   void calc_dominators () { BB::calc_dominators (_blocks); }
