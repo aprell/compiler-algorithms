@@ -37,6 +37,12 @@ public:
   //
   virtual bool is_branch_insn () { return false; }
 
+  // Change the branch target block for this insn from FROM to TO.
+  // FROM must be a currently valid target of this insn.  TO may be
+  // NULL, in which case the target becomes undefined.
+  //
+  virtual void change_branch_target (BB */* from */, BB */* to */) { }
+
 
 private:
 
