@@ -6,6 +6,8 @@
 // Created: 2019-10-28
 //
 
+#include "check-assertion.h"
+
 #include "bb.h"
 #include "insn.h"
 
@@ -18,6 +20,58 @@ BB::BB (Fun *fun)
   : _fun (fun)
 {
   fun->add_block (this);
+}
+
+
+// Destructor; tries to cleanly remove the block from the flow
+// graph.
+//
+BB::~BB ()
+{
+  while (! _insns.empty ())
+    remove_insn (_insns.front ());
+
+  BB *fall_through = _fall_through;
+
+  set_fall_through (0);
+
+  //
+  // Use a funny loop (instead of "for (... : ...)") because we'd like
+  // to remove elements while we're iterating over the list containing
+  // them.  So we increment the list pointer before possibly removing
+  // what it used to point to.
+  //
+
+  auto predp = _preds.begin ();
+  while (predp != _preds.end ())
+    {
+      BB *pred = *predp;
+      ++predp;
+
+      if (pred->fall_through () == this)
+	{
+	  pred->set_fall_through (fall_through);
+	}
+      else
+	{
+	  check_assertion (! pred->_insns.empty (), "No branch insn");
+
+	  Insn *branch_insn = pred->_insns.back ();
+	  check_assertion (branch_insn->is_branch_insn (), "No branch insn");
+
+	  branch_insn->change_branch_target (this, fall_through);
+	}
+    }
+
+  check_assertion (_preds.empty (), "Destroyed block has remaining predecessors");
+  check_assertion (_succs.empty (), "Destroyed block has remaining successors");
+
+  Fun *fun = _fun;
+  if (fun)
+    {
+      _fun = 0;
+      fun->remove_block (this);
+    }
 }
 
 

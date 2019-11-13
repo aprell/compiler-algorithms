@@ -80,6 +80,11 @@ public:
   //
   BB (Fun *fun);
 
+  // Destructor; tries to cleanly remove the block from the flow
+  // graph.
+  //
+  ~BB ();
+
 
   // Return the function this block belongs to.
   //
