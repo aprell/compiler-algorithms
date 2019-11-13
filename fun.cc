@@ -11,6 +11,20 @@
 #include "fun.h"
 
 
+// Remove BLOCK from this function.
+//
+void
+Fun::remove_block (BB *block)
+{
+  _blocks.remove (block);
+
+  if (_entry_block == block)
+    _entry_block = 0;
+  if (_exit_block == block)
+    _exit_block = 0;
+}
+
+
 // For any blocks which have no predecessors, remove their outgoing
 // edges.
 //

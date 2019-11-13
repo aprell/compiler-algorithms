@@ -41,6 +41,10 @@ public:
     _blocks.push_back (block);
   }
 
+  // Remove BLOCK from this function.
+  //
+  void remove_block (BB *block);
+
   // Return a reference to a read-only list containing the blocks in
   // this function.
   //
