@@ -6,6 +6,8 @@
 // Created: 2019-10-31
 //
 
+#include "check-assertion.h"
+
 #include "bb.h"
 
 #include "cond-branch-insn.h"
@@ -44,6 +46,18 @@ CondBranchInsn::set_block (BB *bb)
 
   Insn::set_block (bb);
 }
+
+// Change the branch target block for this insn from FROM to TO.  TO
+// may be NULL, in which case the target is undefined.
+//
+void
+CondBranchInsn::change_branch_target (BB *from, BB *to)
+{
+  check_assertion (from == _target, "Invalid branch target in CondBranchInsn::change_branch_target");
+
+  set_target (to);
+}
+
 
 // Set the block to which this conditional branch instruction may
 // transfer control [if -some- condition is true].

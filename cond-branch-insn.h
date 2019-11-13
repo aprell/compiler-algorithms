@@ -41,6 +41,13 @@ public:
   //
   virtual bool is_branch_insn () { return true; }
 
+  // Change the branch target block for this insn from FROM to TO.
+  // FROM must be a currently valid target of this insn.  TO may be
+  // NULL, in which case the target becomes undefined.
+  //
+  virtual void change_branch_target (BB *from, BB *to);
+
+
   // Return the block to which this conditional branch instruction may
   // transfer control [if -some- condition is true].
   //
