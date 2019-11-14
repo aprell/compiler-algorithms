@@ -8,7 +8,8 @@ all: $(PROGS)
 OBJS = fun.o bb.o bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o	\
 	text-reader-inp.o						\
-	fun-text-reader.o insn-text-reader.o bb-text-reader.o
+	fun-text-reader.o insn-text-reader.o bb-text-reader.o		\
+	check-assertion.o
 
 comp: $(OBJS)
 
