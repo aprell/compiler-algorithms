@@ -14,9 +14,6 @@
 #include <sstream>
 #include <unordered_map>
 
-#include "insn-text-reader.h"
-#include "bb-text-reader.h"
-
 
 class Fun;
 class TextReaderInp;
@@ -49,20 +46,6 @@ public:
   // label has yet been encountered, a new block is added and returned.
   //
   BB *label_block (const std::string &label);
-
-
-  //
-  // The following data members are all public, and reflect common
-  // state during writing.
-  //
-
-  // Text reader for insns.
-  //
-  InsnTextReader insn_reader;
-
-  // Text reader for blocks.
-  //
-  BBTextReader block_reader;
 
 
 private:

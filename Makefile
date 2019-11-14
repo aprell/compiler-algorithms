@@ -7,8 +7,7 @@ all: $(PROGS)
 
 OBJS = fun.o bb.o bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o	\
-	text-reader-inp.o						\
-	fun-text-reader.o insn-text-reader.o bb-text-reader.o		\
+	text-reader-inp.o fun-text-reader.o			\
 	check-assertion.o
 
 comp: $(OBJS)
@@ -30,10 +29,7 @@ bb-text-writer.h-DEPS =
 insn-text-writer.h-DEPS = 
 
 text-reader-inp.h-DEPS = 
-fun-text-reader.h-DEPS = insn-text-reader.h $(insn-text-reader.h-DEPS) \
-	bb-text-reader.h $(bb-text-reader.h-DEPS)
-bb-text-reader.h-DEPS =
-insn-text-reader.h-DEPS = 
+fun-text-reader.h-DEPS = 
 
 
 #
@@ -69,15 +65,6 @@ fun-text-reader.o: fun-text-reader.cc			\
 	fun-text-reader.h $(fun-text-reader.h-DEPS)	\
 	fun.h $(fun.h-DEPS)				\
 	cond-branch-insn.h $(cond-branch-insn.h-DEPS)
-bb-text-reader.o: bb-text-reader.cc			\
-	bb-text-reader.h $(bb-text-reader.h-DEPS)	\
-	insn-text-reader.h $(insn-text-reader.h-DEPS)	\
-	fun-text-reader.h $(fun-text-reader.h-DEPS)
-insn-text-reader.o: insn-text-reader.cc			\
-	insn-text-reader.h $(insn-text-reader.h-DEPS)	\
-	fun-text-reader.h $(fun-text-reader.h-DEPS)	\
-	cond-branch-insn.h $(cond-branch-insn.h-DEPS)	\
-	reg.h $(reg.h-DEPS) bb.h $(bb.h-DEPS)
 
 check-assertion.o: check-assertion.cc			\
 	check-assertion.h $(check-assertion.h-DEPS)

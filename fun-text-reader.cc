@@ -19,7 +19,7 @@
 
 
 FunTextReader::FunTextReader (TextReaderInp &_inp)
-  : insn_reader (*this), block_reader (*this), inp (_inp)
+  : inp (_inp)
 {
 }
 
