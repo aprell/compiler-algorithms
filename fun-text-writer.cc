@@ -13,13 +13,24 @@
 #include "reg.h"
 #include "fun.h"
 
+#include "prog-text-writer.h"
 #include "fun-text-writer.h"
 
 
-FunTextWriter::FunTextWriter (std::ostream &_out)
-  : out (_out), insn_writer (*this), block_writer (*this)
+FunTextWriter::FunTextWriter (ProgTextWriter &_prog_writer)
+  : prog_writer (_prog_writer), insn_writer (*this), block_writer (*this)
 {
 }
+
+
+// Return the output stream we're writing to.
+//
+std::ostream
+&FunTextWriter::output_stream ()
+{
+  return prog_writer.out ();
+}
+
 
 
 // Write a text representation of FUN.
@@ -27,6 +38,8 @@ FunTextWriter::FunTextWriter (std::ostream &_out)
 void
 FunTextWriter::write (Fun *fun)
 {
+  std::ostream &out = output_stream ();
+
   out << "{\n";
 
   // Mention which registers are defined here.

@@ -10,10 +10,13 @@
 #define __FUN_TEXT_WRITER_H__
 
 #include <string>
+#include <list>
 
 #include "insn-text-writer.h"
 #include "bb-text-writer.h"
 
+
+class ProgTextWriter;
 
 class Fun;
 
@@ -24,7 +27,13 @@ class FunTextWriter
 {
 public:
 
-  FunTextWriter (std::ostream &out);
+  FunTextWriter (ProgTextWriter &prog_writer);
+
+
+  // Return the output stream we're writing to.
+  //
+  std::ostream &output_stream ();
+
 
   // Write a text representation of FUN.
   //
@@ -47,9 +56,10 @@ public:
   //
 
 
-  // Stream we're writing to.
+  // Text writer for the program we're associated with.
   //
-  std::ostream &out;
+  ProgTextWriter &prog_writer;
+
 
   // Text writer for insns.
   //

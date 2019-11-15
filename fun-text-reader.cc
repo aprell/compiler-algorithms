@@ -15,12 +15,23 @@
 
 #include "text-reader-inp.h"
 
+#include "prog-text-reader.h"
+
 #include "fun-text-reader.h"
 
 
-FunTextReader::FunTextReader (TextReaderInp &_inp)
-  : inp (_inp)
+FunTextReader::FunTextReader (ProgTextReader &prog_reader)
+  : _prog_reader (prog_reader)
 {
+}
+
+
+// Return the text input source we're reading from.
+//
+TextReaderInp &
+FunTextReader::input () const
+{
+  return _prog_reader.input ();
 }
 
 
@@ -53,6 +64,8 @@ FunTextReader::read ()
 void
 FunTextReader::parse_fun ()
 {
+  TextReaderInp &inp = input ();
+
   inp.read_new_line ();
   inp.expect ('{');
 
@@ -179,6 +192,8 @@ FunTextReader::parse_fun ()
 Reg *
 FunTextReader::read_reg ()
 {
+  TextReaderInp &inp = input ();
+
   std::string reg_name = inp.read_id ();
 
   auto reg_it = registers.find (reg_name);

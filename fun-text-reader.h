@@ -9,14 +9,13 @@
 #ifndef __FUN_TEXT_READER_H__
 #define __FUN_TEXT_READER_H__
 
-#include <istream>
 #include <string>
-#include <sstream>
 #include <unordered_map>
 
 
+class ProgTextReader;
+
 class Fun;
-class TextReaderInp;
 
 
 // A class for reading a text representations of a function.
@@ -25,7 +24,12 @@ class FunTextReader
 {
 public:
 
-  FunTextReader (TextReaderInp &inp);
+  FunTextReader (ProgTextReader &prog_Reader);
+
+
+  // Return the text input source we're reading from.
+  //
+  TextReaderInp &input () const;
 
 
   // Read a text representation of a function, and return the new function..
@@ -35,7 +39,7 @@ public:
 
   // Read a block label.
   //
-  BB *read_label () { return label_block (inp.read_id ()); }
+  BB *read_label () { return label_block (input ().read_id ()); }
 
   // Read a register (which must exist).
   //
@@ -59,6 +63,11 @@ private:
   void clear_state ();
 
 
+  // Text reader for the program this is part of.
+  //
+  ProgTextReader &_prog_reader;
+
+
   // Function we're currently reading, or zero if none.
   //
   Fun *cur_fun = 0;
@@ -71,9 +80,6 @@ private:
   std::unordered_map<std::string, BB *> labeled_blocks;
 
   std::unordered_map<std::string, Reg *> registers;
-
-
-  TextReaderInp &inp;
 };
 
 

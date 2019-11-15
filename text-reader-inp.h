@@ -136,8 +136,6 @@ public:
   bool at_eol () const { return _cur_line_offs >= _cur_line_max_offs; }
 
   
-
-
   // Read a new line, and return true if successful.
   //
   bool read_new_line ();
@@ -151,6 +149,7 @@ public:
   // Return a string showing the current line and parse position.
   //
   std::string cur_line_parse_desc () const;
+
 
 private:
 

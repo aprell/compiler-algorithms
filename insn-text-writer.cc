@@ -51,7 +51,7 @@ InsnTextWriter::write_cond_branch (Insn *insn)
   if (! cond_branch_insn)
     invalid_write_method (insn, "CondBranchInsn");
 
-  std::ostream &out = fun_writer.out;
+  std::ostream &out = fun_writer.output_stream ();
   BB *target = cond_branch_insn->target ();
   out << "if (";
   Reg *cond = cond_branch_insn->condition ();
