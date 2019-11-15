@@ -1,6 +1,6 @@
 CXXFLAGS = -std=c++11 -pedantic-errors -Wall -Wextra -g -O3 -march=native
 
-PROGS = comp
+PROGS = compcat
 
 all: $(PROGS)
 
@@ -11,7 +11,8 @@ OBJS = prog.o fun.o bb.o bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
 	text-reader-inp.o prog-text-reader.o fun-text-reader.o		\
 	check-assertion.o
 
-comp: $(OBJS)
+compcat: compcat.o $(OBJS)
+	$(CXX) -o $@ $(CXXFLAGS) $^
 
 
 #
@@ -78,6 +79,12 @@ fun-text-reader.o: fun-text-reader.cc			\
 
 check-assertion.o: check-assertion.cc			\
 	check-assertion.h $(check-assertion.h-DEPS)
+
+compcat.o: compcat.cc					\
+	fun.h $(fun.h-DEPS)				\
+	prog-text-writer.h $(prog-text-writer.h-DEPS)	\
+	text-reader-inp.h $(text-reader-inp.h-DEPS)	\
+	prog-text-reader.h $(prog-text-reader.h-DEPS)
 
 bitvec.o: bitvec.cc bitvec.h $(bitvec.h-DEPS)
 
