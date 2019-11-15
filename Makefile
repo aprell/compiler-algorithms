@@ -5,9 +5,9 @@ PROGS = comp
 all: $(PROGS)
 
 
-OBJS = fun.o bb.o bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o	\
 	text-reader-inp.o fun-text-reader.o			\
+OBJS = prog.o fun.o bb.o bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
 	check-assertion.o
 
 comp: $(OBJS)
@@ -18,6 +18,7 @@ comp: $(OBJS)
 # dependent source files.
 #
 
+prog.h-DEPS = fun.h $(fun.h-DEPS)
 fun.h-DEPS = bb.h $(bb.h-DEPS)
 bb.h-DEPS = memtoobj.h $(memtoobj.h-DEPS)
 insn.h-DEPS = 
@@ -37,6 +38,7 @@ fun-text-reader.h-DEPS =
 # plus any include files it uses.
 #
 
+prog.o: prog.cc prog.h $(prog.h-DEPS)
 fun.o: fun.cc fun.h $(fun.h-DEPS)
 bb.o: bb.cc bb.h $(bb.h-DEPS) insn.h $(insn.h-DEPS)
 bb-dom-tree.o: bb-dom-tree.cc bb.h $(bb.h-DEPS)
