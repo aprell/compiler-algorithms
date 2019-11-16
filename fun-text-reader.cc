@@ -49,8 +49,12 @@ FunTextReader::read ()
   Fun *fun = new Fun ();
 
   cur_fun = fun;
+  cur_block = fun->entry_block ();
+
   parse_fun ();
+
   cur_fun = 0;
+  cur_block = 0;
 
   // Clear any left over parsing state.
   //
@@ -69,8 +73,6 @@ FunTextReader::parse_fun ()
 
   inp.read_new_line ();
   inp.expect ('{');
-
-  bool first_block = true;
 
   while (inp.read_new_line ())
     {
@@ -95,12 +97,6 @@ FunTextReader::parse_fun ()
 
 	  if (prev_block)
 	    prev_block->set_fall_through (cur_block);
-
-	  if (first_block)
-	    {
-	      cur_fun->set_entry_block (cur_block);
-	      first_block = false;
-	    }
 
 	  continue;
 	}
@@ -176,23 +172,8 @@ FunTextReader::parse_fun ()
 	}
     }
 
-  // If control continues to the end of the function, add an exit
-  // block.
-  //
   if (cur_block)
-    {
-      // If the current block isn't suitable for use as an exit block,
-      // add a new block following it.
-      //
-      if (! cur_block->is_empty () || ! cur_block->successors ().empty ())
-	{
-	  BB *last_user_block = cur_block;
-	  cur_block = new BB (cur_fun);
-	  last_user_block->set_fall_through (cur_block);
-	}
-
-      cur_fun->set_exit_block (cur_block);
-    }
+    cur_block->set_fall_through (cur_fun->exit_block ());
 }
 
 
