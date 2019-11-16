@@ -29,7 +29,7 @@ BB::BB (Fun *fun)
 BB::~BB ()
 {
   while (! _insns.empty ())
-    remove_insn (_insns.front ());
+    delete _insns.front ();
 
   BB *fall_through = _fall_through;
 
