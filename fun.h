@@ -28,15 +28,6 @@ public:
   ~Fun ();
 
 
-  // Calculate the forward dominator tree for all blocks in BLOCKS.
-  //
-  void calc_dominators () { BB::calc_dominators (_blocks); }
-
-  // Calculate the reverse dominator tree for all blocks in BLOCKS.
-  //
-  void calc_reverse_dominators () { BB::calc_post_dominators (_blocks); }
-
-
   // Add new block to this function.
   //
   void add_block (BB *block)
@@ -87,6 +78,38 @@ public:
   //
   const std::list<Reg *> &regs () const { return _regs; }
 
+
+  // Make sure dominator information in this function is valid.
+  //
+  void update_dominators ()
+  {
+    if (! _dominators_valid)
+      calc_dominators ();
+  }
+
+  // Make sure post-dominator information in this function is valid.
+  //
+  void update_post_dominators ()
+  {
+    if (! _post_dominators_valid)
+      calc_post_dominators ();
+  }
+
+
+  // Return true if dominator / post-dominator information in this
+  // function is up to date.
+  //
+  bool dominators_valid () const { return _dominators_valid; }
+  bool post_dominators_valid () const { return _post_dominators_valid; }
+
+
+  // Mark dominator / post-dominator information in this
+  // function is as out of date.
+  //
+  void invalidate_dominators () { _dominators_valid = false; }
+  void invalidate_post_dominators () { _post_dominators_valid = false; }
+
+
   // Try to simplify the flow graph by combining blocks and removing
   // branch insns where possible.
   //
@@ -94,6 +117,14 @@ public:
 
 
 private:
+
+  // Calculate the forward dominator tree for all blocks in BLOCKS.
+  //
+  void calc_dominators () { BB::calc_dominators (_blocks); }
+
+  // Calculate the post dominator tree for all blocks in BLOCKS.
+  //
+  void calc_post_dominators () { BB::calc_post_dominators (_blocks); }
 
   // List of basic blocks in this function, in no particular order.
   //
@@ -114,6 +145,11 @@ private:
   // Maximum block number used in this function so far.
   //
   unsigned _max_block_num = 0;
+
+  // True if dominator / post-dominator information in this function is up to date.
+  //
+  bool _dominators_valid = false;
+  bool _post_dominators_valid = false;
 };
 
 

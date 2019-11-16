@@ -20,8 +20,8 @@ int main ()
 	{
 	  fun->combine_blocks ();
 
-	  fun->calc_dominators ();
-	  fun->calc_reverse_dominators ();
+	  fun->update_dominators ();
+	  fun->update_post_dominators ();
 	}
 
       ProgTextWriter prog_writer (std::cout);
