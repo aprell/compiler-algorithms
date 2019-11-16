@@ -94,6 +94,10 @@ public:
 
 private:
 
+  // List of basic blocks in this function, in no particular order.
+  //
+  std::list<BB *> _blocks;
+
   // Entry block for this function.  Cannot have any predecessors.
   //
   BB *_entry_block = 0;
@@ -101,10 +105,6 @@ private:
   // Exit block for this function.  Cannot have any successors.
   //
   BB *_exit_block = 0;
-
-  // List of basic blocks in this function, in no particular order.
-  //
-  std::list<BB *> _blocks;
 
   // Registers used in this function.
   //
