@@ -138,3 +138,17 @@ BB::remove_successor (BB *succ)
   _succs.remove (succ);
   succ->_preds.remove (this);
 }
+
+
+// Replace FROM in the successors of this block with TO.  TO may be
+// NULL, in which case the target becomes undefined.
+//
+void
+BB::change_successor (BB *from, BB *to)
+{
+  if (from == _fall_through)
+    set_fall_through (to);
+
+  if (! _insns.empty ())
+    _insns.back ()->change_branch_target (from, to);
+}

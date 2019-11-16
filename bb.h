@@ -235,6 +235,12 @@ public:
   const std::list<Insn *> &insns () const { return _insns; }
 
 
+  // Replace FROM in the successors of this block with TO.  TO may be
+  // NULL, in which case the target becomes undefined.
+  //
+  void change_successor (BB *from, BB *to);
+
+
 private:
   
   static void calc_doms (const std::list<BB *> &blocks,
