@@ -63,6 +63,7 @@ bb-text-writer.o: bb-text-writer.cc			\
 insn-text-writer.o: insn-text-writer.cc			\
 	insn-text-writer.h $(insn-text-writer.h-DEPS)	\
 	fun-text-writer.h $(fun-text-writer.h-DEPS)	\
+	nop-insn.h $(nop-insn.h-DEPS)			\
 	cond-branch-insn.h $(cond-branch-insn.h-DEPS)	\
 	reg.h $(reg.h-DEPS) bb.h $(bb.h-DEPS)
 
@@ -75,7 +76,8 @@ prog-text-reader.o: prog-text-reader.cc			\
 fun-text-reader.o: fun-text-reader.cc			\
 	fun-text-reader.h $(fun-text-reader.h-DEPS)	\
 	fun.h $(fun.h-DEPS)				\
-	cond-branch-insn.h $(cond-branch-insn.h-DEPS)
+	cond-branch-insn.h $(cond-branch-insn.h-DEPS)	\
+	nop-insn.h $(nop-insn.h-DEPS)
 
 check-assertion.o: check-assertion.cc			\
 	check-assertion.h $(check-assertion.h-DEPS)

@@ -42,6 +42,7 @@ private:
   // Text writer methods for various insn types.
 
   void write_cond_branch (Insn *insn);
+  void write_nop (Insn *insn);
 
 
 private:

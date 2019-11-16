@@ -14,6 +14,7 @@
 #include "reg.h"
 
 #include "cond-branch-insn.h"
+#include "nop-insn.h"
 
 #include "fun-text-writer.h"
 
@@ -66,6 +67,13 @@ InsnTextWriter::write_cond_branch (Insn *insn)
     out << "-";
 }
 
+void
+InsnTextWriter::write_nop (Insn *)
+{
+  std::ostream &out = fun_writer.output_stream ();
+  out << "nop";
+}
+
 
 
 // Text writer method dispatch machinery.
@@ -85,6 +93,7 @@ InsnTextWriter::setup_write_meths ()
     return;
 
   write_meths[typeid (CondBranchInsn)] = &InsnTextWriter::write_cond_branch;
+  write_meths[typeid (NopInsn)] = &InsnTextWriter::write_nop;
 }
 
 

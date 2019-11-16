@@ -12,6 +12,7 @@
 #include "reg.h"
 
 #include "cond-branch-insn.h"
+#include "nop-insn.h"
 
 #include "text-reader-inp.h"
 
@@ -163,6 +164,14 @@ FunTextReader::parse_fun ()
 
 	  new CondBranchInsn (cond, target, cur_block);
 
+	  continue;
+	}
+
+      // No-operation insn
+      //
+      if (id == "nop")
+	{
+	  new NopInsn (cur_block);
 	  continue;
 	}
     }
