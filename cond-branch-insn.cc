@@ -47,15 +47,15 @@ CondBranchInsn::set_block (BB *bb)
   Insn::set_block (bb);
 }
 
-// Change the branch target block for this insn from FROM to TO.  TO
-// may be NULL, in which case the target is undefined.
+// For each branch target block in this insn which points to FROM,
+// change the target to TO.  TO may be NULL, in which case the target
+// becomes undefined.
 //
 void
 CondBranchInsn::change_branch_target (BB *from, BB *to)
 {
-  check_assertion (from == _target, "Invalid branch target in CondBranchInsn::change_branch_target");
-
-  set_target (to);
+  if (from == _target)
+    set_target (to);
 }
 
 
