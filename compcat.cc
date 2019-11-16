@@ -18,7 +18,7 @@ int main ()
 
       for (auto [_, fun] : prog->functions ())
 	{
-	  fun->propagate_unreachable ();
+	  fun->combine_blocks ();
 
 	  fun->calc_dominators ();
 	  fun->calc_reverse_dominators ();
