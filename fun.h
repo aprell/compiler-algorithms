@@ -87,11 +87,6 @@ public:
   //
   const std::list<Reg *> &regs () const { return _regs; }
 
-  // For any blocks which have no predecessors, remove their outgoing
-  // edges.
-  //
-  void propagate_unreachable ();
-
   // Try to simplify the flow graph by combining blocks and removing
   // branch insns where possible.
   //
