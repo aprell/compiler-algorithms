@@ -92,6 +92,11 @@ public:
   //
   void propagate_unreachable ();
 
+  // Try to simplify the flow graph by combining blocks and removing
+  // branch insns where possible.
+  //
+  void combine_blocks ();
+
 
 private:
 
