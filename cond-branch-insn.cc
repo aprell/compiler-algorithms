@@ -24,6 +24,18 @@ CondBranchInsn::CondBranchInsn (Reg *cond, BB *target, BB *block)
     set_target (target);
 }
 
+CondBranchInsn::~CondBranchInsn ()
+{
+  // We need to override the destructor to make sure that we can
+  // properly remove this insn from its block.  Insn::~Insn also
+  // removes the insn from the block, but by the time it's called, the
+  // vtable has been changed so that our overrides aren't called, and .
+
+  BB *bb = block ();
+  if (bb)
+    bb->remove_insn (this);
+}
+
 // Do instruction-specific setup after this instruction has been
 // added to block BLOCK.  At the point this is called, this
 // instruction is in BLOCK's instruction list, but nothing else has

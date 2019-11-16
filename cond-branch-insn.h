@@ -29,6 +29,8 @@ public:
   //
   CondBranchInsn (Reg *cond = 0, BB *target = 0, BB *block = 0);
 
+  virtual ~CondBranchInsn ();
+
   // Do instruction-specific setup after this instruction has been
   // added to block BLOCK.  At the point this is called, this
   // instruction is in BLOCK's instruction list, but nothing else has

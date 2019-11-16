@@ -16,3 +16,9 @@ Insn::Insn (BB *block)
   if (block)
     block->add_insn (this);
 }
+
+Insn::~Insn ()
+{
+  if (_block)
+    _block->remove_insn (this);
+}

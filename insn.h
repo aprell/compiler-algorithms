@@ -21,6 +21,8 @@ public:
 
   Insn (BB *block = 0);
 
+  virtual ~Insn ();
+
   // Return the block this instruction is in.
   //
   BB *block () const { return _block; }
