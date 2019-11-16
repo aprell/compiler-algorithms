@@ -58,6 +58,21 @@ BB::~BB ()
 }
 
 
+// Mark dominator / post-dominator information in this
+// block's function as out of date.
+//
+void
+BB::invalidate_dominators ()
+{
+  if (_fun) _fun->invalidate_dominators ();
+}
+void
+BB::invalidate_post_dominators ()
+{
+  if (_fun) _fun->invalidate_post_dominators ();
+}
+
+
 // Add the instruction INSN to the end of this block.
 //
 void
@@ -110,6 +125,9 @@ BB::add_successor (BB *succ)
 {
   _succs.push_back (succ);
   succ->_preds.push_back (this);
+
+  invalidate_dominators ();
+  invalidate_post_dominators ();
 }
 
 // Remove a control flow edge between this block and the previous
@@ -120,6 +138,9 @@ BB::remove_successor (BB *succ)
 {
   _succs.remove (succ);
   succ->_preds.remove (this);
+
+  invalidate_dominators ();
+  invalidate_post_dominators ();
 }
 
 

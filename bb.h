@@ -242,6 +242,13 @@ public:
 
 
 private:
+
+  // Mark dominator / post-dominator information in this
+  // block's function as out of date.
+  //
+  void invalidate_dominators ();
+  void invalidate_post_dominators ();
+
   
   static void calc_doms (const std::list<BB *> &blocks,
 			 DomTreeNode BB::*dom_tree_node_member,
