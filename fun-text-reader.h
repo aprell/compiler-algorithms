@@ -46,6 +46,11 @@ public:
   Reg *read_reg ();
 
 
+  // Return the register (which must exist) called NAME
+  //
+  Reg *get_reg (const std::string &name);
+
+
   // Return the block corresponding to the label LABEL.  If no such
   // label has yet been encountered, a new block is added and returned.
   //

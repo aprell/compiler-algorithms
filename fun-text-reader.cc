@@ -183,14 +183,18 @@ FunTextReader::parse_fun ()
 Reg *
 FunTextReader::read_reg ()
 {
-  TextReaderInp &inp = input ();
+  return get_reg (input ().read_id ());
+}
 
-  std::string reg_name = inp.read_id ();
 
-  auto reg_it = registers.find (reg_name);
+// Return the register (which must exist) called NAME
+//
+Reg *
+FunTextReader::get_reg (const std::string &name)
+{
+  auto reg_it = registers.find (name);
   if (reg_it == registers.end ())
-    inp.parse_error (std::string ("Unknown register \"") + reg_name + "\"");
-
+    input ().parse_error (std::string ("Unknown register \"") + name + "\"");
   return reg_it->second;
 }
 
