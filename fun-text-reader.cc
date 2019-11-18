@@ -170,6 +170,8 @@ FunTextReader::parse_fun ()
 	  new NopInsn (cur_block);
 	  continue;
 	}
+
+      inp.parse_error ("Unknown instruction");
     }
 
   if (cur_block)
