@@ -15,6 +15,7 @@
 
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
+#include "arith-insn.h"
 
 #include "fun-text-writer.h"
 
@@ -80,6 +81,39 @@ InsnTextWriter::write_nop (Insn *)
   out << "nop";
 }
 
+void
+InsnTextWriter::write_arith (Insn *insn)
+{
+  if (ArithInsn *arith_insn = dynamic_cast<ArithInsn *> (insn))
+    {
+      std::ostream &out = fun_writer.output_stream ();
+
+      const std::vector<Reg *> &args = arith_insn->args ();
+      const std::vector<Reg *> &results = arith_insn->results ();
+
+      std::string op_name;
+      switch (arith_insn->op ())
+	{
+	case ArithInsn::Op::ADD: op_name = "+"; break;
+	case ArithInsn::Op::SUB: op_name = "-"; break;
+	case ArithInsn::Op::MUL: op_name = "*"; break;
+	case ArithInsn::Op::DIV: op_name = "/"; break;
+	default:
+	  op_name
+	    = "?("
+	    + std::to_string (static_cast<int> (arith_insn->op ()))
+	    + ")";
+	}
+
+      out << reg_name (results[0]) << " := "
+	  << reg_name (args[0])
+	  << ' ' << op_name << ' '
+	  << reg_name (args[1]);
+    }
+  else
+    invalid_write_method (insn, "ArithInsn");
+}
+
 
 
 // Text writer method dispatch machinery.
@@ -100,6 +134,7 @@ InsnTextWriter::setup_write_meths ()
 
   write_meths[typeid (CondBranchInsn)] = &InsnTextWriter::write_cond_branch;
   write_meths[typeid (NopInsn)] = &InsnTextWriter::write_nop;
+  write_meths[typeid (ArithInsn)] = &InsnTextWriter::write_arith;
 }
 
 

@@ -45,7 +45,18 @@ FunTextWriter::write (Fun *fun)
   // Mention which registers are defined here.
   //
   for (auto reg : fun->regs ())
-    out << "   reg " << reg->name () << '\n';
+    {
+      const std::string &name = reg->name ();
+      unsigned name_len = name.size ();
+      std::string padding ((name_len > 18 ? 2 : 20 - name_len), ' ');
+      unsigned nuses = reg->uses ().size ();
+      unsigned ndefs = reg->defs ().size ();
+      out << "   reg " << name
+	  << padding
+	  << "# (" << nuses << (nuses == 1 ? " use" : " uses")
+	  << ", " << ndefs << (ndefs == 1 ? " def" : " defs")
+	  << ")\n";
+    }
 
   // A record of which blocks we've queued to be written.
   //

@@ -5,7 +5,8 @@ PROGS = compcat
 all: $(PROGS)
 
 
-OBJS = prog.o fun.o bb.o bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
+OBJS = prog.o fun.o bb.o bb.o bb-dom-tree.o				\
+	insn.o cond-branch-insn.o arith-insn.o				\
 	reg.o								\
 	prog-text-writer.o						\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o		\

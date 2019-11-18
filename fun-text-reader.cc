@@ -13,6 +13,7 @@
 
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
+#include "arith-insn.h"
 
 #include "text-reader-inp.h"
 
@@ -126,11 +127,38 @@ FunTextReader::parse_fun ()
       if (! cur_block)
 	inp.parse_error ("Expected label");
 
+      inp.skip_whitespace ();
+
       // Assignment, of the form "REG := ..."
       //
       if (inp.peek () == ':')
 	{
+	  Reg *result = get_reg (id);
+
+	  inp.skip (':');
 	  inp.expect ('=');
+
+	  //if (inp.peek () == '-')
+
+	  Reg *arg1 = read_reg ();
+
+	  inp.skip_whitespace ();
+
+	  char arith_op_char = inp.read_char ();
+	  ArithInsn::Op arith_op;
+	  switch (arith_op_char)
+	    {
+	    case '+': arith_op = ArithInsn::Op::ADD; break;
+	    case '-': arith_op = ArithInsn::Op::SUB; break;
+	    case '*': arith_op = ArithInsn::Op::MUL; break;
+	    case '/': arith_op = ArithInsn::Op::DIV; break;
+	    default:
+	      inp.parse_error (std::string ("Unknown arithmetic operation \"") + arith_op_char + "\"");
+	    }
+
+	  Reg *arg2 = read_reg ();
+
+	  new ArithInsn (arith_op, arg1, arg2, result, cur_block);
 
 	  continue;
 	}
