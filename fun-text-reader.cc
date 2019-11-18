@@ -115,9 +115,8 @@ FunTextReader::parse_fun ()
 	  Reg *&reg = registers[reg_name];
 	  if (reg)
 	    inp.parse_error (std::string ("Duplicate register declaration \"") + id + "\"");
-	  reg = new Reg (reg_name);
 
-	  cur_fun->add_reg (reg);
+	  reg = new Reg (reg_name, cur_fun);
 
 	  continue;
 	}

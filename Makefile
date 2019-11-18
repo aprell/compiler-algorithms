@@ -6,6 +6,7 @@ all: $(PROGS)
 
 
 OBJS = prog.o fun.o bb.o bb.o bb-dom-tree.o insn.o cond-branch-insn.o	\
+	reg.o								\
 	prog-text-writer.o						\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o		\
 	text-reader-inp.o prog-text-reader.o fun-text-reader.o		\

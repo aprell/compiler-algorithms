@@ -68,15 +68,21 @@ public:
   void set_exit_block (BB *block) { _exit_block = block; }
 
 
-  // Add REG to this function.  Subsquently, the function now owns
-  // it, and is responsible for deallocating it.
-  //
-  void add_reg (Reg *reg) { _regs.push_back (reg); }
-
   // Return a reference to a read-only list containing the registers
   // in this function.
   //
   const std::list<Reg *> &regs () const { return _regs; }
+
+  // Add REG to this function.  Subsquently, the function now owns
+  // it, and is responsible for deallocating it.  This does not modify
+  // REG to refer to this function.
+  //
+  void add_reg (Reg *reg) { _regs.push_back (reg); }
+
+  // Remove REG from this function.  It is not deallocated, merely
+  // forgotten.  This does not modify REG's reference to this function.
+  //
+  void remove_reg (Reg *reg) { _regs.remove (reg); }
 
 
   // Make sure dominator information in this function is valid.
