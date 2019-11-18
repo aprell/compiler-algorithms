@@ -18,7 +18,7 @@
 // it to block BLOCK.
 //
 CondBranchInsn::CondBranchInsn (Reg *cond, BB *target, BB *block)
-  : Insn (block), _cond (cond)
+  : Insn (block), _cond_vec ({ cond })
 {
   if (target)
     set_target (target);

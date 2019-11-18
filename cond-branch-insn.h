@@ -60,12 +60,18 @@ public:
   //
   void set_target (BB *target);
 
+
   // Return the register that determines whether this conditional
   // branch instruction does a control transfer or not.  If the
   // designated register contains a non-zero value, control is
   // transferred, otherwise it is not.
   //
-  Reg *condition () const { return _cond; }
+  Reg *condition () const { return _cond_vec[0]; }
+
+
+  // Return a vector of arguments read by this.  For many insns, this is empty.
+  //
+  virtual const std::vector<Reg *> &args () const { return _cond_vec; }
 
 
 private:
@@ -79,7 +85,7 @@ private:
   // control transfer: if the designated register contains a non-zero
   // value, control is transferred, otherwise it is not.
   //
-  Reg *_cond = 0;
+  std::vector<Reg *> _cond_vec { 1 };
 };
 
 
