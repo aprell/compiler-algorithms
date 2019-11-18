@@ -10,6 +10,7 @@
 #define __INSN_H__
 
 #include <vector>
+#include <initializer_list>
 
 
 class BB;
@@ -22,9 +23,8 @@ class Insn
 {
 public:
 
-  Insn (BB *block = 0);
-
   virtual ~Insn ();
+
 
   // Return the block this instruction is in.
   //
@@ -52,28 +52,36 @@ public:
 
   // Return a vector of arguments read by this.  For many insns, this is empty.
   //
-  virtual const std::vector<Reg *> &args () const { return _null_vec; }
+  const std::vector<Reg *> &args () const { return _args; }
 
   // Return a vector of results written by this insn.  For many insns, this is empty.
   //
-  virtual const std::vector<Reg *> &results () const { return _null_vec; }
+  const std::vector<Reg *> &results () const { return _results; }
 
   // Change each use of FROM in this instruction to TO.  TO may be NULL.
   // This will update FROM and TO accordingly to reflect the new state.
   //
-  virtual void change_arg (Reg * /*from*/, Reg * /*to*/) { }
+  void change_arg (Reg *from, Reg *to);
 
   // Change each define of FROM in this instruction to TO.  TO may be NULL.
   // This will update FROM and TO accordingly to reflect the new state.
   //
-  virtual void change_result (Reg * /*from*/, Reg * /*to*/) { }
+  void change_result (Reg *from, Reg *to);
+
+
+protected:
+
+  Insn (BB *block,
+	std::initializer_list<Reg *> init_args = {},
+	std::initializer_list<Reg *> init_results = {});
 
 
 private:
 
-  // This is used as a default value for empty result vectors.
+  // Arguments to, and results from, this arithmetic insn.
   //
-  static const std::vector<Reg *> _null_vec;
+  std::vector<Reg *> _args;
+  std::vector<Reg *> _results;
 
 
   // The block this instruction is in.

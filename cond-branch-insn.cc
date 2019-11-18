@@ -19,13 +19,10 @@
 // it to block BLOCK.
 //
 CondBranchInsn::CondBranchInsn (Reg *cond, BB *target, BB *block)
-  : Insn (block), _cond_vec ({ cond })
+  : Insn (block, { cond })
 {
   if (target)
     set_target (target);
-
-  if (cond)
-    cond->add_use (this);
 }
 
 CondBranchInsn::~CondBranchInsn ()
@@ -38,10 +35,6 @@ CondBranchInsn::~CondBranchInsn ()
   BB *bb = block ();
   if (bb)
     bb->remove_insn (this);
-
-  Reg *cond = condition ();
-  if (cond)
-    cond->remove_use (this);
 }
 
 // Do instruction-specific setup after this instruction has been

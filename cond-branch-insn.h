@@ -66,12 +66,7 @@ public:
   // designated register contains a non-zero value, control is
   // transferred, otherwise it is not.
   //
-  Reg *condition () const { return _cond_vec[0]; }
-
-
-  // Return a vector of arguments read by this.  For many insns, this is empty.
-  //
-  virtual const std::vector<Reg *> &args () const { return _cond_vec; }
+  Reg *condition () const { return args ()[0]; }
 
 
 private:
@@ -80,12 +75,6 @@ private:
   // control [if -some- condition is true].
   //
   BB *_target = 0;
-
-  // Condition which determines whether this instruction does a
-  // control transfer: if the designated register contains a non-zero
-  // value, control is transferred, otherwise it is not.
-  //
-  std::vector<Reg *> _cond_vec { 1 };
 };
 
 
