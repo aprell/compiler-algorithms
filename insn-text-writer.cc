@@ -41,6 +41,18 @@ InsnTextWriter::write (Insn *insn)
 }
 
 
+// Return a string representation of the register REG
+//
+std::string
+InsnTextWriter::reg_name (Reg *reg) const
+{
+  if (reg)
+    return reg->name ();
+  else
+    return "?";
+}
+
+
 
 // Text writer methods
 

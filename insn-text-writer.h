@@ -33,6 +33,11 @@ public:
 
 private:
 
+  // Return a string representation of the register REG
+  //
+  std::string reg_name (Reg *reg) const;
+
+
   // Text writer for the function we're associated with.
   //
   FunTextWriter &fun_writer;
