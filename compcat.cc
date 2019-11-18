@@ -19,6 +19,7 @@ int main ()
       for (auto [_, fun] : prog->functions ())
 	{
 	  fun->combine_blocks ();
+	  fun->remove_unreachable ();
 
 	  fun->update_dominators ();
 	  fun->update_post_dominators ();
