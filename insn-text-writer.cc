@@ -66,13 +66,7 @@ InsnTextWriter::write_cond_branch (Insn *insn)
 
   std::ostream &out = fun_writer.output_stream ();
   BB *target = cond_branch_insn->target ();
-  out << "if (";
-  Reg *cond = cond_branch_insn->condition ();
-  if (cond)
-    out << cond->name ();
-  else
-    out << "0";
-  out << ") goto ";
+  out << "if (" << reg_name (cond_branch_insn->condition ()) << ") goto ";
   if (target)
     out << fun_writer.block_label (target);
   else
