@@ -58,6 +58,16 @@ public:
   //
   virtual const std::vector<Reg *> &results () const { return _null_vec; }
 
+  // Change each use of FROM in this instruction to TO.  TO may be NULL.
+  // This will update FROM and TO accordingly to reflect the new state.
+  //
+  virtual void change_arg (Reg * /*from*/, Reg * /*to*/) { }
+
+  // Change each define of FROM in this instruction to TO.  TO may be NULL.
+  // This will update FROM and TO accordingly to reflect the new state.
+  //
+  virtual void change_result (Reg * /*from*/, Reg * /*to*/) { }
+
 
 private:
 
