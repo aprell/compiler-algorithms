@@ -1,4 +1,4 @@
-CXXFLAGS = -std=c++11 -pedantic-errors -Wall -Wextra -g -O3 -march=native
+CXXFLAGS = -std=c++17 -pedantic-errors -Wall -Wextra -g -O3 -march=native
 
 PROGS = compcat
 
