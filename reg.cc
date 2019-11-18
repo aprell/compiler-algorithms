@@ -20,6 +20,14 @@ Reg::Reg (const std::string &name, Fun *fun)
 
 Reg::~Reg ()
 {
+  // Remove this register from every place it's used / set.
+
+  while (! _uses.empty ())
+    _uses.front ()->change_arg (this, 0);
+
+  while (! _defs.empty ())
+    _defs.front ()->change_result (this, 0);
+
   set_fun (0);
 }
 
