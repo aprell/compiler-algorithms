@@ -22,3 +22,8 @@ Insn::~Insn ()
   if (_block)
     _block->remove_insn (this);
 }
+
+
+// This is used as a default value for empty result vectors.
+//
+const std::vector<Reg *> Insn::_null_vec;

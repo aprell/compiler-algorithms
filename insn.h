@@ -9,8 +9,11 @@
 #ifndef __INSN_H__
 #define __INSN_H__
 
+#include <vector>
+
 
 class BB;
+class Reg;
 
 
 // IR instruction, representing a single operation in a flow graph.
@@ -34,6 +37,7 @@ public:
   //
   virtual void set_block (BB *block) { _block = block; }
 
+
   // Return true if this is a branch instruction, that is, if it may
   // affect control-flow.
   //
@@ -46,7 +50,21 @@ public:
   virtual void change_branch_target (BB */* from */, BB */* to */) { }
 
 
+  // Return a vector of arguments read by this.  For many insns, this is empty.
+  //
+  virtual const std::vector<Reg *> &args () const { return _null_vec; }
+
+  // Return a vector of results written by this insn.  For many insns, this is empty.
+  //
+  virtual const std::vector<Reg *> &results () const { return _null_vec; }
+
+
 private:
+
+  // This is used as a default value for empty result vectors.
+  //
+  static const std::vector<Reg *> _null_vec;
+
 
   // The block this instruction is in.
   //
