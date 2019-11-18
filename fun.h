@@ -116,6 +116,10 @@ public:
   void invalidate_post_dominators () { _post_dominators_valid = false; }
 
 
+  // Remove any unreachable blocks.
+  //
+  void remove_unreachable ();
+
   // Try to simplify the flow graph by combining blocks and removing
   // branch insns where possible.
   //
