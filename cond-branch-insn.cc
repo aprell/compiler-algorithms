@@ -9,6 +9,7 @@
 #include "check-assertion.h"
 
 #include "bb.h"
+#include "reg.h"
 
 #include "cond-branch-insn.h"
 
@@ -22,6 +23,9 @@ CondBranchInsn::CondBranchInsn (Reg *cond, BB *target, BB *block)
 {
   if (target)
     set_target (target);
+
+  if (cond)
+    cond->add_use (this);
 }
 
 CondBranchInsn::~CondBranchInsn ()
@@ -34,6 +38,10 @@ CondBranchInsn::~CondBranchInsn ()
   BB *bb = block ();
   if (bb)
     bb->remove_insn (this);
+
+  Reg *cond = condition ();
+  if (cond)
+    cond->remove_use (this);
 }
 
 // Do instruction-specific setup after this instruction has been
