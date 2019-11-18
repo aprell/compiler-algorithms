@@ -13,7 +13,7 @@
 
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
-#include "arith-insn.h"
+#include "calc-insn.h"
 
 #include "text-reader-inp.h"
 
@@ -144,21 +144,21 @@ FunTextReader::parse_fun ()
 
 	  inp.skip_whitespace ();
 
-	  char arith_op_char = inp.read_char ();
-	  ArithInsn::Op arith_op;
-	  switch (arith_op_char)
+	  char calc_op_char = inp.read_char ();
+	  CalcInsn::Op calc_op;
+	  switch (calc_op_char)
 	    {
-	    case '+': arith_op = ArithInsn::Op::ADD; break;
-	    case '-': arith_op = ArithInsn::Op::SUB; break;
-	    case '*': arith_op = ArithInsn::Op::MUL; break;
-	    case '/': arith_op = ArithInsn::Op::DIV; break;
+	    case '+': calc_op = CalcInsn::Op::ADD; break;
+	    case '-': calc_op = CalcInsn::Op::SUB; break;
+	    case '*': calc_op = CalcInsn::Op::MUL; break;
+	    case '/': calc_op = CalcInsn::Op::DIV; break;
 	    default:
-	      inp.parse_error (std::string ("Unknown arithmetic operation \"") + arith_op_char + "\"");
+	      inp.parse_error (std::string ("Unknown calculation operation \"") + calc_op_char + "\"");
 	    }
 
 	  Reg *arg2 = read_reg ();
 
-	  new ArithInsn (arith_op, arg1, arg2, result, cur_block);
+	  new CalcInsn (calc_op, arg1, arg2, result, cur_block);
 
 	  continue;
 	}

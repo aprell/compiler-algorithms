@@ -15,7 +15,7 @@
 
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
-#include "arith-insn.h"
+#include "calc-insn.h"
 
 #include "fun-text-writer.h"
 
@@ -82,26 +82,26 @@ InsnTextWriter::write_nop (Insn *)
 }
 
 void
-InsnTextWriter::write_arith (Insn *insn)
+InsnTextWriter::write_calc (Insn *insn)
 {
-  if (ArithInsn *arith_insn = dynamic_cast<ArithInsn *> (insn))
+  if (CalcInsn *calc_insn = dynamic_cast<CalcInsn *> (insn))
     {
       std::ostream &out = fun_writer.output_stream ();
 
-      const std::vector<Reg *> &args = arith_insn->args ();
-      const std::vector<Reg *> &results = arith_insn->results ();
+      const std::vector<Reg *> &args = calc_insn->args ();
+      const std::vector<Reg *> &results = calc_insn->results ();
 
       std::string op_name;
-      switch (arith_insn->op ())
+      switch (calc_insn->op ())
 	{
-	case ArithInsn::Op::ADD: op_name = "+"; break;
-	case ArithInsn::Op::SUB: op_name = "-"; break;
-	case ArithInsn::Op::MUL: op_name = "*"; break;
-	case ArithInsn::Op::DIV: op_name = "/"; break;
+	case CalcInsn::Op::ADD: op_name = "+"; break;
+	case CalcInsn::Op::SUB: op_name = "-"; break;
+	case CalcInsn::Op::MUL: op_name = "*"; break;
+	case CalcInsn::Op::DIV: op_name = "/"; break;
 	default:
 	  op_name
 	    = "?("
-	    + std::to_string (static_cast<int> (arith_insn->op ()))
+	    + std::to_string (static_cast<int> (calc_insn->op ()))
 	    + ")";
 	}
 
@@ -111,7 +111,7 @@ InsnTextWriter::write_arith (Insn *insn)
 	  << reg_name (args[1]);
     }
   else
-    invalid_write_method (insn, "ArithInsn");
+    invalid_write_method (insn, "CalcInsn");
 }
 
 
@@ -134,7 +134,7 @@ InsnTextWriter::setup_write_meths ()
 
   write_meths[typeid (CondBranchInsn)] = &InsnTextWriter::write_cond_branch;
   write_meths[typeid (NopInsn)] = &InsnTextWriter::write_nop;
-  write_meths[typeid (ArithInsn)] = &InsnTextWriter::write_arith;
+  write_meths[typeid (CalcInsn)] = &InsnTextWriter::write_calc;
 }
 
 

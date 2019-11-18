@@ -78,7 +78,7 @@ protected:
 
 private:
 
-  // Arguments to, and results from, this arithmetic insn.
+  // Arguments to, and results from, this calculation insn.
   //
   std::vector<Reg *> _args;
   std::vector<Reg *> _results;
