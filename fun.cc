@@ -11,6 +11,7 @@
 #include "check-assertion.h"
 
 #include "insn.h"
+#include "reg.h"
 
 #include "fun.h"
 
@@ -30,6 +31,9 @@ Fun::~Fun ()
 {
   while (! _blocks.empty ())
     delete _blocks.front ();
+
+  while (! _regs.empty ())
+    delete _regs.front ();
 }
 
 
