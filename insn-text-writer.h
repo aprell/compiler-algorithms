@@ -49,6 +49,7 @@ private:
   void write_cond_branch (Insn *insn);
   void write_nop (Insn *insn);
   void write_calc (Insn *insn);
+  void write_copy (Insn *insn);
   void write_fun_arg (Insn *insn);
   void write_fun_result (Insn *insn);
 

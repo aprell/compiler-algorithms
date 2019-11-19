@@ -14,6 +14,7 @@
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
 #include "calc-insn.h"
+#include "copy-insn.h"
 #include "fun-arg-insn.h"
 #include "fun-result-insn.h"
 
@@ -180,21 +181,28 @@ FunTextReader::parse_fun ()
 
 	  inp.skip_whitespace ();
 
-	  char calc_op_char = inp.read_char ();
-	  CalcInsn::Op calc_op;
-	  switch (calc_op_char)
+	  if (inp.at_eol ())
 	    {
-	    case '+': calc_op = CalcInsn::Op::ADD; break;
-	    case '-': calc_op = CalcInsn::Op::SUB; break;
-	    case '*': calc_op = CalcInsn::Op::MUL; break;
-	    case '/': calc_op = CalcInsn::Op::DIV; break;
-	    default:
-	      inp.parse_error (std::string ("Unknown calculation operation \"") + calc_op_char + "\"");
+	      new CopyInsn (arg1, result, cur_block);
 	    }
+	  else
+	    {
+	      char calc_op_char = inp.read_char ();
+	      CalcInsn::Op calc_op;
+	      switch (calc_op_char)
+		{
+		case '+': calc_op = CalcInsn::Op::ADD; break;
+		case '-': calc_op = CalcInsn::Op::SUB; break;
+		case '*': calc_op = CalcInsn::Op::MUL; break;
+		case '/': calc_op = CalcInsn::Op::DIV; break;
+		default:
+		  inp.parse_error (std::string ("Unknown calculation operation \"") + calc_op_char + "\"");
+		}
 
-	  Reg *arg2 = read_reg ();
+	      Reg *arg2 = read_reg ();
 
-	  new CalcInsn (calc_op, arg1, arg2, result, cur_block);
+	      new CalcInsn (calc_op, arg1, arg2, result, cur_block);
+	    }
 
 	  continue;
 	}

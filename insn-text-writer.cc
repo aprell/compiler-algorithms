@@ -16,6 +16,7 @@
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
 #include "calc-insn.h"
+#include "copy-insn.h"
 #include "fun-arg-insn.h"
 #include "fun-result-insn.h"
 
@@ -117,6 +118,22 @@ InsnTextWriter::write_calc (Insn *insn)
 }
 
 void
+InsnTextWriter::write_copy (Insn *insn)
+{
+  if (CopyInsn *copy_insn = dynamic_cast<CopyInsn *> (insn))
+    {
+      std::ostream &out = fun_writer.output_stream ();
+
+      const std::vector<Reg *> &args = copy_insn->args ();
+      const std::vector<Reg *> &results = copy_insn->results ();
+
+      out << reg_name (results[0]) << " := " << reg_name (args[0]);
+    }
+  else
+    invalid_write_method (insn, "CopyInsn");
+}
+
+void
 InsnTextWriter::write_fun_arg (Insn *insn)
 {
   if (FunArgInsn *fun_arg_insn = dynamic_cast<FunArgInsn *> (insn))
@@ -173,6 +190,7 @@ InsnTextWriter::setup_write_meths ()
   write_meths[typeid (CondBranchInsn)] = &InsnTextWriter::write_cond_branch;
   write_meths[typeid (NopInsn)] = &InsnTextWriter::write_nop;
   write_meths[typeid (CalcInsn)] = &InsnTextWriter::write_calc;
+  write_meths[typeid (CopyInsn)] = &InsnTextWriter::write_copy;
   write_meths[typeid (FunArgInsn)] = &InsnTextWriter::write_fun_arg;
   write_meths[typeid (FunResultInsn)] = &InsnTextWriter::write_fun_result;
 }
