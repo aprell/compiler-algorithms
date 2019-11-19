@@ -15,6 +15,7 @@
 
 class Fun;
 class Insn;
+class Value;
 
 
 // IR register, representing a value/storage-location.
@@ -23,13 +24,32 @@ class Reg
 {
 public:
 
+  // Return a new register called NAME.  If FUN is non-NULL, the
+  // register is added to FUN.
+  //
   Reg (const std::string &name, Fun *fun = 0);
+
+  // Return a new unnamed register with constant value VALUE.
+  // If VALUE is in a function, the register is added to that function
+  // as well.
+  //
+  Reg (Value *value);
+
   ~Reg ();
 
 
   // Return the name of this register.
   //
   const std::string &name () const { return _name; }
+
+
+  // Return this register's known value, of NULL if it has none.
+  //
+  Value *value () const { return _value; }
+
+  // Return true if this is a constant-valued unnamed register.
+  //
+  bool is_constant () const { return _name.size () == 0 && _value; }
 
 
   // Return a list of places this register is used.
@@ -83,6 +103,10 @@ private:
   // Function where this register is used.
   //
   Fun *_fun = 0;
+
+  // If non-NULL, this register's known value.
+  //
+  Value *_value = 0;
 
   // Places this register is used.
   //

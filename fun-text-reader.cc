@@ -10,6 +10,7 @@
 
 #include "fun.h"
 #include "reg.h"
+#include "value.h"
 
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
@@ -104,7 +105,7 @@ FunTextReader::parse_fun ()
       if (inp.skip ("fun_result"))
 	{
 	  unsigned result_num = inp.read_unsigned ();
-	  Reg *result_reg = read_reg ();
+	  Reg *result_reg = read_lvalue_reg ();
 	  new FunResultInsn (result_num, result_reg, cur_fun->exit_block ());
 
 	  saw_fun_result = true;
@@ -177,7 +178,7 @@ FunTextReader::parse_fun ()
 
 	  //if (inp.peek () == '-')
 
-	  Reg *arg1 = read_reg ();
+	  Reg *arg1 = read_rvalue_reg ();
 
 	  inp.skip_whitespace ();
 
@@ -199,7 +200,7 @@ FunTextReader::parse_fun ()
 		  inp.parse_error (std::string ("Unknown calculation operation \"") + calc_op_char + "\"");
 		}
 
-	      Reg *arg2 = read_reg ();
+	      Reg *arg2 = read_rvalue_reg ();
 
 	      new CalcInsn (calc_op, arg1, arg2, result, cur_block);
 	    }
@@ -223,7 +224,7 @@ FunTextReader::parse_fun ()
       if (id == "if")
 	{
 	  inp.expect ('(');
-	  Reg *cond = read_reg ();
+	  Reg *cond = read_rvalue_reg ();
 	  inp.expect (')');
 	  inp.expect ("goto");
 
@@ -250,7 +251,7 @@ FunTextReader::parse_fun ()
 	    inp.parse_error ("fun_arg instructions are only valid at the start of a function");
 
 	  unsigned arg_num = inp.read_unsigned ();
-	  Reg *arg_reg = read_reg ();
+	  Reg *arg_reg = read_lvalue_reg ();
 	  new FunArgInsn (arg_num, arg_reg, cur_fun->entry_block ());
 
 	  continue;
@@ -264,14 +265,13 @@ FunTextReader::parse_fun ()
 }
 
 
-// Read a register (which must exist) .
+// Read a register (which must exist).
 //
 Reg *
-FunTextReader::read_reg ()
+FunTextReader::read_lvalue_reg ()
 {
   return get_reg (input ().read_id ());
 }
-
 
 // Return the register (which must exist) called NAME
 //
@@ -282,6 +282,35 @@ FunTextReader::get_reg (const std::string &name)
   if (reg_it == registers.end ())
     input ().parse_error (std::string ("Unknown register \"") + name + "\"");
   return reg_it->second;
+}
+
+
+// Read either a register (which must exist), or a constant value
+// (which will be added to the current function if necessary), and
+// return the resulting register.
+//
+Reg *
+FunTextReader::read_rvalue_reg ()
+{
+  TextReaderInp &inp = input ();
+
+  inp.skip_whitespace ();
+
+  if (inp.is_id_start_char (inp.peek ()))
+    {
+      return read_lvalue_reg ();
+    }
+  else
+    {
+      int int_value = inp.read_int ();
+
+      for (auto existing_value_reg : cur_fun->regs ())
+	if (existing_value_reg->is_constant ()
+	    && existing_value_reg->value ()->int_value () == int_value)
+	  return existing_value_reg;
+
+      return new Reg (new Value (int_value, cur_fun));
+    }
 }
 
 

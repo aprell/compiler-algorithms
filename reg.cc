@@ -8,14 +8,30 @@
 
 #include "fun.h"
 #include "insn.h"
+#include "value.h"
 
 #include "reg.h"
 
 
+// Return a new register called NAME.  If FUN is non-NULL, the
+// register is added to FUN.
+//
 Reg::Reg (const std::string &name, Fun *fun)
   : _name (name)
 {
   set_fun (fun);
+}
+
+// Return a new unnamed register with constant value VALUE.
+// If VALUE is in a function, the register is added to that function
+// as well.
+//
+Reg::Reg (Value *value)
+  : _value (value)
+{
+  Fun *fun = value->fun ();
+  if (fun)
+    set_fun (fun);
 }
 
 Reg::~Reg ()

@@ -12,6 +12,7 @@
 
 #include "reg.h"
 #include "fun.h"
+#include "value.h"
 
 #include "prog-text-writer.h"
 #include "fun-text-writer.h"
@@ -47,15 +48,30 @@ FunTextWriter::write (Fun *fun)
   for (auto reg : fun->regs ())
     {
       const std::string &name = reg->name ();
-      unsigned name_len = name.size ();
-      std::string padding ((name_len > 18 ? 2 : 20 - name_len), ' ');
+
+      std::string desc;
+      if (reg->is_constant ())
+	{
+	  desc = "# const ";
+	  desc += std::to_string (reg->value ()->int_value ());
+	}
+      else
+	{
+	  desc = "reg ";
+	  desc += name;
+	}
+      
+      unsigned desc_len = desc.size ();
+      std::string padding ((desc_len > 18 ? 2 : 20 - desc_len), ' ');
+
       unsigned nuses = reg->uses ().size ();
       unsigned ndefs = reg->defs ().size ();
-      out << "   reg " << name
-	  << padding
-	  << "# (" << nuses << (nuses == 1 ? " use" : " uses")
-	  << ", " << ndefs << (ndefs == 1 ? " def" : " defs")
-	  << ")\n";
+
+      out << "   " << desc;
+      out << padding << "# (" << nuses << (nuses == 1 ? " use" : " uses");
+      if (! reg->is_constant ())
+	out << ", " << ndefs << (ndefs == 1 ? " def" : " defs");
+      out << ")\n";
     }
 
   // A record of which blocks we've queued to be written.

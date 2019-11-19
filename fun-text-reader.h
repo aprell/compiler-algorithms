@@ -43,12 +43,18 @@ public:
 
   // Read a register (which must exist).
   //
-  Reg *read_reg ();
-
+  Reg *read_lvalue_reg ();
 
   // Return the register (which must exist) called NAME
   //
   Reg *get_reg (const std::string &name);
+
+
+  // Read either a register (which must exist), or a constant value
+  // (which will be added to the current function if necessary), and
+  // return the resulting register.
+  //
+  Reg *read_rvalue_reg ();
 
 
   // Return the block corresponding to the label LABEL.  If no such

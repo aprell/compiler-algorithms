@@ -14,6 +14,7 @@
 
 
 class Reg;
+class Value;
 
 
 // IR function, containing a flow graph, a description of resources
@@ -84,6 +85,23 @@ public:
   void remove_reg (Reg *reg) { _regs.remove (reg); }
 
 
+  // Return a reference to a read-only list containing the values
+  // in this function.
+  //
+  const std::list<Value *> &values () const { return _values; }
+
+  // Add VALUE to this function.  Subsquently, the function now owns
+  // it, and is responsible for deallocating it.  This does not modify
+  // VALUE to refer to this function.
+  //
+  void add_value (Value *value) { _values.push_back (value); }
+
+  // Remove VALUE from this function.  It is not deallocated, merely
+  // forgotten.  This does not modify VALUE's reference to this function.
+  //
+  void remove_value (Value *value) { _values.remove (value); }
+
+
   // Make sure dominator information in this function is valid.
   //
   void update_dominators ()
@@ -150,6 +168,10 @@ private:
   // Registers used in this function.
   //
   std::list<Reg *> _regs;
+
+  // Values used in this function.
+  //
+  std::list<Value *> _values;
 
   // Maximum block number used in this function so far.
   //

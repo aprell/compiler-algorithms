@@ -12,6 +12,7 @@
 
 #include "bb.h"
 #include "reg.h"
+#include "value.h"
 
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
@@ -50,10 +51,13 @@ InsnTextWriter::write (Insn *insn)
 std::string
 InsnTextWriter::reg_name (Reg *reg) const
 {
-  if (reg)
-    return reg->name ();
-  else
+  if (! reg)
     return "?";
+
+  if (reg->is_constant ())
+    return std::to_string (reg->value ()->int_value ());
+  else
+    return reg->name  ();
 }
 
 

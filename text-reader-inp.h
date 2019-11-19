@@ -31,6 +31,11 @@ public:
   //
   unsigned read_unsigned ();
 
+  // Read and return a signed integer, or signal an error if none
+  // can be read.
+  //
+  int read_int ();
+
   // Read and return an identifier name (/[_a-zA-Z][_a-zA-Z0-9]*/), or
   // signal an error if none.
   //

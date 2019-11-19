@@ -32,6 +32,34 @@ TextReaderInp::read_unsigned ()
     }
 }
 
+// Read and return a signed integer, or signal an error if none
+// can be read.
+//
+int
+TextReaderInp::read_int ()
+{
+  skip_whitespace ();
+
+  bool is_negative = skip ('-');
+
+  char ch = peek ();
+  if (ch >= '0' && ch <= '9')
+    {
+      int num = 0;
+
+      do
+	num = num * 10 + (read_char () - '0');
+      while ((ch = peek ()) >= '0' && ch <= '9');
+
+      return is_negative ? -num : num;
+    }
+  else
+    {
+      parse_error ("Expected integer");
+    }
+}
+
+
 // Read and return an identifier name (/[_a-zA-Z][_a-zA-Z0-9]*/), or
 // signal an error if none.
 //

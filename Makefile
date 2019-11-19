@@ -7,7 +7,7 @@ all: $(PROGS)
 
 OBJS = prog.o fun.o bb.o bb.o bb-dom-tree.o				\
 	insn.o cond-branch-insn.o calc-insn.o				\
-	reg.o								\
+	reg.o value.o							\
 	prog-text-writer.o						\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o		\
 	text-reader-inp.o prog-text-reader.o fun-text-reader.o		\
@@ -73,6 +73,7 @@ fun-ssa.o: fun-ssa.cc                               \
 fun-text-reader.o: fun-text-reader.cc               \
     fun.h $(fun.h-DEPS)                             \
     reg.h $(reg.h-DEPS)                             \
+    value.h $(value.h-DEPS)                         \
     cond-branch-insn.h $(cond-branch-insn.h-DEPS)   \
     nop-insn.h $(nop-insn.h-DEPS)                   \
     calc-insn.h $(calc-insn.h-DEPS)                 \
@@ -85,6 +86,7 @@ fun-text-reader.o: fun-text-reader.cc               \
 fun-text-writer.o: fun-text-writer.cc               \
     reg.h $(reg.h-DEPS)                             \
     fun.h $(fun.h-DEPS)                             \
+    value.h $(value.h-DEPS)                         \
     prog-text-writer.h $(prog-text-writer.h-DEPS)   \
     fun-text-writer.h $(fun-text-writer.h-DEPS)
 fun.o: fun.cc                                       \
@@ -95,6 +97,7 @@ fun.o: fun.cc                                       \
 insn-text-writer.o: insn-text-writer.cc             \
     bb.h $(bb.h-DEPS)                               \
     reg.h $(reg.h-DEPS)                             \
+    value.h $(value.h-DEPS)                         \
     cond-branch-insn.h $(cond-branch-insn.h-DEPS)   \
     nop-insn.h $(nop-insn.h-DEPS)                   \
     calc-insn.h $(calc-insn.h-DEPS)                 \
@@ -120,9 +123,14 @@ prog.o: prog.cc                                     \
 reg.o: reg.cc                                       \
     fun.h $(fun.h-DEPS)                             \
     insn.h $(insn.h-DEPS)                           \
+    value.h $(value.h-DEPS)                         \
     reg.h $(reg.h-DEPS)
 text-reader-inp.o: text-reader-inp.cc               \
     text-reader-inp.h $(text-reader-inp.h-DEPS)
+value.o: value.cc                                   \
+    fun.h $(fun.h-DEPS)                             \
+    insn.h $(insn.h-DEPS)                           \
+    value.h $(value.h-DEPS)
 
 
 clean:
