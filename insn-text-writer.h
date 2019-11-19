@@ -50,6 +50,7 @@ private:
   void write_nop (Insn *insn);
   void write_calc (Insn *insn);
   void write_fun_arg (Insn *insn);
+  void write_fun_result (Insn *insn);
 
 
 private:

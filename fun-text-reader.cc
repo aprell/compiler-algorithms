@@ -15,6 +15,7 @@
 #include "nop-insn.h"
 #include "calc-insn.h"
 #include "fun-arg-insn.h"
+#include "fun-result-insn.h"
 
 #include "text-reader-inp.h"
 
@@ -81,6 +82,11 @@ FunTextReader::parse_fun ()
   //
   bool saw_label = false;
 
+  // True if we've seen a function-result instruction, after which no
+  // other instructions are allowed.
+  //
+  bool saw_fun_result = false;
+
   while (inp.read_new_line ())
     {
       if (inp.skip ('}'))
@@ -90,6 +96,28 @@ FunTextReader::parse_fun ()
       //
       if (inp.skip ('#') || inp.at_eol ())
 	continue;
+
+      // A "function result" insn, which must come at the end of the
+      // function.
+      //
+      if (inp.skip ("fun_result"))
+	{
+	  unsigned result_num = inp.read_unsigned ();
+	  Reg *result_reg = read_reg ();
+	  new FunResultInsn (result_num, result_reg, cur_fun->exit_block ());
+
+	  saw_fun_result = true;
+
+	  continue;
+	}
+      else
+	{
+	  // Anything _except_ a function result insn must not follow
+	  // one.
+
+	  if (saw_fun_result)
+	    inp.parse_error ("No instructions can follow a fun-result instruction");
+	}
 
       // Label (starts a new block)
       //

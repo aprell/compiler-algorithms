@@ -17,6 +17,7 @@
 #include "nop-insn.h"
 #include "calc-insn.h"
 #include "fun-arg-insn.h"
+#include "fun-result-insn.h"
 
 #include "fun-text-writer.h"
 
@@ -133,6 +134,24 @@ InsnTextWriter::write_fun_arg (Insn *insn)
     invalid_write_method (insn, "FunArgInsn");
 }
 
+void
+InsnTextWriter::write_fun_result (Insn *insn)
+{
+  if (FunResultInsn *fun_result_insn = dynamic_cast<FunResultInsn *> (insn))
+    {
+      std::ostream &out = fun_writer.output_stream ();
+
+      const std::vector<Reg *> &args = fun_result_insn->args ();
+
+      out << "fun_result "
+	  << fun_result_insn->result_num ()
+	  << ' '
+	  << reg_name (args[0]);
+    }
+  else
+    invalid_write_method (insn, "FunResultInsn");
+}
+
 
 
 // Text writer method dispatch machinery.
@@ -155,6 +174,7 @@ InsnTextWriter::setup_write_meths ()
   write_meths[typeid (NopInsn)] = &InsnTextWriter::write_nop;
   write_meths[typeid (CalcInsn)] = &InsnTextWriter::write_calc;
   write_meths[typeid (FunArgInsn)] = &InsnTextWriter::write_fun_arg;
+  write_meths[typeid (FunResultInsn)] = &InsnTextWriter::write_fun_result;
 }
 
 
