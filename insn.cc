@@ -6,6 +6,8 @@
 // Created: 2019-10-30
 //
 
+#include "check-assertion.h"
+
 #include "bb.h"
 #include "reg.h"
 
@@ -72,4 +74,42 @@ Insn::change_result (Reg *from, Reg *to)
 	  result = to;
 	  result->add_use (this);
 	}
+}
+
+
+// Return true if this instruction dominates INSN, meaning that
+// either: (1) they are in the same basic block, and this instruction
+// precedes INSN, or (2) they are in different basic blocks, and
+// this instruction's block dominates INSN's block.
+//
+// An instruction does _not_ dominate itself (because arguments are
+// typically read before results are written).
+//
+bool
+Insn::dominates (Insn *insn) const
+{
+  // An instruction does not dominate itself.
+  //
+  if (this == insn)
+    return false;
+
+  if (_block == insn->_block)
+    {
+      // In same block, check to see that this instruction comes
+      // first.
+
+      for (auto search : _block->insns ())
+	if (search == this)
+	  return true;		// this insn is first
+	else if (search == insn)
+	  return false;		// INSN is first
+
+      check_assertion_failure ("Instruction not found in Insn::dominates");
+    }
+  else
+    {
+      // Check to see if our block dominates INSN's block.
+      //
+      return _block->dominates (insn->_block, true);
+    }
 }

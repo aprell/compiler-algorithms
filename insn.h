@@ -69,6 +69,17 @@ public:
   void change_result (Reg *from, Reg *to);
 
 
+  // Return true if this instruction dominates INSN, meaning that
+  // either: (1) they are in the same basic block, and this instruction
+  // precedes INSN, or (2) they are in different basic blocks, and
+  // this instruction's block dominates INSN's block.
+  //
+  // An instruction does _not_ dominate itself (because arguments are
+  // typically read before results are written).
+  //
+  bool dominates (Insn *insn) const;
+
+
 protected:
 
   Insn (BB *block,
