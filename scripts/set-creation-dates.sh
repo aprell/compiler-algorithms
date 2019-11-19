@@ -8,7 +8,7 @@
 #
 
 for file in "$@"; do
-    cdate=`git log --date=short --pretty=tformat:%ad "$file" | tail -1`
+    cdate=`git log --follow --date=short --pretty=tformat:%ad "$file" | tail -1`
     if ! test "$cdate"; then
 	cdate=`date +"%Y-%m-%d"`
     fi
