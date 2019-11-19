@@ -214,8 +214,7 @@ BB::extend_dominance_frontier (const DomTreeNode *dom_tree_root,
       // If DOM_TREE_ROOT does not strictly dominated succ_node, then
       // SUCC_NODE is in the dominance frontier of DOM_TREE_ROOT.
       //
-      if (succ_node == dom_tree_root
-	  || ! dom_tree_root->is_ancestor_of (succ_node))
+      if (! dom_tree_root->is_ancestor_of (succ_node, true))
 	{
 	  // Only add SUCC to FRONTIER if it's not a duplicate.
 	  //

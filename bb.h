@@ -43,10 +43,16 @@ private:
     DomTreeNode *common_ancestor (DomTreeNode *other);
 
     // Return true if this dominator tree node is an ancestor of
-    // OTHER, i.e., we dominate OTHER.
+    // OTHER, i.e., we dominate OTHER.  If STRICTLY is false, then a
+    // node is considered to be an ancestor of itself; otherwise, it
+    // is not.
     //
-    bool is_ancestor_of (const DomTreeNode *other) const
+    bool is_ancestor_of (const DomTreeNode *other, bool strictly = false)
+      const
     {
+      if (strictly && this == other)
+	return false;
+
       while (other && other->depth > depth)
 	other = other->dominator;
 
@@ -109,31 +115,43 @@ public:
   //
 
   // Return true if this block dominates BLOCK.
+  // If STRICTLY is false, then a block dominates itself, otherwise it
+  // does not.
   //
-  bool dominates (BB *block) const
+  bool dominates (BB *block, bool strictly = false) const
   {
-    return fwd_dom_tree_node.is_ancestor_of (&block->fwd_dom_tree_node);
+    return fwd_dom_tree_node.is_ancestor_of (&block->fwd_dom_tree_node,
+					     strictly);
   }
 
   // Return true if this block is dominated by BLOCK.
+  // If STRICTLY is false, then a block dominates itself, otherwise it
+  // does not.
   //
-  bool is_dominated_by (BB *block) const
+  bool is_dominated_by (BB *block, bool strictly = false) const
   {
-    return block->fwd_dom_tree_node.is_ancestor_of (&fwd_dom_tree_node);
+    return block->fwd_dom_tree_node.is_ancestor_of (&fwd_dom_tree_node,
+						    strictly);
   }
 
   // Return true if this block post-dominates BLOCK.
+  // If STRICTLY is false, then a block dominates itself, otherwise it
+  // does not.
   //
-  bool post_dominates (BB *block) const
+  bool post_dominates (BB *block, bool strictly = false) const
   {
-    return bwd_dom_tree_node.is_ancestor_of (&block->bwd_dom_tree_node);
+    return bwd_dom_tree_node.is_ancestor_of (&block->bwd_dom_tree_node,
+					     strictly);
   }
 
   // Return true if this block is post-dominated by BLOCK.
+  // If STRICTLY is false, then a block dominates itself, otherwise it
+  // does not.
   //
-  bool is_post_dominated_by (BB *block) const
+  bool is_post_dominated_by (BB *block, bool strictly = false) const
   {
-    return block->bwd_dom_tree_node.is_ancestor_of (&bwd_dom_tree_node);
+    return block->bwd_dom_tree_node.is_ancestor_of (&bwd_dom_tree_node,
+						    strictly);
   }
 
   // Return this block's immedately dominating block, or zero if none.
