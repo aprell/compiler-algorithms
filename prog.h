@@ -9,6 +9,7 @@
 #ifndef __PROG_H__
 #define __PROG_H__
 
+#include <string>
 #include <unordered_map>
 
 #include "fun.h"

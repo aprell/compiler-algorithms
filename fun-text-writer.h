@@ -11,6 +11,7 @@
 
 #include <string>
 #include <list>
+#include <ostream>
 
 #include "insn-text-writer.h"
 #include "bb-text-writer.h"
