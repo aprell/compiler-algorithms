@@ -3,7 +3,7 @@
 // Copyright © 2019  Miles Bader
 //
 // Author: Miles Bader <snogglethorpe@gmail.com>
-// Created: 2019-11-02
+// Created: 2019-10-31
 //
 
 #ifndef __FUN_TEXT_WRITER_H__
