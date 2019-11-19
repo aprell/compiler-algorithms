@@ -14,6 +14,7 @@
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
 #include "calc-insn.h"
+#include "fun-arg-insn.h"
 
 #include "text-reader-inp.h"
 
@@ -75,6 +76,11 @@ FunTextReader::parse_fun ()
   inp.read_new_line ();
   inp.expect ('{');
 
+  // True if we've seen at least one label, meaning we're past the
+  // function beginning into the body.
+  //
+  bool saw_label = false;
+
   while (inp.read_new_line ())
     {
       if (inp.skip ('}'))
@@ -98,6 +104,8 @@ FunTextReader::parse_fun ()
 
 	  if (prev_block)
 	    prev_block->set_fall_through (cur_block);
+
+	  saw_label = true;
 
 	  continue;
 	}
@@ -195,6 +203,20 @@ FunTextReader::parse_fun ()
       if (id == "nop")
 	{
 	  new NopInsn (cur_block);
+	  continue;
+	}
+
+      // Function-argument insn
+      //
+      if (id == "fun_arg")
+	{
+	  if (saw_label)
+	    inp.parse_error ("fun_arg instructions are only valid at the start of a function");
+
+	  unsigned arg_num = inp.read_unsigned ();
+	  Reg *arg_reg = read_reg ();
+	  new FunArgInsn (arg_num, arg_reg, cur_fun->entry_block ());
+
 	  continue;
 	}
 

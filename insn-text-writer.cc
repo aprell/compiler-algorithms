@@ -16,6 +16,7 @@
 #include "cond-branch-insn.h"
 #include "nop-insn.h"
 #include "calc-insn.h"
+#include "fun-arg-insn.h"
 
 #include "fun-text-writer.h"
 
@@ -114,6 +115,24 @@ InsnTextWriter::write_calc (Insn *insn)
     invalid_write_method (insn, "CalcInsn");
 }
 
+void
+InsnTextWriter::write_fun_arg (Insn *insn)
+{
+  if (FunArgInsn *fun_arg_insn = dynamic_cast<FunArgInsn *> (insn))
+    {
+      std::ostream &out = fun_writer.output_stream ();
+
+      const std::vector<Reg *> &results = fun_arg_insn->results ();
+
+      out << "fun_arg "
+	  << fun_arg_insn->arg_num ()
+	  << ' '
+	  << reg_name (results[0]);
+    }
+  else
+    invalid_write_method (insn, "FunArgInsn");
+}
+
 
 
 // Text writer method dispatch machinery.
@@ -135,6 +154,7 @@ InsnTextWriter::setup_write_meths ()
   write_meths[typeid (CondBranchInsn)] = &InsnTextWriter::write_cond_branch;
   write_meths[typeid (NopInsn)] = &InsnTextWriter::write_nop;
   write_meths[typeid (CalcInsn)] = &InsnTextWriter::write_calc;
+  write_meths[typeid (FunArgInsn)] = &InsnTextWriter::write_fun_arg;
 }
 
 

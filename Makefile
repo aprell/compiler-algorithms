@@ -23,6 +23,7 @@ compcat: compcat.o $(OBJS)
 bb.h-DEPS = memtoobj.h $(memtoobj.h-DEPS)
 calc-insn.h-DEPS = insn.h $(insn.h-DEPS)
 cond-branch-insn.h-DEPS = insn.h $(insn.h-DEPS)
+fun-arg-insn.h-DEPS = insn.h $(insn.h-DEPS)
 fun-text-writer.h-DEPS = insn-text-writer.h $(insn-text-writer.h-DEPS) \
     bb-text-writer.h $(bb-text-writer.h-DEPS)
 fun.h-DEPS = bb.h $(bb.h-DEPS)
@@ -73,6 +74,7 @@ fun-text-reader.o: fun-text-reader.cc               \
     cond-branch-insn.h $(cond-branch-insn.h-DEPS)   \
     nop-insn.h $(nop-insn.h-DEPS)                   \
     calc-insn.h $(calc-insn.h-DEPS)                 \
+    fun-arg-insn.h $(fun-arg-insn.h-DEPS)           \
     text-reader-inp.h $(text-reader-inp.h-DEPS)     \
     prog-text-reader.h $(prog-text-reader.h-DEPS)   \
     fun-text-reader.h $(fun-text-reader.h-DEPS)
@@ -92,6 +94,7 @@ insn-text-writer.o: insn-text-writer.cc             \
     cond-branch-insn.h $(cond-branch-insn.h-DEPS)   \
     nop-insn.h $(nop-insn.h-DEPS)                   \
     calc-insn.h $(calc-insn.h-DEPS)                 \
+    fun-arg-insn.h $(fun-arg-insn.h-DEPS)           \
     fun-text-writer.h $(fun-text-writer.h-DEPS)     \
     insn-text-writer.h $(insn-text-writer.h-DEPS)
 insn.o: insn.cc                                     \

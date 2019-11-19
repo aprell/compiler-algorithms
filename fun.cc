@@ -129,9 +129,6 @@ Fun::combine_blocks ()
 
       for (auto bb : _blocks)
 	{
-	  if (bb == _entry_block || bb == _exit_block)
-	    check_assertion (bb->insns ().empty (), "Exit block not empty");
-
 	  // Ignore exit block.
 	  //
 	  if (bb == _exit_block)
