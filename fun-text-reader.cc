@@ -41,7 +41,8 @@ FunTextReader::input () const
 }
 
 
-// Read a text representation of a function, and return the new function..
+// Read a text representation of a function, and return the new
+// function.
 //
 Fun *
 FunTextReader::read ()
@@ -106,7 +107,8 @@ FunTextReader::parse_fun ()
 	{
 	  unsigned result_num = inp.read_unsigned ();
 	  Reg *result_reg = read_lvalue_reg ();
-	  new FunResultInsn (result_num, result_reg, cur_fun->exit_block ());
+	  new FunResultInsn (result_num,
+			     result_reg, cur_fun->exit_block ());
 
 	  saw_fun_result = true;
 
@@ -118,7 +120,8 @@ FunTextReader::parse_fun ()
 	  // one.
 
 	  if (saw_fun_result)
-	    inp.parse_error ("No instructions can follow a fun-result instruction");
+	    inp.parse_error
+	      ("No instructions can follow a fun-result instruction");
 	}
 
       // Label (starts a new block)
@@ -130,7 +133,8 @@ FunTextReader::parse_fun ()
 	  cur_block = read_label ();
 
 	  if (! cur_block->is_empty ())
-	    inp.parse_error (std::string ("duplicate label _") + std::to_string (cur_block->num ()));
+	    inp.parse_error (std::string ("duplicate label _")
+			     + std::to_string (cur_block->num ()));
 
 	  if (prev_block)
 	    prev_block->set_fall_through (cur_block);
@@ -153,7 +157,9 @@ FunTextReader::parse_fun ()
 
 	  Reg *&reg = registers[reg_name];
 	  if (reg)
-	    inp.parse_error (std::string ("Duplicate register declaration \"") + id + "\"");
+	    inp.parse_error
+	      (std::string ("Duplicate register declaration \"")
+	       + id + "\"");
 
 	  reg = new Reg (reg_name, cur_fun);
 
@@ -197,7 +203,9 @@ FunTextReader::parse_fun ()
 		case '*': calc_op = CalcInsn::Op::MUL; break;
 		case '/': calc_op = CalcInsn::Op::DIV; break;
 		default:
-		  inp.parse_error (std::string ("Unknown calculation operation \"") + calc_op_char + "\"");
+		  inp.parse_error
+		    (std::string ("Unknown calculation operation \"")
+		     + calc_op_char + "\"");
 		}
 
 	      Reg *arg2 = read_rvalue_reg ();
@@ -248,7 +256,8 @@ FunTextReader::parse_fun ()
       if (id == "fun_arg")
 	{
 	  if (saw_label)
-	    inp.parse_error ("fun_arg instructions are only valid at the start of a function");
+	    inp.parse_error
+	      ("fun_arg instructions are only valid at the start of a function");
 
 	  unsigned arg_num = inp.read_unsigned ();
 	  Reg *arg_reg = read_lvalue_reg ();
@@ -280,7 +289,8 @@ FunTextReader::get_reg (const std::string &name)
 {
   auto reg_it = registers.find (name);
   if (reg_it == registers.end ())
-    input ().parse_error (std::string ("Unknown register \"") + name + "\"");
+    input ().parse_error
+      (std::string ("Unknown register \"") + name + "\"");
   return reg_it->second;
 }
 

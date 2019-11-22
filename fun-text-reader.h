@@ -32,7 +32,8 @@ public:
   TextReaderInp &input () const;
 
 
-  // Read a text representation of a function, and return the new function..
+  // Read a text representation of a function, and return the new
+  // function.
   //
   Fun *read ();
 
