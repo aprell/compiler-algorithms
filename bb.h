@@ -231,6 +231,11 @@ public:
   //
   void add_insn (Insn *insn);
 
+  // Add the instruction INSN to the end of this block, but before any
+  // branch instructio if there is one.
+  //
+  void add_insn_before_branch (Insn *insn);
+
   // Add the instruction INSN to the beginning of this block.
   //
   void prepend_insn (Insn *insn);

@@ -88,6 +88,31 @@ BB::add_insn (Insn *insn)
   insn->set_block (this);
 }
 
+// Add the instruction INSN to the end of this block, but before any
+// branch instructio if there is one.
+//
+void
+BB::add_insn_before_branch (Insn *insn)
+{
+  BB *old_block = insn->block ();
+
+  if (old_block)
+    old_block->remove_insn (insn);
+
+  // Where we will insert.  This is the end of the list of the
+  // instruction list except when the last instruction is a branch
+  // insn, in which case it will be that insn.
+  //
+  auto insert_before = _insns.end ();
+  if (insert_before != _insns.begin ()
+      && (*insert_before)->is_branch_insn ())
+    --insert_before;
+
+  _insns.insert (insert_before, insn);
+
+  insn->set_block (this);
+}
+
 // Add the instruction INSN to the beginning of this block.
 //
 void
