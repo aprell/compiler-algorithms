@@ -231,6 +231,10 @@ public:
   //
   void add_insn (Insn *insn);
 
+  // Add the instruction INSN to the beginning of this block.
+  //
+  void prepend_insn (Insn *insn);
+
   // Remove the instruction INSN from this block.
   //
   void remove_insn (Insn *insn);

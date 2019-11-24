@@ -88,6 +88,21 @@ BB::add_insn (Insn *insn)
   insn->set_block (this);
 }
 
+// Add the instruction INSN to the beginning of this block.
+//
+void
+BB::prepend_insn (Insn *insn)
+{
+  BB *old_block = insn->block ();
+
+  if (old_block)
+    old_block->remove_insn (insn);
+
+  _insns.push_front (insn);
+
+  insn->set_block (this);
+}
+
 // Remove the instruction INSN from this block.
 //
 void
