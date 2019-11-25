@@ -10,6 +10,7 @@
 
 #include "bb.h"
 #include "insn.h"
+#include "remove-one.h"
 
 #include "fun.h"
 
@@ -182,14 +183,18 @@ BB::add_successor (BB *succ)
   invalidate_post_dominators ();
 }
 
-// Remove a control flow edge between this block and the previous
-// successor block SUCC.
-///
+// Remove a control flow edge between this block and the successor
+// block SUCC.  If there are multiple control flow edges between
+// this block and SUCC, only a single edge is removed.
+//
 void
 BB::remove_successor (BB *succ)
 {
-  _succs.remove (succ);
-  succ->_preds.remove (this);
+  // We can't use std::list<T>::remove, because it will remove all
+  // matching entries, and we only want to remove one.
+
+  remove_one (succ, _succs);
+  remove_one (this, succ->_preds);
 
   invalidate_dominators ();
   invalidate_post_dominators ();

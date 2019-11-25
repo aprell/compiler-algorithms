@@ -49,6 +49,7 @@ bb.o: bb.cc                                         \
     check-assertion.h $(check-assertion.h-DEPS)     \
     bb.h $(bb.h-DEPS)                               \
     insn.h $(insn.h-DEPS)                           \
+    remove-one.h $(remove-one.h-DEPS)               \
     fun.h $(fun.h-DEPS)
 bitvec.o: bitvec.cc                                 \
     bitvec.h $(bitvec.h-DEPS)

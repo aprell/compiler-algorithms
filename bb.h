@@ -161,9 +161,10 @@ public:
   ///
   void add_successor (BB *succ);
 
-  // Remove a control flow edge between this block and the previous
-  // successor block SUCC.
-  ///
+  // Remove a control flow edge between this block and the successor
+  // block SUCC.  If there are multiple control flow edges between
+  // this block and SUCC, only a single edge is removed.
+  //
   void remove_successor (BB *succ);
 
 
