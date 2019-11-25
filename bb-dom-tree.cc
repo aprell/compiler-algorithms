@@ -9,54 +9,22 @@
 #include "bb.h"
 
 
-// Dtor tries to maintain the tree.
+// Assert that this block is immediately dominated by DOM.
 //
-BB::DomTreeNode::~DomTreeNode ()
-{
-  // Remove this node from the tree it's in
-
-  for (auto dominee : dominatees)
-    {
-      dominee->dominator = dominator;
-
-      if (dominator)
-	dominator->dominatees.push_front (dominee);
-    }
-}
-
-
-//
-// From Wikipedia:
-//
-//  // dominator of the start node is the start itself
-//  Dom(n0) = {n0}
-//
-//  // for all other nodes, set all nodes as the dominators
-//  for each n in N - {n0}
-//      Dom(n) = N;
-//
-//  // iteratively eliminate nodes that are not dominators
-//  while changes in any Dom(n)
-//      for each n in N - {n0}:
-//          Dom(n) = {n} union with intersection over Dom(p) for all p in pred(n)
-//
-
-
-
-// Assert that this node is immediately dominated by the dominator
-// tree node DOM.
+// DOM_TREE_NODE_MEMBER identifies which dominator tree node to use.
 //
 void
-BB::DomTreeNode::set_dominator (DomTreeNode *dom)
+BB::set_dominator (BB *dom, DomTreeNode BB::*dom_tree_node_member)
 {
   // If we already have a parent, remove ourselves from it.
   //
   // Note that we don't update the depth of our subtree at this point.
   //
-  if (dominator)
+  BB *old_dom = (this->*dom_tree_node_member).dominator;
+  if (old_dom)
     {
-      dominator->dominatees.remove (this);
-      dominator = 0;
+      (old_dom->*dom_tree_node_member).dominatees.remove (this);
+      (this->*dom_tree_node_member).dominator = 0;
     }
 
   // Add ourselves as a new child of DOM, and update our subtree
@@ -64,107 +32,162 @@ BB::DomTreeNode::set_dominator (DomTreeNode *dom)
   //
   if (dom)
     {
-      dom->dominatees.push_front (this);
-      dominator = dom;
+      (dom->*dom_tree_node_member).dominatees.push_front (this);
+      (this->*dom_tree_node_member).dominator = dom;
 
-      update_depths (dom->depth + 1);
+      update_dominator_depths ((dom->*dom_tree_node_member).depth + 1,
+			       dom_tree_node_member);
     }
-  else if (depth != 0)
+  else if ((dom->*dom_tree_node_member).depth != 0)
     {
       // We're now the root, and we weren't previously, so update
       // depths accordingly.
 
-      update_depths (0);
+      update_dominator_depths (0, dom_tree_node_member);
     }
 }
 
 
-// Set the depth of this node to _DEPTH, and update all child nodes
-// recursively.
-//
-void
-BB::DomTreeNode::update_depths (unsigned _depth)
-{
-  depth = _depth;
-
-  for (auto child : dominatees)
-    child->update_depths (_depth + 1);
-}
-
-
 // Return the nearest common ancestor in the dominator tree which is
-// an ancestor of both this and OTHER.  If there is none, return 0.
+// an ancestor of both this block and OTHER.  If there is none, return 0.
 //
-BB::DomTreeNode *
-BB::DomTreeNode::common_ancestor (DomTreeNode *other)
+// DOM_TREE_NODE_MEMBER identifies which dominator tree node to use.
+//
+BB *
+BB::common_dominator (BB *other, DomTreeNode BB::*dom_tree_node_member)
 {
   if (! other)
     return 0;
 
-  DomTreeNode *a = this, *b = other;
+  BB *a = this, *b = other;
 
-  while (a && a->depth > b->depth)
-    a = a->dominator;
+  while (a
+	 && ((a->*dom_tree_node_member).depth
+	     > (b->*dom_tree_node_member).depth))
+    a = (a->*dom_tree_node_member).dominator;
 
-  while (b && b->depth > a->depth)
-    b = b->dominator;
+  while (b
+	 && ((b->*dom_tree_node_member).depth
+	     > (a->*dom_tree_node_member).depth))
+    b = (b->*dom_tree_node_member).dominator;
 
   while (a && a != b)
     {
-      a = a->dominator;
-      b = b->dominator;
+      a = (a->*dom_tree_node_member).dominator;
+      b = (b->*dom_tree_node_member).dominator;
     }
 
   return a;
 }
 
+// Set the dominator-tree depth of this block to DEPTH, and update
+// all dominated blocks recursively.
+//
+// DOM_TREE_NODE_MEMBER identifies which dominator tree node to use.
+//
+void
+BB::update_dominator_depths (unsigned depth,
+			     DomTreeNode BB::*dom_tree_node_member)
+{
+  (this->*dom_tree_node_member).depth = depth;
+
+  for (auto child : (this->*dom_tree_node_member).dominatees)
+    child->update_dominator_depths (depth + 1, dom_tree_node_member);
+}
 
 
+// Remove this block from the dominator tree represented by
+// DOM_TREE_NODE_MEMBER.
+//
+void
+BB::remove_from_dominator_tree (DomTreeNode BB::*dom_tree_node_member)
+{
+  BB *dominator = (this->*dom_tree_node_member).dominator;
+
+  for (auto dominee : (this->*dom_tree_node_member).dominatees)
+    {
+      (dominee->*dom_tree_node_member).dominator = dominator;
+
+      if (dominator)
+	(dominator->*dom_tree_node_member).dominatees.push_front (dominee);
+    }
+}
+
+
+// Calculate the dominator tree for blocks in BLOCKS, using dominator
+// node members DOM_TREE_NODE_MEMBER, and block-predecessor list
+// members PRED_LIST_MEMBER.
+//
 void
 BB::calc_doms (const std::list<BB *> &blocks,
 	       DomTreeNode BB::*dom_tree_node_member,
 	       std::list<BB *> BB::*pred_list_member)
 {
+  // Clear old dominator info.
+  //
+  for (auto block : blocks)
+    {
+      (block->*dom_tree_node_member).dominator = 0;
+      (block->*dom_tree_node_member).dominatees.clear ();
+    }
+
+  //
+  // Calculate new dominator info.
+  //
+
+  //
+  // From Wikipedia:
+  //
+  //  // dominator of the start node is the start itself
+  //  Dom(n0) = {n0}
+  //
+  //  // for all other nodes, set all nodes as the dominators
+  //  for each n in N - {n0}
+  //      Dom(n) = N;
+  //
+  //  // iteratively eliminate nodes that are not dominators
+  //  while changes in any Dom(n)
+  //      for each n in N - {n0}:
+  //          Dom(n) = {n} union with intersection over Dom(p) for all p in pred(n)
+  //
+
   bool change = true;
   while (change)
     {
       change = false;
       for (auto block : blocks)
 	{
-	  DomTreeNode *block_node = &(block->*dom_tree_node_member);
-
 	  // Remember the previous dominator set for BLOCK.
 	  //
-	  DomTreeNode *old_dom = block_node->dominator;
+	  BB *old_dom = (block->*dom_tree_node_member).dominator;
 
 	  // The newly calculated dominator set.
 	  //
-	  DomTreeNode *new_dom = 0;
+	  BB *new_dom = 0;
 
 	  // Go through all BLOCK's predecessors.
 	  //
 	  for (auto pred : block->*pred_list_member)
 	    {
-	      DomTreeNode *pred_node = &(pred->*dom_tree_node_member);
-
 	      // If it wouldn't form a loop, try to update NEW_DOM
 	      // based on PRED.
 	      //
-	      if (! block_node->is_ancestor_of (pred_node))
+	      if (! block->dominates (pred, false, dom_tree_node_member))
 		{
 		  if (! new_dom)
 		    // PRED is the first predecessor, so the dominator
 		    // set represented by NEW_DOM is the same as
 		    // PRED's dominator set.
 		    //
-		    new_dom = pred_node;
+		    new_dom = pred;
 		  else
 		    // Otherwise, take the intersection of PRED's
 		    // dominator set with previously NEW_DOM (which
 		    // currently represents the dominator set found
 		    // for all predecessors of BLOCK so far).
 		    //
-		    new_dom = new_dom->common_ancestor (pred_node);
+		    new_dom = new_dom->common_dominator (pred,
+							 dom_tree_node_member);
 		}
 	    }
 
@@ -172,7 +195,7 @@ BB::calc_doms (const std::list<BB *> &blocks,
 	  //
 	  if (new_dom != old_dom)
 	    {
-	      block_node->set_dominator (new_dom);
+	      block->set_dominator (new_dom, dom_tree_node_member);
 	      change = true;
 	    }
 	}
@@ -191,7 +214,7 @@ BB::calc_doms (const std::list<BB *> &blocks,
 // Nodes are only added to FRONTIER once, duplicates are ignored.
 //
 void
-BB::extend_dominance_frontier (const DomTreeNode *dom_tree_root,
+BB::extend_dominance_frontier (const BB *dom_tree_root,
 			       DomTreeNode BB::*dom_tree_node_member,
 			       std::list<BB *> BB::*succ_list_member,
 			       std::list<BB *> &frontier)
@@ -206,28 +229,21 @@ BB::extend_dominance_frontier (const DomTreeNode *dom_tree_root,
   // "escaped" the region dominated by DOM_TREE_ROOT.
   //
   for (auto succ : this->*succ_list_member)
-    {
-      // Dominator tree node in SUCC.
-      //
-      DomTreeNode *succ_node = &(succ->*dom_tree_node_member);
-
-      // If DOM_TREE_ROOT does not strictly dominated succ_node, then
-      // SUCC_NODE is in the dominance frontier of DOM_TREE_ROOT.
-      //
-      if (! dom_tree_root->is_ancestor_of (succ_node, true))
-	{
-	  // Only add SUCC to FRONTIER if it's not a duplicate.
-	  //
-	  if (std::find (frontier.begin(), frontier.end(), succ) == frontier.end ())
-	    frontier.push_back (succ);
-	}
-    }
+    // If DOM_TREE_ROOT does not strictly dominated succ_node, then
+    // SUCC_NODE is in the dominance frontier of DOM_TREE_ROOT.
+    //
+    if (! dom_tree_root->dominates (succ, true, dom_tree_node_member))
+      {
+	// Only add SUCC to FRONTIER if it's not a duplicate.
+	//
+	if (std::find (frontier.begin(), frontier.end(), succ) == frontier.end ())
+	  frontier.push_back (succ);
+      }
 
   // Now walk the rest of the dominator tree underneath this node.
   //
-  for (auto dominatee_node : (this->*dom_tree_node_member).dominatees)
-    member_to_enclosing_object (dominatee_node, dom_tree_node_member)
-      ->extend_dominance_frontier (dom_tree_root,
-				   dom_tree_node_member, succ_list_member, 
-				   frontier);
+  for (auto dominatee : (this->*dom_tree_node_member).dominatees)
+    dominatee->extend_dominance_frontier (dom_tree_root,
+					  dom_tree_node_member, succ_list_member, 
+					  frontier);
 }

@@ -55,6 +55,9 @@ BB::~BB ()
       _fun = 0;
       fun->remove_block (this);
     }
+
+  remove_from_dominator_tree (&BB::fwd_dom_tree_node);
+  remove_from_dominator_tree (&BB::bwd_dom_tree_node);
 }
 
 

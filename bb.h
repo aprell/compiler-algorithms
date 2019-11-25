@@ -11,8 +11,6 @@
 
 #include <list>
 
-#include "memtoobj.h"
-
 
 class Fun;
 class Insn;
@@ -22,64 +20,6 @@ class Insn;
 //
 class BB
 {
-private:
-
-  class DomTreeNode
-  {
-  public:
-
-    // Dtor tries to maintain the tree.
-    //
-    ~DomTreeNode ();
-
-    // Assert that this node is immediately dominated by the dominator
-    // tree node DOM.
-    //
-    void set_dominator (DomTreeNode *dom); 
-
-    // Return the nearest common ancestor in the dominator tree which is
-    // an ancestor of both this and OTHER.  If there is none, return 0.
-    //
-    DomTreeNode *common_ancestor (DomTreeNode *other);
-
-    // Return true if this dominator tree node is an ancestor of
-    // OTHER, i.e., we dominate OTHER.  If STRICTLY is false, then a
-    // node is considered to be an ancestor of itself; otherwise, it
-    // is not.
-    //
-    bool is_ancestor_of (const DomTreeNode *other, bool strictly = false)
-      const
-    {
-      if (strictly && this == other)
-	return false;
-
-      while (other && other->depth > depth)
-	other = other->dominator;
-
-      return (other == this);
-    }
-
-    // Parent in dominator tree.
-    //
-    DomTreeNode *dominator = 0;
-
-    // Children in dominator tree.
-    //
-    std::list<DomTreeNode *> dominatees;
-
-  private:
-
-    // Set the depth of this node to DEPTH, and update all child nodes
-    // recursively.
-    //
-    void update_depths (unsigned depth);
-
-    // Depth in the dominator tree, with the root as 0.
-    //
-    unsigned depth = 0;
-  };
-
-
 public:
 
   // Make a new block in function FUN.
@@ -120,8 +60,7 @@ public:
   //
   bool dominates (BB *block, bool strictly = false) const
   {
-    return fwd_dom_tree_node.is_ancestor_of (&block->fwd_dom_tree_node,
-					     strictly);
+    return dominates (block, strictly, &BB::fwd_dom_tree_node);
   }
 
   // Return true if this block is dominated by BLOCK.
@@ -130,8 +69,7 @@ public:
   //
   bool is_dominated_by (BB *block, bool strictly = false) const
   {
-    return block->fwd_dom_tree_node.is_ancestor_of (&fwd_dom_tree_node,
-						    strictly);
+    return block->dominates (this, strictly, &BB::fwd_dom_tree_node);
   }
 
   // Return true if this block post-dominates BLOCK.
@@ -140,8 +78,7 @@ public:
   //
   bool post_dominates (BB *block, bool strictly = false) const
   {
-    return bwd_dom_tree_node.is_ancestor_of (&block->bwd_dom_tree_node,
-					     strictly);
+    return dominates (block, strictly, &BB::bwd_dom_tree_node);
   }
 
   // Return true if this block is post-dominated by BLOCK.
@@ -150,31 +87,18 @@ public:
   //
   bool is_post_dominated_by (BB *block, bool strictly = false) const
   {
-    return block->bwd_dom_tree_node.is_ancestor_of (&bwd_dom_tree_node,
-						    strictly);
+    return block->dominates (this, strictly, &BB::bwd_dom_tree_node);
   }
+
 
   // Return this block's immedately dominating block, or zero if none.
   //
-  BB *dominator () const
-  {
-    DomTreeNode *dom_node = fwd_dom_tree_node.dominator;
-    if (dom_node)
-      return member_to_enclosing_object (dom_node, &BB::fwd_dom_tree_node);
-    else
-      return 0;
-  }
+  BB *dominator () const { return fwd_dom_tree_node.dominator; }
 
   // Return this block's immedately dominating block, or zero if none.
   //
-  BB *post_dominator () const
-  {
-    DomTreeNode *bwd_dom_node = bwd_dom_tree_node.dominator;
-    if (bwd_dom_node)
-      return member_to_enclosing_object (bwd_dom_node, &BB::bwd_dom_tree_node);
-    else
-      return 0;
-  }
+  BB *post_dominator () const { return bwd_dom_tree_node.dominator; }
+
 
   // Calculate the forward dominator tree for all blocks in BLOCKS.
   //
@@ -198,7 +122,7 @@ public:
   std::list<BB *> dominance_frontier () const
   {
     std::list<BB *> frontier;
-    extend_dominance_frontier (&fwd_dom_tree_node,
+    extend_dominance_frontier (this,
 			       &BB::fwd_dom_tree_node, &BB::_succs,
 			       frontier);
     return frontier;
@@ -270,34 +194,6 @@ public:
 
 private:
 
-  // Mark dominator / post-dominator information in this
-  // block's function as out of date.
-  //
-  void invalidate_dominators ();
-  void invalidate_post_dominators ();
-
-  
-  static void calc_doms (const std::list<BB *> &blocks,
-			 DomTreeNode BB::*dom_tree_node_member,
-			 std::list<BB *> BB::*pred_list_member);
-
-  // Helper method used by BB::dominance_frontier method.
-  //
-  // Walk this node's dominator tree using dominator node members
-  // DOM_TREE_NODE_MEMBER, and for every dominated node, add to
-  // FRONTIER any successor of that node, using SUCC_LIST_MEMBER to
-  // get the successors list, which is not a descendent of
-  // DOM_TREE_ROOT.
-  //
-  // Nodes are only added to FRONTIER once, duplicates are ignored.
-  //
-  void extend_dominance_frontier (const DomTreeNode *dom_tree_root,
-				  DomTreeNode BB::*dom_tree_node_member,
-				  std::list<BB *> BB::*succ_list_member,
-				  std::list<BB *> &frontier)
-    const;
-
-
   // Unique block number, assigned at block creation time.
   //
   unsigned _num = 0;
@@ -323,6 +219,110 @@ private:
   // Successor blocks of this block.
   //
   std::list<BB *> _succs;
+
+
+  //
+  // Dominator info
+  //
+
+
+  // Dominator tree info.
+  //
+  struct DomTreeNode
+  {
+    // Parent in dominator tree.
+    //
+    BB *dominator = 0;
+
+    // Children in dominator tree.
+    //
+    std::list<BB *> dominatees;
+
+    // Depth in the dominator tree, with the root as 0.
+    //
+    unsigned depth = 0;
+  };
+
+
+  // Mark dominator / post-dominator information in this
+  // block's function as out of date.
+  //
+  void invalidate_dominators ();
+  void invalidate_post_dominators ();
+
+
+  // Return true if this block dominates OTHER.  If STRICTLY is false,
+  // then a node is considered to be an ancestor of itself; otherwise,
+  // it is not.
+  //
+  // DOM_TREE_NODE_MEMBER identifies which dominator tree node to use.
+  //
+  bool dominates (const BB *other, bool strictly,
+		  DomTreeNode BB::*dom_tree_node_member)
+    const
+  {
+    if (strictly && this == other)
+      return false;
+
+    while (other
+	   && ((other->*dom_tree_node_member).depth
+	       > (this->*dom_tree_node_member).depth))
+      other = (other->*dom_tree_node_member).dominator;
+
+    return (other == this);
+  }
+
+  // Assert that this block is immediately dominated by DOM.
+  //
+  // DOM_TREE_NODE_MEMBER identifies which dominator tree node to use.
+  //
+  void set_dominator (BB *dom, DomTreeNode BB::*dom_tree_node_member);
+
+  // Return the nearest common ancestor in the dominator tree which is
+  // an ancestor of both this block and OTHER.  If there is none, return 0.
+  //
+  // DOM_TREE_NODE_MEMBER identifies which dominator tree node to use.
+  //
+  BB *common_dominator (BB *other, DomTreeNode BB::*dom_tree_node_member);
+
+  // Set the dominator-tree depth of this block to DEPTH, and update
+  // all dominated blocks recursively.
+  //
+  // DOM_TREE_NODE_MEMBER identifies which dominator tree node to use.
+  //
+  void update_dominator_depths (unsigned depth,
+				DomTreeNode BB::*dom_tree_node_member);
+
+  // Remove this block from the dominator tree represented by
+  // DOM_TREE_NODE_MEMBER.
+  //
+  void remove_from_dominator_tree (DomTreeNode BB::*dom_tree_node_member);
+
+
+  // Calculate the dominator tree for blocks in BLOCKS, using dominator
+  // node members DOM_TREE_NODE_MEMBER, and block-predecessor list
+  // members PRED_LIST_MEMBER.
+  //
+  static void calc_doms (const std::list<BB *> &blocks,
+			 DomTreeNode BB::*dom_tree_node_member,
+			 std::list<BB *> BB::*pred_list_member);
+
+
+  // Helper method used by BB::dominance_frontier method.
+  //
+  // Walk this node's dominator tree using dominator node members
+  // DOM_TREE_NODE_MEMBER, and for every dominated node, add to
+  // FRONTIER any successor of that node, using SUCC_LIST_MEMBER to
+  // get the successors list, which is not a descendent of
+  // DOM_TREE_ROOT.
+  //
+  // Nodes are only added to FRONTIER once, duplicates are ignored.
+  //
+  void extend_dominance_frontier (const BB *dom_tree_root,
+				  DomTreeNode BB::*dom_tree_node_member,
+				  std::list<BB *> BB::*succ_list_member,
+				  std::list<BB *> &frontier)
+    const;
 
 
   // Dominator-tree node for forward dominator tree.

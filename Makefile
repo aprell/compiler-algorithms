@@ -20,7 +20,6 @@ compcat: compcat.o $(OBJS)
 # Include file dependencies, which should be transitively used by
 # dependent source files.
 #
-bb.h-DEPS = memtoobj.h $(memtoobj.h-DEPS)
 calc-insn.h-DEPS = insn.h $(insn.h-DEPS)
 cond-branch-insn.h-DEPS = insn.h $(insn.h-DEPS)
 copy-insn.h-DEPS = insn.h $(insn.h-DEPS)
