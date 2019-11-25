@@ -20,6 +20,8 @@
 #include "copy-insn.h"
 #include "fun-arg-insn.h"
 #include "fun-result-insn.h"
+#include "phi-fun-insn.h"
+#include "phi-fun-inp-insn.h"
 
 #include "fun-text-writer.h"
 
@@ -173,6 +175,57 @@ InsnTextWriter::write_fun_result (Insn *insn)
     invalid_write_method (insn, "FunResultInsn");
 }
 
+void
+InsnTextWriter::write_phi_fun (Insn *insn)
+{
+  if (PhiFunInsn *phi_fun_insn = dynamic_cast<PhiFunInsn *> (insn))
+    {
+      std::ostream &out = fun_writer.output_stream ();
+
+      const std::vector<Reg *> &results = phi_fun_insn->results ();
+
+      out << reg_name (results[0])
+	  << " := phi (";
+
+      bool first_arg = true;
+      for (auto inp : phi_fun_insn->inputs ())
+	{
+	  if (first_arg)
+	    first_arg = false;
+	  else
+	    out << ", ";
+
+	  out << fun_writer.block_label (inp->block ())
+	      << ": "
+	      << reg_name (inp->args ()[0]);
+	}
+
+      out << ')';
+    }
+  else
+    invalid_write_method (insn, "PhiFunInsn");
+}
+
+void
+InsnTextWriter::write_phi_fun_inp (Insn *insn)
+{
+  if (PhiFunInpInsn *phi_fun_inp_insn = dynamic_cast<PhiFunInpInsn *> (insn))
+    {
+      std::ostream &out = fun_writer.output_stream ();
+
+      const std::vector<Reg *> &args = phi_fun_inp_insn->args ();
+
+      PhiFunInsn *phi_fun = phi_fun_inp_insn->phi_fun ();
+
+      out << "phi_fun_inp "
+	  << reg_name (phi_fun->results ()[0])
+	  << " := "
+	  << reg_name (args[0]);
+    }
+  else
+    invalid_write_method (insn, "PhiFunInpInsn");
+}
+
 
 
 // Text writer method dispatch machinery.
@@ -197,6 +250,8 @@ InsnTextWriter::setup_write_meths ()
   write_meths[typeid (CopyInsn)] = &InsnTextWriter::write_copy;
   write_meths[typeid (FunArgInsn)] = &InsnTextWriter::write_fun_arg;
   write_meths[typeid (FunResultInsn)] = &InsnTextWriter::write_fun_result;
+  write_meths[typeid (PhiFunInsn)] = &InsnTextWriter::write_phi_fun;
+  write_meths[typeid (PhiFunInpInsn)] = &InsnTextWriter::write_phi_fun_inp;
 }
 
 

@@ -52,6 +52,8 @@ private:
   void write_copy (Insn *insn);
   void write_fun_arg (Insn *insn);
   void write_fun_result (Insn *insn);
+  void write_phi_fun (Insn *insn);
+  void write_phi_fun_inp (Insn *insn);
 
 
 private:

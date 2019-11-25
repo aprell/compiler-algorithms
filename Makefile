@@ -7,6 +7,7 @@ all: $(PROGS)
 
 OBJS = prog.o fun.o bb.o bb.o bb-dom-tree.o				\
 	insn.o cond-branch-insn.o calc-insn.o				\
+	phi-fun-insn.o phi-fun-inp-insn.o				\
 	reg.o value.o							\
 	prog-text-writer.o						\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o		\
@@ -29,6 +30,8 @@ fun-text-writer.h-DEPS = insn-text-writer.h $(insn-text-writer.h-DEPS) \
     bb-text-writer.h $(bb-text-writer.h-DEPS)
 fun.h-DEPS = bb.h $(bb.h-DEPS)
 nop-insn.h-DEPS = insn.h $(insn.h-DEPS)
+phi-fun-inp-insn.h-DEPS = insn.h $(insn.h-DEPS)
+phi-fun-insn.h-DEPS = insn.h $(insn.h-DEPS)
 prog-text-reader.h-DEPS = fun-text-reader.h $(fun-text-reader.h-DEPS)
 prog-text-writer.h-DEPS = fun-text-writer.h $(fun-text-writer.h-DEPS)
 prog.h-DEPS = fun.h $(fun.h-DEPS)
@@ -104,12 +107,23 @@ insn-text-writer.o: insn-text-writer.cc             \
     copy-insn.h $(copy-insn.h-DEPS)                 \
     fun-arg-insn.h $(fun-arg-insn.h-DEPS)           \
     fun-result-insn.h $(fun-result-insn.h-DEPS)     \
+    phi-fun-insn.h $(phi-fun-insn.h-DEPS)           \
+    phi-fun-inp-insn.h $(phi-fun-inp-insn.h-DEPS)   \
     fun-text-writer.h $(fun-text-writer.h-DEPS)     \
     insn-text-writer.h $(insn-text-writer.h-DEPS)
 insn.o: insn.cc                                     \
     bb.h $(bb.h-DEPS)                               \
     reg.h $(reg.h-DEPS)                             \
     insn.h $(insn.h-DEPS)
+phi-fun-inp-insn.o: phi-fun-inp-insn.cc             \
+    bb.h $(bb.h-DEPS)                               \
+    phi-fun-insn.h $(phi-fun-insn.h-DEPS)           \
+    phi-fun-inp-insn.h $(phi-fun-inp-insn.h-DEPS)
+phi-fun-insn.o: phi-fun-insn.cc                     \
+    bb.h $(bb.h-DEPS)                               \
+    reg.h $(reg.h-DEPS)                             \
+    phi-fun-inp-insn.h $(phi-fun-inp-insn.h-DEPS)   \
+    phi-fun-insn.h $(phi-fun-insn.h-DEPS)
 prog-text-reader.o: prog-text-reader.cc             \
     prog.h $(prog.h-DEPS)                           \
     text-reader-inp.h $(text-reader-inp.h-DEPS)     \
