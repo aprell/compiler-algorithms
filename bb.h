@@ -95,9 +95,25 @@ public:
   //
   BB *dominator () const { return fwd_dom_tree_node.dominator; }
 
+  // Return a reference to a read-only list containing blocks
+  // immediately dominated by this block.
+  //
+  const std::list<BB *> &dominatees () const
+  {
+    return fwd_dom_tree_node.dominatees;
+  }
+
   // Return this block's immedately dominating block, or zero if none.
   //
   BB *post_dominator () const { return bwd_dom_tree_node.dominator; }
+
+  // Return a reference to a read-only list containing blocks
+  // immediately post-dominated by this block.
+  //
+  const std::list<BB *> &post_dominatees () const
+  {
+    return bwd_dom_tree_node.dominatees;
+  }
 
 
   // Calculate the forward dominator tree for all blocks in BLOCKS.
