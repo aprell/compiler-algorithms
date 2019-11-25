@@ -70,9 +70,9 @@ Insn::change_result (Reg *from, Reg *to)
     for (auto &result : _results)
       if (result == from)
 	{
-	  result->remove_use (this);
+	  result->remove_def (this);
 	  result = to;
-	  result->add_use (this);
+	  result->add_def (this);
 	}
 }
 
