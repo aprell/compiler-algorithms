@@ -5,7 +5,7 @@ PROGS = compcat
 all: $(PROGS)
 
 
-OBJS = prog.o fun.o bb.o bb.o bb-dom-tree.o				\
+OBJS = prog.o fun.o fun-ssa.o bb.o bb-dom-tree.o			\
 	insn.o cond-branch-insn.o calc-insn.o				\
 	phi-fun-insn.o phi-fun-inp-insn.o				\
 	reg.o value.o							\
@@ -72,6 +72,10 @@ cond-branch-insn.o: cond-branch-insn.cc             \
     reg.h $(reg.h-DEPS)                             \
     cond-branch-insn.h $(cond-branch-insn.h-DEPS)
 fun-ssa.o: fun-ssa.cc                               \
+    reg.h $(reg.h-DEPS)                             \
+    insn.h $(insn.h-DEPS)                           \
+    phi-fun-insn.h $(phi-fun-insn.h-DEPS)           \
+    phi-fun-inp-insn.h $(phi-fun-inp-insn.h-DEPS)   \
     fun.h $(fun.h-DEPS)
 fun-text-reader.o: fun-text-reader.cc               \
     fun.h $(fun.h-DEPS)                             \

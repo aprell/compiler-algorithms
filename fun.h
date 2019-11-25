@@ -133,6 +133,11 @@ public:
   void invalidate_post_dominators () { _post_dominators_valid = false; }
 
 
+  // Convert this function into SSA form.
+  //
+  void convert_to_ssa_form ();
+
+
   // Remove any unreachable blocks.
   //
   void remove_unreachable ();
@@ -152,6 +157,13 @@ private:
   // Calculate the post dominator tree for all blocks in BLOCKS.
   //
   void calc_post_dominators () { BB::calc_post_dominators (_blocks); }
+
+
+  // Insert SSA phi-functions in every place they're needed in this
+  // function.
+  //
+  void insert_phi_functions ();
+
 
   // List of basic blocks in this function, in no particular order.
   //
