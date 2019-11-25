@@ -94,6 +94,24 @@ public:
   void set_fun (Fun *fun);
 
 
+  // If this register is a particular value in SSA-form, return the
+  // original register it corresponds to, otherwise known as its
+  // "prototype," otherwise return NULL.
+  //
+  Reg *ssa_proto () const { return _ssa_proto; }
+
+  // In SSA-form, return a list of individal value registers
+  // corresponding to this prototype register, otherwiser return an
+  // empty list.
+  //
+  const std::list<Reg *> ssa_values () const { return _ssa_values; }
+
+  // Return a new individual value register for SSA-form, which will
+  // have this register as its prototype.
+  //
+  Reg *make_ssa_value ();
+
+
 private:
 
   // Name of this register.
@@ -115,6 +133,17 @@ private:
   // Places this register is set.
   //
   std::list<Insn *> _defs;
+
+  // If this register is a particular value in SSA-form, the original
+  // register it corresponds to, otherwise known as its "prototype,"
+  // otherwise NULL.
+  //
+  Reg *_ssa_proto;
+
+  // In SSA-form, the list of individal values corresponding to this
+  // prototype.
+  //
+  std::list<Reg *> _ssa_values;
 };
 
 

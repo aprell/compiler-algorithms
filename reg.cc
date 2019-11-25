@@ -36,6 +36,20 @@ Reg::Reg (Value *value)
 
 Reg::~Reg ()
 {
+  // If this is an SSA prototype, remove it from its value registers.
+  //
+  for (auto val_reg : _ssa_values)
+    val_reg->_ssa_proto = 0;
+  _ssa_values.clear ();
+
+  // If this is an SSA value, remove it from its prototype register.
+  //
+  if (_ssa_proto)
+    {
+      _ssa_proto->_ssa_values.remove (this);
+      _ssa_proto = 0;
+    }
+
   // Remove this register from every place it's used / set.
 
   while (! _uses.empty ())
@@ -65,3 +79,21 @@ Reg::set_fun (Fun *fun)
     }
 }
 
+
+// Return a new individual value register for SSA-form, which will
+// have this register as its prototype.
+//
+Reg *
+Reg::make_ssa_value ()
+{
+  std::string val_name = _name;
+  val_name += '.';
+  val_name += std::to_string (_ssa_values.size ());
+
+  Reg *val_reg = new Reg (val_name, _fun);
+
+  val_reg->_ssa_proto = this;
+  _ssa_values.push_back (val_reg);
+
+  return val_reg;
+}
