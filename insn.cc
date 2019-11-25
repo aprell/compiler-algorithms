@@ -60,6 +60,25 @@ Insn::change_arg (Reg *from, Reg *to)
 	}
 }
 
+// Change argument NUM in this instruction to TO.  TO may be NULL.
+// This will update both TO and the old argument NUM accordingly to
+// reflect the new state.
+//
+void
+Insn::change_arg (unsigned num, Reg *to)
+{
+  check_assertion (num < _args.size (),
+		   "Invalid argument index in Insn::change_arg");
+
+  Reg *from = _args[num];
+  if (from != to)
+    {
+      from->remove_use (this);
+      _args[num] = to;
+      to->add_use (this);
+    }
+}
+
 // Change each define of FROM in this instruction to TO.  TO may be NULL.
 // This will update FROM and TO accordingly to reflect the new state.
 //
@@ -74,6 +93,25 @@ Insn::change_result (Reg *from, Reg *to)
 	  result = to;
 	  result->add_def (this);
 	}
+}
+
+// Change result NUM in this instruction to TO.  TO may be NULL.
+// This will update both TO and the old result NUM accordingly to
+// reflect the new state.
+//
+void
+Insn::change_result (unsigned num, Reg *to)
+{
+  check_assertion (num < _results.size (),
+		   "Invalid result index in Insn::change_result");
+
+  Reg *from = _results[num];
+  if (from != to)
+    {
+      from->remove_def (this);
+      _results[num] = to;
+      to->add_def (this);
+    }
 }
 
 

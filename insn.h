@@ -63,10 +63,22 @@ public:
   //
   void change_arg (Reg *from, Reg *to);
 
+  // Change argument NUM in this instruction to TO.  TO may be NULL.
+  // This will update both TO and the old argument NUM accordingly to
+  // reflect the new state.
+  //
+  void change_arg (unsigned num, Reg *to);
+
   // Change each define of FROM in this instruction to TO.  TO may be NULL.
   // This will update FROM and TO accordingly to reflect the new state.
   //
   void change_result (Reg *from, Reg *to);
+
+  // Change result NUM in this instruction to TO.  TO may be NULL.
+  // This will update both TO and the old result NUM accordingly to
+  // reflect the new state.
+  //
+  void change_result (unsigned num, Reg *to);
 
 
   // Return true if this instruction dominates INSN, meaning that
