@@ -72,6 +72,7 @@ cond-branch-insn.o: cond-branch-insn.cc             \
     reg.h $(reg.h-DEPS)                             \
     cond-branch-insn.h $(cond-branch-insn.h-DEPS)
 fun-ssa.o: fun-ssa.cc                               \
+    check-assertion.h $(check-assertion.h-DEPS)     \
     reg.h $(reg.h-DEPS)                             \
     insn.h $(insn.h-DEPS)                           \
     phi-fun-insn.h $(phi-fun-insn.h-DEPS)           \

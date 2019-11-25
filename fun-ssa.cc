@@ -10,6 +10,8 @@
 #include <set>
 #include <map>
 
+#include "check-assertion.h"
+
 #include "reg.h"
 #include "insn.h"
 #include "phi-fun-insn.h"
@@ -147,7 +149,11 @@ convert_dominated_regs_to_ssa_values (BB *block, HierarchialRegMap *dominating_r
 	{
 	  Reg *arg_proto = phi_fun->results ()[0]->ssa_proto ();
 	  Reg *arg_value = reg_map.map (arg_proto);
-	  if (!arg_value) std::cerr << "arg_proto = " << (arg_proto?arg_proto->name ():"(null)")  << '\n';
+
+	  check_assertion
+	    (arg_value,
+	     "Phi-function input has no value in predecessor block");
+
 	  new PhiFunInpInsn (phi_fun, arg_value, block);
 	}
       else
