@@ -115,7 +115,7 @@ void
 Fun::combine_blocks ()
 {
 
-  check_assertion (_exit_block && _exit_block->successors ().empty (),
+  check_assertion (!_exit_block || _exit_block->successors ().empty (),
 		   "Exit block has successors before combine_blocks");
   check_assertion (_exit_block != _entry_block && ! _entry_block->successors ().empty (),
 		   "Entry block has no successors before combine_blocks");
@@ -207,7 +207,7 @@ Fun::combine_blocks ()
 	}
     }
 
-  check_assertion (_exit_block && _exit_block->successors ().empty (),
+  check_assertion (!_exit_block || _exit_block->successors ().empty (),
 		   "Exit block has successors after combine_blocks");
   check_assertion (_exit_block != _entry_block && ! _entry_block->successors ().empty (),
 		   "Entry block has no successors after combine_blocks");
