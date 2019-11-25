@@ -44,6 +44,18 @@ Insn::~Insn ()
 }
 
 
+// Add an argument.
+//
+void
+Insn::add_arg (Reg *arg)
+{
+  _args.push_back (arg);
+
+  if (arg)
+    arg->add_use (this);
+}
+
+
 // Change each use of FROM in this instruction to TO.  TO may be NULL.
 // This will update FROM and TO accordingly to reflect the new state.
 //

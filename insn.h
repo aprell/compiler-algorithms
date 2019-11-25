@@ -98,6 +98,10 @@ protected:
 	std::initializer_list<Reg *> init_args = {},
 	std::initializer_list<Reg *> init_results = {});
 
+  // Add an argument.
+  //
+  void add_arg (Reg *arg);
+
 
 private:
 
