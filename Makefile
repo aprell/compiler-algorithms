@@ -116,6 +116,7 @@ insn-text-writer.o: insn-text-writer.cc             \
     fun-text-writer.h $(fun-text-writer.h-DEPS)     \
     insn-text-writer.h $(insn-text-writer.h-DEPS)
 insn.o: insn.cc                                     \
+    check-assertion.h $(check-assertion.h-DEPS)     \
     bb.h $(bb.h-DEPS)                               \
     reg.h $(reg.h-DEPS)                             \
     insn.h $(insn.h-DEPS)
