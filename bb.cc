@@ -102,16 +102,25 @@ BB::add_insn_before_branch (Insn *insn)
   if (old_block)
     old_block->remove_insn (insn);
 
-  // Where we will insert.  This is the end of the list of the
-  // instruction list except when the last instruction is a branch
-  // insn, in which case it will be that insn.
+  // If the last instruction is a branch, insert before it, otherwise
+  // just insert at the end.
   //
-  auto insert_before = _insns.end ();
-  if (insert_before != _insns.begin ()
-      && (*insert_before)->is_branch_insn ())
-    --insert_before;
+  if (_insns.empty () || !_insns.back()->is_branch_insn ())
+    {
+      // Just insert at end.
 
-  _insns.insert (insert_before, insn);
+    _insns.push_back (insn);
+    }
+  else
+    {
+      // Insert before last insn.
+
+      auto insert_before = _insns.end ();
+
+      --insert_before;
+
+      _insns.insert (insert_before, insn);
+    }
 
   insn->set_block (this);
 }
