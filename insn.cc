@@ -56,8 +56,9 @@ Insn::add_arg (Reg *arg)
 }
 
 
-// Change each use of FROM in this instruction to TO.  TO may be NULL.
-// This will update FROM and TO accordingly to reflect the new state.
+// Change each use of the argument register FROM in this instruction
+// to TO.  TO may be NULL.  This will update FROM and TO accordingly
+// to reflect the new state.
 //
 void
 Insn::change_arg (Reg *from, Reg *to)
@@ -72,9 +73,9 @@ Insn::change_arg (Reg *from, Reg *to)
 	}
 }
 
-// Change argument NUM in this instruction to TO.  TO may be NULL.
-// This will update both TO and the old argument NUM accordingly to
-// reflect the new state.
+// Change the register used for argument NUM in this instruction to
+// TO.  TO may be NULL.  This will update both TO and the old register
+// used for argument NUM accordingly to reflect the new state.
 //
 void
 Insn::change_arg (unsigned num, Reg *to)
@@ -91,8 +92,9 @@ Insn::change_arg (unsigned num, Reg *to)
     }
 }
 
-// Change each define of FROM in this instruction to TO.  TO may be NULL.
-// This will update FROM and TO accordingly to reflect the new state.
+// Change each define of the result register FROM in this instruction
+// to TO.  TO may be NULL.  This will update FROM and TO accordingly
+// to reflect the new state.
 //
 void
 Insn::change_result (Reg *from, Reg *to)
@@ -107,9 +109,9 @@ Insn::change_result (Reg *from, Reg *to)
 	}
 }
 
-// Change result NUM in this instruction to TO.  TO may be NULL.
-// This will update both TO and the old result NUM accordingly to
-// reflect the new state.
+// Change the register defined for result NUM in this instruction to
+// TO.  TO may be NULL.  This will update both TO and the old register
+// used for result NUM accordingly to reflect the new state.
 //
 void
 Insn::change_result (unsigned num, Reg *to)
