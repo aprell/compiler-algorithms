@@ -5,7 +5,7 @@ PROGS = compcat
 all: $(PROGS)
 
 
-OBJS = prog.o fun.o fun-ssa.o bb.o bb-dom-tree.o			\
+OBJS = prog.o fun.o fun-opt.o fun-ssa.o bb.o bb-dom-tree.o		\
 	insn.o cond-branch-insn.o calc-insn.o				\
 	phi-fun-insn.o phi-fun-inp-insn.o				\
 	reg.o value.o							\
@@ -71,6 +71,10 @@ cond-branch-insn.o: cond-branch-insn.cc             \
     bb.h $(bb.h-DEPS)                               \
     reg.h $(reg.h-DEPS)                             \
     cond-branch-insn.h $(cond-branch-insn.h-DEPS)
+fun-opt.o: fun-opt.cc                               \
+    check-assertion.h $(check-assertion.h-DEPS)     \
+    insn.h $(insn.h-DEPS)                           \
+    fun.h $(fun.h-DEPS)
 fun-ssa.o: fun-ssa.cc                               \
     check-assertion.h $(check-assertion.h-DEPS)     \
     reg.h $(reg.h-DEPS)                             \
@@ -98,8 +102,6 @@ fun-text-writer.o: fun-text-writer.cc               \
     prog-text-writer.h $(prog-text-writer.h-DEPS)   \
     fun-text-writer.h $(fun-text-writer.h-DEPS)
 fun.o: fun.cc                                       \
-    check-assertion.h $(check-assertion.h-DEPS)     \
-    insn.h $(insn.h-DEPS)                           \
     reg.h $(reg.h-DEPS)                             \
     fun.h $(fun.h-DEPS)
 insn-text-writer.o: insn-text-writer.cc             \
