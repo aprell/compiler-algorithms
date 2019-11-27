@@ -41,7 +41,7 @@ public:
   // Return true if this is a branch instruction, that is, if it may
   // affect control-flow.
   //
-  virtual bool is_branch_insn () { return false; }
+  virtual bool is_branch_insn () const { return false; }
 
   // For each branch target block in this insn which points to FROM,
   // change the target to TO.  TO may be NULL, in which case the
