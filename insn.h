@@ -43,6 +43,13 @@ public:
   //
   virtual bool is_branch_insn () const { return false; }
 
+  // Return true if this instruction has a visible side-effect other
+  // than reading from its argument registers and writing to its
+  // result registers.
+  //
+  virtual bool has_side_effect () const { return false; }
+
+
   // For each branch target block in this insn which points to FROM,
   // change the target to TO.  TO may be NULL, in which case the
   // target becomes undefined.
