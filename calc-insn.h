@@ -23,11 +23,18 @@ public:
   enum class Op { NONE, ADD, SUB, MUL, DIV };
 
 
-  // Make a new calculation instruction, which performs the calculation
-  // OP on arguments ARG1 and ARG2, storing the result in RESULT.
+  // Make a new calculation instruction, which performs the binary
+  // calculation OP on arguments ARG1 and ARG2, storing the result in
+  // RESULT.
   // If BLOCK is non-NULL, the instruction is appended to it.
   //
   CalcInsn (Op op, Reg *arg1, Reg *arg2, Reg *result, BB *block = 0);
+
+  // Make a new calculation instruction, which performs the unary
+  // calculation OP on argument ARG, storing the result in RESULT.
+  // If BLOCK is non-NULL, the instruction is appended to it.
+  //
+  CalcInsn (Op op, Reg *arg, Reg *result, BB *block = 0);
 
 
   // Return the operation for this instruction.

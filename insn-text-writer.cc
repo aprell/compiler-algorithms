@@ -114,10 +114,16 @@ InsnTextWriter::write_calc (Insn *insn)
 	    + ")";
 	}
 
-      out << reg_name (results[0]) << " := "
-	  << reg_name (args[0])
-	  << ' ' << op_name << ' '
-	  << reg_name (args[1]);
+      // Binary or unary op
+      if (args.size () == 2)
+	out << reg_name (results[0]) << " := "
+	    << reg_name (args[0])
+	    << ' ' << op_name << ' '
+	    << reg_name (args[1]);
+      else
+	out << reg_name (results[0]) << " := "
+	    << op_name << ' '
+	    << reg_name (args[0]);
     }
   else
     invalid_write_method (insn, "CalcInsn");

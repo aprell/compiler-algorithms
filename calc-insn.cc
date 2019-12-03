@@ -17,3 +17,11 @@ CalcInsn::CalcInsn (Op op, Reg *arg1, Reg *arg2, Reg *result, BB *block)
   : Insn (block, {arg1, arg2}, {result}), _op (op)
 {
 }
+
+// Make a new calculation instruction, which performs the unary
+// calculation OP on argument ARG, storing the result in RESULT.
+// If BLOCK is non-NULL, the instruction is appended to it.
+//
+CalcInsn::CalcInsn (Op op, Reg *arg, Reg *result, BB *block)
+  : Insn (block, {arg}, {result}), _op (op){
+}
