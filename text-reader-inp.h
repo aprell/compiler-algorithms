@@ -156,6 +156,24 @@ public:
   std::string cur_line_parse_desc () const;
 
 
+  // Parsing state in this line.
+  //
+  struct SavedState
+  {
+    unsigned offs, max_offs;
+  };
+
+  // Return the current parsing state, which can later be restored
+  // using the TextReaderInp::restore_state method.
+  //
+  SavedState save_state () const { return { _cur_line_offs, _cur_line_max_offs }; }
+
+  // Return the current parsing state, which can later be restored
+  // using the TextReaderInp::restore_state method.
+  //
+  void restore_state (const SavedState &state) { _cur_line_offs = state.offs; _cur_line_max_offs = state.max_offs; };
+
+
 private:
 
   // Current line we're parsing.
