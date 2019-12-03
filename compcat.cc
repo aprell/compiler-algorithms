@@ -25,6 +25,7 @@ int main ()
 	  fun->update_post_dominators ();
 
 	  fun->convert_to_ssa_form ();
+	  fun->convert_from_ssa_form ();
 	}
 
       ProgTextWriter prog_writer (std::cout);
