@@ -20,7 +20,7 @@ class CalcInsn : public Insn
 {
 public:
 
-  enum class Op { NONE, ADD, SUB, MUL, DIV };
+  enum class Op { NONE, ADD, SUB, MUL, DIV, NEG };
 
 
   // Make a new calculation instruction, which performs the binary

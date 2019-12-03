@@ -107,6 +107,7 @@ InsnTextWriter::write_calc (Insn *insn)
 	case CalcInsn::Op::SUB: op_name = "-"; break;
 	case CalcInsn::Op::MUL: op_name = "*"; break;
 	case CalcInsn::Op::DIV: op_name = "/"; break;
+	case CalcInsn::Op::NEG: op_name = "-"; break;
 	default:
 	  op_name
 	    = "?("
