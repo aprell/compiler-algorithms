@@ -14,10 +14,17 @@
 
 #include "reg.h"
 #include "insn.h"
+#include "copy-insn.h"
 #include "phi-fun-insn.h"
 #include "phi-fun-inp-insn.h"
 
 #include "fun.h"
+
+
+
+// ----------------------------------------------------------------
+// Convert to SSA-form
+//
 
 
 // Insert SSA phi-functions in every place they're needed in this
@@ -168,4 +175,148 @@ Fun::convert_to_ssa_form ()
   insert_phi_functions ();
 
   convert_dominated_regs_to_ssa_values (_entry_block);
+}
+
+
+
+// ----------------------------------------------------------------
+// Convert from SSA-form
+//
+
+
+// Interpose new blocks for each successor to INP_BLOCK which has a
+// phi-function input in this block, and move the corresponding
+// phi-function input instructions into these new blocks.
+//
+void
+isolate_phi_function_inputs (BB *inp_block)
+{
+  check_assertion (inp_block->successors ().size () > 1,
+		   "Multiple successors expected in isolate_phi_function_inputs");
+
+  // A mapping from phi-function blocks to the new interposing blocks
+  // we create.
+  //
+  std::map<BB *, BB *> interposing_blocks;
+
+  const std::list<Insn *> &inp_block_insns = inp_block->insns ();
+  while (! inp_block_insns.empty ())
+    {
+      auto insn_iter = inp_block_insns.end ();
+
+      // Skip the branch insn at the end (we expect a
+      // branch insn because the block has multiple
+      // successors).
+      //
+      --insn_iter;
+      check_assertion ((*insn_iter)->is_branch_insn (),
+		       "Branch expected at end of block");
+
+      // Now see if the insn before that is a
+      // phi-function input.
+      //
+      --insn_iter;
+      if (insn_iter == inp_block_insns.begin ())
+	break;
+
+      if (PhiFunInpInsn *inp_to_move
+	  = dynamic_cast<PhiFunInpInsn *> (*insn_iter))
+	{
+	  // Move INP_TO_MOVE.
+
+	  // Block for the corresponding phi-function.
+	  //
+	  BB *phi_fun_block = inp_to_move->phi_fun ()->block ();
+
+	  // See if there's a new interposing block to move
+	  // INP_TO_MOVE to, otherwise create one.
+	  //
+	  BB *&interposing_block = interposing_blocks[phi_fun_block];
+	  if (! interposing_block)
+	    {
+	      interposing_block = new BB (inp_block->fun ());
+	      interposing_block->set_fall_through (phi_fun_block);
+	      inp_block->change_successor (phi_fun_block, interposing_block);
+
+	      const std::list<BB *> &succs = inp_block->successors ();
+	      check_assertion (std::find (succs.begin(), succs.end(), phi_fun_block) == succs.end(), "@2");
+	    }
+
+	  // Move INP_TO_MOVE to the interposing block (which removes
+	  // it from INP_BLOCK).
+	  //
+	  interposing_block->add_insn (inp_to_move);
+
+	  check_assertion (inp_to_move->block () == interposing_block, "@1");
+	  const std::list<Insn *> &insns = inp_block->insns ();
+	  check_assertion (std::find (insns.begin(), insns.end(), inp_to_move) == insns.end (), "@3");
+	}
+      else
+	{
+	  // We've run out of phi-function inputs, so stop the loop.
+
+	  break;
+	}
+    }
+}
+
+
+// Remove SSA phi-functions from this function, replacing them with
+// equivalent simple copy insns.
+//
+void
+Fun::convert_from_ssa_form ()
+{
+  for (auto bb : _blocks)
+    {
+      const std::list<Insn *> &insns = bb->insns ();
+
+      while (! insns.empty ())
+	{
+	  Insn *insn = insns.front ();
+	  PhiFunInsn *phi_fun = dynamic_cast<PhiFunInsn *> (insn);
+
+	  if (! phi_fun)
+	    break;
+
+	  for (auto inp : phi_fun->inputs ())
+	    {
+	      BB *inp_block = inp->block ();
+
+	      // If this block has multiple successors, we need to add
+	      // special blocks to hold the phi-function inputs, as
+	      // they'll be replaced by copy instructions.
+	      //
+	      // When we do this for one phi-function input, we move
+	      // all other phi-function inputs as well; the new blocks
+	      // we add will all have a single successor, so
+	      // subsequent checks on any of the moved phi-function
+	      // inputs will not cause any further blocks to be added.
+	      //
+	      if (inp_block->successors ().size () > 1)
+		{
+		  isolate_phi_function_inputs (inp_block);
+
+		  // INP's block will have changed, so re-fetch it.
+		  //
+		  inp_block = inp->block ();
+		}
+
+	      // Add a copy insn to replace the phi-function input.
+	      //
+	      new CopyInsn (inp->args ()[0], phi_fun->results ()[0],
+			    inp_block);
+	    }
+
+	  // Remove all the phi-function's inputs.
+	  //
+	  const std::list<PhiFunInpInsn *> &inputs = phi_fun->inputs ();
+	  while (! inputs.empty ())
+	    delete inputs.front ();
+
+	  // Finally, get rid of the phi-function.
+	  //
+	  delete phi_fun;
+	}
+    }
 }

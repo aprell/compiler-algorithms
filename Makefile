@@ -80,6 +80,7 @@ fun-ssa.o: fun-ssa.cc                               \
     check-assertion.h $(check-assertion.h-DEPS)     \
     reg.h $(reg.h-DEPS)                             \
     insn.h $(insn.h-DEPS)                           \
+    copy-insn.h $(copy-insn.h-DEPS)                 \
     phi-fun-insn.h $(phi-fun-insn.h-DEPS)           \
     phi-fun-inp-insn.h $(phi-fun-inp-insn.h-DEPS)   \
     fun.h $(fun.h-DEPS)

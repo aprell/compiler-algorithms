@@ -137,6 +137,11 @@ public:
   //
   void convert_to_ssa_form ();
 
+  // Remove SSA phi-functions from this function, replacing them with
+  // equivalent simple copy insns.
+  //
+  void convert_from_ssa_form ();
+
 
   // Remove any unreachable blocks.
   //
