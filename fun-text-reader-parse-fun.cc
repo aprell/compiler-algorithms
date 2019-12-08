@@ -134,35 +134,48 @@ FunTextReader::parse_fun ()
 	  inp.skip (':');
 	  inp.expect ('=');
 
-	  //if (inp.peek () == '-')
-
-	  Reg *arg1 = read_rvalue_reg ();
-
 	  inp.skip_whitespace ();
 
-	  if (inp.at_eol ())
+	  if (inp.skip ('-'))
 	    {
-	      new CopyInsn (arg1, result, cur_block);
+	      // Unary calc insn
+
+	      Reg *arg = read_rvalue_reg ();
+
+	      new CalcInsn (CalcInsn::Op::NEG, arg, result, cur_block);
 	    }
 	  else
 	    {
-	      char calc_op_char = inp.read_char ();
-	      CalcInsn::Op calc_op;
-	      switch (calc_op_char)
+	      // Copy insn or binary calc insn
+
+	      Reg *arg1 = read_rvalue_reg ();
+
+	      inp.skip_whitespace ();
+
+	      if (inp.at_eol ())
 		{
-		case '+': calc_op = CalcInsn::Op::ADD; break;
-		case '-': calc_op = CalcInsn::Op::SUB; break;
-		case '*': calc_op = CalcInsn::Op::MUL; break;
-		case '/': calc_op = CalcInsn::Op::DIV; break;
-		default:
-		  inp.parse_error
-		    (std::string ("Unknown calculation operation \"")
-		     + calc_op_char + "\"");
+		  new CopyInsn (arg1, result, cur_block);
 		}
+	      else
+		{
+		  char calc_op_char = inp.read_char ();
+		  CalcInsn::Op calc_op;
+		  switch (calc_op_char)
+		    {
+		    case '+': calc_op = CalcInsn::Op::ADD; break;
+		    case '-': calc_op = CalcInsn::Op::SUB; break;
+		    case '*': calc_op = CalcInsn::Op::MUL; break;
+		    case '/': calc_op = CalcInsn::Op::DIV; break;
+		    default:
+		      inp.parse_error
+			(std::string ("Unknown calculation operation \"")
+			 + calc_op_char + "\"");
+		    }
 
-	      Reg *arg2 = read_rvalue_reg ();
+		  Reg *arg2 = read_rvalue_reg ();
 
-	      new CalcInsn (calc_op, arg1, arg2, result, cur_block);
+		  new CalcInsn (calc_op, arg1, arg2, result, cur_block);
+		}
 	    }
 
 	  continue;
