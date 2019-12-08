@@ -19,7 +19,7 @@
 #include "fun-arg-insn.h"
 #include "fun-result-insn.h"
 
-#include "text-reader-inp.h"
+#include "line-input.h"
 
 #include "prog-text-reader.h"
 
@@ -34,7 +34,7 @@ FunTextReader::FunTextReader (ProgTextReader &prog_reader)
 
 // Return the text input source we're reading from.
 //
-TextReaderInp &
+LineInput &
 FunTextReader::input () const
 {
   return _prog_reader.input ();
@@ -98,7 +98,7 @@ FunTextReader::get_reg (const std::string &name)
 Reg *
 FunTextReader::read_rvalue_reg ()
 {
-  TextReaderInp &inp = input ();
+  LineInput &inp = input ();
 
   inp.skip_whitespace ();
 

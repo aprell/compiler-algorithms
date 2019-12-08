@@ -12,7 +12,7 @@
 #include "fun-text-reader.h"
 
 class Prog;
-class TextReaderInp;
+class LineInput;
 
 
 // A class for reading a text representations of a program.
@@ -21,12 +21,12 @@ class ProgTextReader
 {
 public:
 
-  ProgTextReader (TextReaderInp &inp);
+  ProgTextReader (LineInput &inp);
 
 
   // Return the text input source we're reading from.
   //
-  TextReaderInp &input () const { return _inp; }
+  LineInput &input () const { return _inp; }
 
 
   // Read a text representation of a program, and return the new program..
@@ -36,7 +36,7 @@ public:
 
 private:
 
-  TextReaderInp &_inp;
+  LineInput &_inp;
 
   FunTextReader _fun_reader;
 

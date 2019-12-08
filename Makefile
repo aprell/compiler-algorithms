@@ -11,8 +11,8 @@ OBJS = prog.o fun.o fun-opt.o fun-ssa.o bb.o bb-dom-tree.o		\
 	reg.o value.o							\
 	prog-text-writer.o						\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o		\
-	text-reader-inp.o prog-text-reader.o				\
 	fun-text-reader.o fun-text-reader-parse-fun.o			\
+	line-input.o prog-text-reader.o					\
 	check-assertion.o
 
 compcat: compcat.o $(OBJS)
@@ -65,7 +65,7 @@ compcat.o: compcat.cc                               \
     fun.h $(fun.h-DEPS)                             \
     prog.h $(prog.h-DEPS)                           \
     prog-text-writer.h $(prog-text-writer.h-DEPS)   \
-    text-reader-inp.h $(text-reader-inp.h-DEPS)     \
+    line-input.h $(line-input.h-DEPS)               \
     prog-text-reader.h $(prog-text-reader.h-DEPS)
 cond-branch-insn.o: cond-branch-insn.cc             \
     check-assertion.h $(check-assertion.h-DEPS)     \
@@ -93,7 +93,7 @@ fun-text-reader-parse-fun.o: fun-text-reader-parse-fun.cc \
     copy-insn.h $(copy-insn.h-DEPS)                 \
     fun-arg-insn.h $(fun-arg-insn.h-DEPS)           \
     fun-result-insn.h $(fun-result-insn.h-DEPS)     \
-    text-reader-inp.h $(text-reader-inp.h-DEPS)     \
+    line-input.h $(line-input.h-DEPS)               \
     fun-text-reader.h $(fun-text-reader.h-DEPS)
 fun-text-reader.o: fun-text-reader.cc               \
     fun.h $(fun.h-DEPS)                             \
@@ -105,7 +105,7 @@ fun-text-reader.o: fun-text-reader.cc               \
     copy-insn.h $(copy-insn.h-DEPS)                 \
     fun-arg-insn.h $(fun-arg-insn.h-DEPS)           \
     fun-result-insn.h $(fun-result-insn.h-DEPS)     \
-    text-reader-inp.h $(text-reader-inp.h-DEPS)     \
+    line-input.h $(line-input.h-DEPS)               \
     prog-text-reader.h $(prog-text-reader.h-DEPS)   \
     fun-text-reader.h $(fun-text-reader.h-DEPS)
 fun-text-writer.o: fun-text-writer.cc               \
@@ -136,6 +136,8 @@ insn.o: insn.cc                                     \
     bb.h $(bb.h-DEPS)                               \
     reg.h $(reg.h-DEPS)                             \
     insn.h $(insn.h-DEPS)
+line-input.o: line-input.cc                         \
+    line-input.h $(line-input.h-DEPS)
 phi-fun-inp-insn.o: phi-fun-inp-insn.cc             \
     bb.h $(bb.h-DEPS)                               \
     phi-fun-insn.h $(phi-fun-insn.h-DEPS)           \
@@ -147,7 +149,7 @@ phi-fun-insn.o: phi-fun-insn.cc                     \
     phi-fun-insn.h $(phi-fun-insn.h-DEPS)
 prog-text-reader.o: prog-text-reader.cc             \
     prog.h $(prog.h-DEPS)                           \
-    text-reader-inp.h $(text-reader-inp.h-DEPS)     \
+    line-input.h $(line-input.h-DEPS)               \
     prog-text-reader.h $(prog-text-reader.h-DEPS)
 prog-text-writer.o: prog-text-writer.cc             \
     prog.h $(prog.h-DEPS)                           \
@@ -160,8 +162,6 @@ reg.o: reg.cc                                       \
     insn.h $(insn.h-DEPS)                           \
     value.h $(value.h-DEPS)                         \
     reg.h $(reg.h-DEPS)
-text-reader-inp.o: text-reader-inp.cc               \
-    text-reader-inp.h $(text-reader-inp.h-DEPS)
 value.o: value.cc                                   \
     fun.h $(fun.h-DEPS)                             \
     insn.h $(insn.h-DEPS)                           \

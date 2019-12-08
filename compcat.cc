@@ -5,14 +5,14 @@
 #include "prog.h"
 #include "prog-text-writer.h"
 
-#include "text-reader-inp.h"
+#include "line-input.h"
 #include "prog-text-reader.h"
 
 int main ()
 {
   try
     {
-      TextReaderInp inp (std::cin);
+      LineInput inp (std::cin);
       ProgTextReader prog_reader (inp);
       std::unique_ptr<Prog> prog (prog_reader.read ());
 

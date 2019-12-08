@@ -10,12 +10,12 @@
 
 #include "prog.h"
 
-#include "text-reader-inp.h"
+#include "line-input.h"
 
 #include "prog-text-reader.h"
 
 
-ProgTextReader::ProgTextReader (TextReaderInp &inp)
+ProgTextReader::ProgTextReader (LineInput &inp)
   : _inp (inp), _fun_reader (*this)
 {
 }

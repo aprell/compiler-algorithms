@@ -17,7 +17,7 @@
 #include "fun-arg-insn.h"
 #include "fun-result-insn.h"
 
-#include "text-reader-inp.h"
+#include "line-input.h"
 
 #include "fun-text-reader.h"
 
@@ -27,7 +27,7 @@
 void
 FunTextReader::parse_fun ()
 {
-  TextReaderInp &inp = input ();
+  LineInput &inp = input ();
 
   inp.read_new_line ();
   inp.expect ('{');

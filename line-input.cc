@@ -1,4 +1,4 @@
-// text-reader-inp.cc -- Input source for IR text-format input classes
+// line-input.cc -- Line-by-line source input
 //
 // Copyright © 2019  Miles Bader
 //
@@ -6,14 +6,14 @@
 // Created: 2019-11-03
 //
 
-#include "text-reader-inp.h"
+#include "line-input.h"
 
 
 // Read and return an unsigned integer, or signal an error if none
 // can be read.
 //
 unsigned
-TextReaderInp::read_unsigned ()
+LineInput::read_unsigned ()
 {
   skip_whitespace ();
 
@@ -36,7 +36,7 @@ TextReaderInp::read_unsigned ()
 // can be read.
 //
 int
-TextReaderInp::read_int ()
+LineInput::read_int ()
 {
   skip_whitespace ();
 
@@ -64,7 +64,7 @@ TextReaderInp::read_int ()
 // signal an error if none.
 //
 std::string
-TextReaderInp::read_id ()
+LineInput::read_id ()
 {
   skip_whitespace ();
 
@@ -88,7 +88,7 @@ TextReaderInp::read_id ()
 // otherwise signal an error.
 //
 void
-TextReaderInp::expect (char ch)
+LineInput::expect (char ch)
 {
   if (! skip (ch))
     parse_error (std::string ("Expected '") + ch + "'");
@@ -98,7 +98,7 @@ TextReaderInp::expect (char ch)
 // otherwise signal an error.
 //
 void
-TextReaderInp::expect (const char *keyw)
+LineInput::expect (const char *keyw)
 {
   if (! skip (keyw))
     parse_error (std::string ("Expected \"") + keyw + "\"");
@@ -109,7 +109,7 @@ TextReaderInp::expect (const char *keyw)
 // return true, otherwise return false.
 //
 bool
-TextReaderInp::skip (char ch)
+LineInput::skip (char ch)
 {
   skip_whitespace ();
 
@@ -128,7 +128,7 @@ TextReaderInp::skip (char ch)
 // return true, otherwise return false.
 //
 bool
-TextReaderInp::skip (const char *keyw)
+LineInput::skip (const char *keyw)
 {
   skip_whitespace ();
 
@@ -155,7 +155,7 @@ TextReaderInp::skip (const char *keyw)
 // false.
 //
 bool
-TextReaderInp::skip_eol (char ch)
+LineInput::skip_eol (char ch)
 {
   skip_eol_whitespace ();
 
@@ -174,7 +174,7 @@ TextReaderInp::skip_eol (char ch)
 // Read a new line, and return true if successful.
 //
 bool
-TextReaderInp::read_new_line ()
+LineInput::read_new_line ()
 {
   _cur_line_offs = 0;
   if (std::getline (_inp_stream, _cur_line))
@@ -194,8 +194,7 @@ TextReaderInp::read_new_line ()
 // LOC in the line, which defaults to the current location.
 //
 [[noreturn]] void
-TextReaderInp::parse_error (const std::string &err,
-			    SrcContext::Loc loc)
+LineInput::parse_error (const std::string &err, SrcContext::Loc loc)
   const
 {
   throw std::runtime_error (cur_line_parse_desc (loc) + "Parse error: " + err);
@@ -205,7 +204,7 @@ TextReaderInp::parse_error (const std::string &err,
 // Return a string showing the current line and parse position.
 //
 std::string
-TextReaderInp::cur_line_parse_desc (SrcContext::Loc loc) const
+LineInput::cur_line_parse_desc (SrcContext::Loc loc) const
 {
   std::string desc (_cur_line);
   desc += '\n';

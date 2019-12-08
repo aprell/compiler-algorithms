@@ -1,4 +1,4 @@
-// text-reader-inp.h -- Input source for IR text-format input classes
+// line-input.h -- Line-by-line source input
 //
 // Copyright © 2019  Miles Bader
 //
@@ -6,8 +6,8 @@
 // Created: 2019-11-03
 //
 
-#ifndef __TEXT_READER_INP_H__
-#define __TEXT_READER_INP_H__
+#ifndef __LINE_INPUT_H__
+#define __LINE_INPUT_H__
 
 #include <istream>
 #include <string>
@@ -18,7 +18,7 @@
 // A text input source for *TextReader classes, adds somewhat
 // higher-level methods on top of a stream to do line-by-line input.
 //
-class TextReaderInp
+class LineInput
 {
 public:
 
@@ -28,7 +28,7 @@ public:
   {
   public:
 
-    SrcContext (const TextReaderInp &inp)
+    SrcContext (const LineInput &inp)
       : _inp (inp)
     { }
 
@@ -45,11 +45,11 @@ public:
 
     // Input object this SrcContext corresponds to.
     //
-    const TextReaderInp &_inp;
+    const LineInput &_inp;
   };
 
 
-  TextReaderInp (std::istream &inp_stream)
+  LineInput (std::istream &inp_stream)
     : _inp_stream (inp_stream), _src_context (*this)
   {
   }
@@ -203,12 +203,12 @@ public:
   };
 
   // Return the current parsing state, which can later be restored
-  // using the TextReaderInp::restore_state method.
+  // using the LineInput::restore_state method.
   //
   SavedState save_state () const { return { _cur_line_offs, _cur_line_max_offs }; }
 
   // Return the current parsing state, which can later be restored
-  // using the TextReaderInp::restore_state method.
+  // using the LineInput::restore_state method.
   //
   void restore_state (const SavedState &state) { _cur_line_offs = state.offs; _cur_line_max_offs = state.max_offs; };
 
@@ -249,4 +249,4 @@ private:
 };
 
 
-#endif // __TEXT_READER_INP_H__
+#endif // __LINE_INPUT_H__
