@@ -12,6 +12,8 @@
 #include <istream>
 #include <string>
 
+#include "src-context.h"
+
 
 // A text input source for *TextReader classes, adds somewhat
 // higher-level methods on top of a stream to do line-by-line input.
@@ -20,8 +22,35 @@ class TextReaderInp
 {
 public:
 
+  // Subclass of SrcContext for use with a LineInput.
+  //
+  class SrcContext : public ::SrcContext
+  {
+  public:
+
+    SrcContext (const TextReaderInp &inp)
+      : _inp (inp)
+    { }
+
+    // Signal an exception for an error at location LOC within this
+    // context with message MSG.
+    //
+    [[noreturn]] virtual void error (Loc loc, const std::string &msg) const
+    {
+      _inp.parse_error (msg, loc);
+    }
+
+
+  private:
+
+    // Input object this SrcContext corresponds to.
+    //
+    const TextReaderInp &_inp;
+  };
+
+
   TextReaderInp (std::istream &inp_stream)
-    : _inp_stream (inp_stream)
+    : _inp_stream (inp_stream), _src_context (*this)
   {
   }
 
@@ -146,14 +175,24 @@ public:
   bool read_new_line ();
 
 
-  // Throw an exception containing the error message ERR.
+  // Throw an exception containing the error message ERR at location
+  // LOC in the line.
   //
-  [[noreturn]] void parse_error (const std::string &err) const;
+  [[noreturn]] void parse_error (const std::string &err, SrcContext::Loc loc)
+    const;
+
+  // Throw an exception containing the error message ERR at the
+  // current location.
+  //
+  [[noreturn]] void parse_error (const std::string &err) const
+  {
+    parse_error (err, _cur_line_offs);
+  }
 
 
-  // Return a string showing the current line and parse position.
+  // Return a string showing the current line at position LOC.
   //
-  std::string cur_line_parse_desc () const;
+  std::string cur_line_parse_desc (SrcContext::Loc loc) const;
 
 
   // Parsing state in this line.
@@ -174,6 +213,17 @@ public:
   void restore_state (const SavedState &state) { _cur_line_offs = state.offs; _cur_line_max_offs = state.max_offs; };
 
 
+  // Return a SrcContext for this LineInput.
+  //
+  const SrcContext &src_context () const { return _src_context; }
+
+
+  // Return a source-location for the current location in the line.
+  // Reading another line invalidates source locations.
+  //
+  SrcContext::Loc cur_src_loc () const { return _cur_line_max_offs; }
+
+
 private:
 
   // Current line we're parsing.
@@ -191,6 +241,10 @@ private:
   // Stream we're reading from.
   //
   std::istream &_inp_stream;
+
+  // SrcContext for us.
+  //
+  SrcContext _src_context;
 
 };
 

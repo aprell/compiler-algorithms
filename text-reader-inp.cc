@@ -190,23 +190,26 @@ TextReaderInp::read_new_line ()
 }
 
 
-// Throw an exception containing the error message ERR.
+// Throw an exception containing the error message ERR at location
+// LOC in the line, which defaults to the current location.
 //
-void
-TextReaderInp::parse_error (const std::string &err) const
+[[noreturn]] void
+TextReaderInp::parse_error (const std::string &err,
+			    SrcContext::Loc loc)
+  const
 {
-  throw std::runtime_error (cur_line_parse_desc () + "Parse error: " + err);
+  throw std::runtime_error (cur_line_parse_desc (loc) + "Parse error: " + err);
 }
 
 
 // Return a string showing the current line and parse position.
 //
 std::string
-TextReaderInp::cur_line_parse_desc () const
+TextReaderInp::cur_line_parse_desc (SrcContext::Loc loc) const
 {
   std::string desc (_cur_line);
   desc += '\n';
-  for (unsigned i = 0; i < _cur_line_offs; i++)
+  for (unsigned i = 0; i < loc; i++)
     desc += ' ';
   desc += '^';
   desc += '\n';
