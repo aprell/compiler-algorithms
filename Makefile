@@ -147,8 +147,6 @@ insn.o: insn.cc                                     \
     bb.h $(bb.h-DEPS)                               \
     reg.h $(reg.h-DEPS)                             \
     insn.h $(insn.h-DEPS)
-line-input.o: line-input.cc                         \
-    line-input.h $(line-input.h-DEPS)
 phi-fun-inp-insn.o: phi-fun-inp-insn.cc             \
     bb.h $(bb.h-DEPS)                               \
     phi-fun-insn.h $(phi-fun-insn.h-DEPS)           \
