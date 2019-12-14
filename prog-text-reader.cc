@@ -35,7 +35,7 @@ ProgTextReader::read ()
 
   cur_prog = prog;
 
-  while (_inp.read_new_line ())
+  do
     {
       if (! _inp.at_eol ())
 	{
@@ -47,6 +47,7 @@ ProgTextReader::read ()
 	  prog->add_fun (fun_name, fun);
 	}
     }
+  while (_inp.read_new_line ());
 
   cur_prog = 0;
 

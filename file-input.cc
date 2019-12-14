@@ -22,6 +22,9 @@ FileInput::FileInput (const std::string &file_name, FileSrcContext &src_context,
     _line_oriented (line_oriented),
     _src_context (src_context), _src_file (_src_context.file (file_name))
 {
+  // Read the first line.
+  //
+  read_new_line ();
 }
 
 
