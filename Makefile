@@ -13,7 +13,7 @@ OBJS = prog.o fun.o fun-opt.o fun-ssa.o bb.o bb-dom-tree.o		\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o		\
 	fun-text-reader.o fun-text-reader-parse-fun.o			\
 	line-input.o prog-text-reader.o					\
-	file-input.o file-src-context.o					\
+	src-file-input.o file-input.o file-src-context.o		\
 	check-assertion.o
 
 compcat: compcat.o $(OBJS)
@@ -39,6 +39,7 @@ phi-fun-insn.h-DEPS = insn.h $(insn.h-DEPS)
 prog-text-reader.h-DEPS = fun-text-reader.h $(fun-text-reader.h-DEPS)
 prog-text-writer.h-DEPS = fun-text-writer.h $(fun-text-writer.h-DEPS)
 prog.h-DEPS = fun.h $(fun.h-DEPS)
+src-file-input.h-DEPS = file-input.h $(file-input.h-DEPS)
 
 
 # Object file dependencies, basically the corresponding source file
@@ -170,6 +171,8 @@ reg.o: reg.cc                                       \
     insn.h $(insn.h-DEPS)                           \
     value.h $(value.h-DEPS)                         \
     reg.h $(reg.h-DEPS)
+src-file-input.o: src-file-input.cc                 \
+    src-file-input.h $(src-file-input.h-DEPS)
 value.o: value.cc                                   \
     fun.h $(fun.h-DEPS)                             \
     insn.h $(insn.h-DEPS)                           \
