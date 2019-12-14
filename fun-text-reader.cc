@@ -19,7 +19,7 @@
 #include "fun-arg-insn.h"
 #include "fun-result-insn.h"
 
-#include "line-input.h"
+#include "src-file-input.h"
 
 #include "prog-text-reader.h"
 
@@ -34,7 +34,7 @@ FunTextReader::FunTextReader (ProgTextReader &prog_reader)
 
 // Return the text input source we're reading from.
 //
-LineInput &
+SrcFileInput &
 FunTextReader::input () const
 {
   return _prog_reader.input ();
@@ -47,6 +47,10 @@ FunTextReader::input () const
 Fun *
 FunTextReader::read ()
 {
+  // We need to be in line-oriented mode.
+  //
+  input ().set_line_oriented (true);
+
   // Cannot be called recursively.
   //
   if (cur_fun)
@@ -85,8 +89,7 @@ FunTextReader::get_reg (const std::string &name)
 {
   auto reg_it = registers.find (name);
   if (reg_it == registers.end ())
-    input ().parse_error
-      (std::string ("Unknown register \"") + name + "\"");
+    input ().error (std::string ("Unknown register \"") + name + "\"");
   return reg_it->second;
 }
 
@@ -98,7 +101,7 @@ FunTextReader::get_reg (const std::string &name)
 Reg *
 FunTextReader::read_rvalue_reg ()
 {
-  LineInput &inp = input ();
+  SrcFileInput &inp = input ();
 
   inp.skip_whitespace ();
 

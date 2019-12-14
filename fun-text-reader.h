@@ -29,7 +29,7 @@ public:
 
   // Return the text input source we're reading from.
   //
-  LineInput &input () const;
+  SrcFileInput &input () const;
 
 
   // Read a text representation of a function, and return the new

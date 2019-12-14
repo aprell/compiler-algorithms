@@ -5,14 +5,22 @@
 #include "prog.h"
 #include "prog-text-writer.h"
 
-#include "line-input.h"
+#include "file-src-context.h"
+#include "src-file-input.h"
 #include "prog-text-reader.h"
 
-int main ()
+int main (int argc, const char *const *argv)
 {
+  if (argc != 2)
+    {
+      std::cerr << "Usage: " << argv[0] << " SRC_FILE\n";
+      return 1;
+    }
+
   try
     {
-      LineInput inp (std::cin);
+      FileSrcContext src_context;
+      SrcFileInput inp (argv[1], src_context);
       ProgTextReader prog_reader (inp);
       std::unique_ptr<Prog> prog (prog_reader.read ());
 

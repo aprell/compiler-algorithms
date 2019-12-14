@@ -4,7 +4,7 @@
 // Copyright © 2019  Miles Bader
 //
 // Author: Miles Bader <snogglethorpe@gmail.com>
-// Created: 2019-12-01
+// Created: 2019-11-03
 //
 
 #include "fun.h"
@@ -17,7 +17,7 @@
 #include "fun-arg-insn.h"
 #include "fun-result-insn.h"
 
-#include "line-input.h"
+#include "src-file-input.h"
 
 #include "fun-text-reader.h"
 
@@ -27,7 +27,7 @@
 void
 FunTextReader::parse_fun ()
 {
-  LineInput &inp = input ();
+  SrcFileInput &inp = input ();
 
   inp.read_new_line ();
   inp.expect ('{');
@@ -72,21 +72,20 @@ FunTextReader::parse_fun ()
 	  // one.
 
 	  if (saw_fun_result)
-	    inp.parse_error
-	      ("No instructions can follow a fun-result instruction");
+	    inp.error ("No instructions can follow a fun-result instruction");
 	}
 
       // Label (starts a new block)
       //
-      if (inp.skip_eol (':'))
+      if (inp.eol_skip_backwards (':'))
 	{
 	  BB *prev_block = cur_block;
 
 	  cur_block = read_label ();
 
 	  if (! cur_block->is_empty ())
-	    inp.parse_error (std::string ("duplicate label _")
-			     + std::to_string (cur_block->num ()));
+	    inp.error (std::string ("duplicate label _")
+		       + std::to_string (cur_block->num ()));
 
 	  if (prev_block)
 	    prev_block->set_fall_through (cur_block);
@@ -109,9 +108,8 @@ FunTextReader::parse_fun ()
 
 	  Reg *&reg = registers[reg_name];
 	  if (reg)
-	    inp.parse_error
-	      (std::string ("Duplicate register declaration \"")
-	       + id + "\"");
+	    inp.error (std::string ("Duplicate register declaration \"")
+		       + id + "\"");
 
 	  reg = new Reg (reg_name, cur_fun);
 
@@ -121,7 +119,7 @@ FunTextReader::parse_fun ()
       // For everything after this point, a block is expected.
       //
       if (! cur_block)
-	inp.parse_error ("Expected label");
+	inp.error ("Expected label");
 
       inp.skip_whitespace ();
 
@@ -167,7 +165,7 @@ FunTextReader::parse_fun ()
 		    case '*': calc_op = CalcInsn::Op::MUL; break;
 		    case '/': calc_op = CalcInsn::Op::DIV; break;
 		    default:
-		      inp.parse_error
+		      inp.error
 			(std::string ("Unknown calculation operation \"")
 			 + calc_op_char + "\"");
 		    }
@@ -221,7 +219,7 @@ FunTextReader::parse_fun ()
       if (id == "fun_arg")
 	{
 	  if (saw_label)
-	    inp.parse_error
+	    inp.error
 	      ("fun_arg instructions are only valid at the start of a function");
 
 	  unsigned arg_num = inp.read_unsigned ();
@@ -231,7 +229,7 @@ FunTextReader::parse_fun ()
 	  continue;
 	}
 
-      inp.parse_error ("Unknown instruction");
+      inp.error ("Unknown instruction");
     }
 
   if (cur_block)

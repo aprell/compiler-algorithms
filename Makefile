@@ -11,8 +11,9 @@ OBJS = prog.o fun.o fun-opt.o fun-ssa.o bb.o bb-dom-tree.o		\
 	reg.o value.o							\
 	prog-text-writer.o						\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o		\
-	fun-text-reader.o fun-text-reader-parse-fun.o			\
-	line-input.o prog-text-reader.o					\
+	prog-text-reader.o						\
+	fun-text-reader.o						\
+	fun-text-reader-parse-fun.o					\
 	src-file-input.o file-input.o file-src-context.o		\
 	check-assertion.o
 
@@ -69,7 +70,8 @@ compcat.o: compcat.cc                               \
     fun.h $(fun.h-DEPS)                             \
     prog.h $(prog.h-DEPS)                           \
     prog-text-writer.h $(prog-text-writer.h-DEPS)   \
-    line-input.h $(line-input.h-DEPS)               \
+    file-src-context.h $(file-src-context.h-DEPS)   \
+    src-file-input.h $(src-file-input.h-DEPS)       \
     prog-text-reader.h $(prog-text-reader.h-DEPS)
 cond-branch-insn.o: cond-branch-insn.cc             \
     check-assertion.h $(check-assertion.h-DEPS)     \
@@ -102,7 +104,7 @@ fun-text-reader-parse-fun.o: fun-text-reader-parse-fun.cc \
     copy-insn.h $(copy-insn.h-DEPS)                 \
     fun-arg-insn.h $(fun-arg-insn.h-DEPS)           \
     fun-result-insn.h $(fun-result-insn.h-DEPS)     \
-    line-input.h $(line-input.h-DEPS)               \
+    src-file-input.h $(src-file-input.h-DEPS)       \
     fun-text-reader.h $(fun-text-reader.h-DEPS)
 fun-text-reader.o: fun-text-reader.cc               \
     fun.h $(fun.h-DEPS)                             \
@@ -114,7 +116,7 @@ fun-text-reader.o: fun-text-reader.cc               \
     copy-insn.h $(copy-insn.h-DEPS)                 \
     fun-arg-insn.h $(fun-arg-insn.h-DEPS)           \
     fun-result-insn.h $(fun-result-insn.h-DEPS)     \
-    line-input.h $(line-input.h-DEPS)               \
+    src-file-input.h $(src-file-input.h-DEPS)       \
     prog-text-reader.h $(prog-text-reader.h-DEPS)   \
     fun-text-reader.h $(fun-text-reader.h-DEPS)
 fun-text-writer.o: fun-text-writer.cc               \
@@ -158,7 +160,7 @@ phi-fun-insn.o: phi-fun-insn.cc                     \
     phi-fun-insn.h $(phi-fun-insn.h-DEPS)
 prog-text-reader.o: prog-text-reader.cc             \
     prog.h $(prog.h-DEPS)                           \
-    line-input.h $(line-input.h-DEPS)               \
+    src-file-input.h $(src-file-input.h-DEPS)       \
     prog-text-reader.h $(prog-text-reader.h-DEPS)
 prog-text-writer.o: prog-text-writer.cc             \
     prog.h $(prog.h-DEPS)                           \
