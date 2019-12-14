@@ -13,6 +13,7 @@ OBJS = prog.o fun.o fun-opt.o fun-ssa.o bb.o bb-dom-tree.o		\
 	fun-text-writer.o bb-text-writer.o insn-text-writer.o		\
 	fun-text-reader.o fun-text-reader-parse-fun.o			\
 	line-input.o prog-text-reader.o					\
+	file-src-context.o						\
 	check-assertion.o
 
 compcat: compcat.o $(OBJS)
@@ -25,6 +26,7 @@ compcat: compcat.o $(OBJS)
 calc-insn.h-DEPS = insn.h $(insn.h-DEPS)
 cond-branch-insn.h-DEPS = insn.h $(insn.h-DEPS)
 copy-insn.h-DEPS = insn.h $(insn.h-DEPS)
+file-src-context.h-DEPS = src-context.h $(src-context.h-DEPS)
 fun-arg-insn.h-DEPS = insn.h $(insn.h-DEPS)
 fun-result-insn.h-DEPS = insn.h $(insn.h-DEPS)
 fun-text-writer.h-DEPS = insn-text-writer.h $(insn-text-writer.h-DEPS) \
@@ -72,6 +74,9 @@ cond-branch-insn.o: cond-branch-insn.cc             \
     bb.h $(bb.h-DEPS)                               \
     reg.h $(reg.h-DEPS)                             \
     cond-branch-insn.h $(cond-branch-insn.h-DEPS)
+file-src-context.o: file-src-context.cc             \
+    check-assertion.h $(check-assertion.h-DEPS)     \
+    file-src-context.h $(file-src-context.h-DEPS)
 fun-opt.o: fun-opt.cc                               \
     check-assertion.h $(check-assertion.h-DEPS)     \
     insn.h $(insn.h-DEPS)                           \
