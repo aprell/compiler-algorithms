@@ -140,6 +140,10 @@ public:
   //
   bool read_new_line ();
 
+  // Return true when we've reached the end of the input file.
+  //
+  bool at_eof () const { return _at_eof; }
+
 
   //
   // Error handling
@@ -224,6 +228,11 @@ private:
   // read.
   //
   bool _line_oriented = false;
+
+
+  // True when we've reached the end of the input file.
+  //
+  bool _at_eof = false;
 
 
   // SrcContext we're using.

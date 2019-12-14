@@ -35,6 +35,9 @@ FileInput::FileInput (const std::string &file_name, FileSrcContext &src_context,
 bool
 FileInput::read_new_line ()
 {
+  if (_at_eof)
+    return false;
+
   std::streamoff file_offs = _inp_stream.tellg ();
 
   _cur_line_offs = 0;
@@ -61,6 +64,7 @@ FileInput::read_new_line ()
   else
     {
       _cur_line_max_offs = 0;
+      _at_eof = true;
       return false;
     }
 }
