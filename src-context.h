@@ -9,6 +9,8 @@
 #ifndef __SRC_CONTEXT_H__
 #define __SRC_CONTEXT_H__
 
+#include <string>
+
 
 // A source-context.  This is an abstract class.
 //
