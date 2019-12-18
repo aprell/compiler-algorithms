@@ -86,21 +86,6 @@ public:
   }
 
 
-  // If the character CH is the last unused character at the end of
-  // the current line, remove it, and return true, otherwise return
-  // false.
-  //
-  bool eol_skip_backwards (char ch);
-
-  // Remove any whitespace characters at the end of the current line.
-  //
-  void eol_skip_whitespace_backwards ()
-  {
-    while (! at_eol () && is_whitespace (eol_peek ()))
-      eol_read_char_backwards ();
-  }
-
-
   // Return true if CH can start an identifier.
   //
   bool is_id_start_char (char ch)

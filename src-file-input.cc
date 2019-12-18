@@ -168,24 +168,3 @@ SrcFileInput::skip (const char *keyw)
 
   return true;
 }
-
-
-// If the character CH is the last unused character at the end of
-// the current line, remove it, and return true, otherwise return
-// false.
-//
-bool
-SrcFileInput::eol_skip_backwards (char ch)
-{
-  eol_skip_whitespace_backwards ();
-
-  if (eol_peek () == ch)
-    {
-      eol_read_char_backwards ();
-      return true;
-    }
-  else
-    {
-      return false;
-    }
-}
