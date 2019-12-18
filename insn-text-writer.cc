@@ -63,6 +63,28 @@ InsnTextWriter::reg_name (Reg *reg) const
 }
 
 
+// Return a string representation of the registers in the vector
+// REGS, starting from index START_IDX (default 0).
+//
+std::string
+InsnTextWriter::reg_names (const std::vector<Reg *> &regs,
+			   unsigned start_idx)
+  const
+{
+  std::string result;
+
+  for (auto idx = start_idx; idx < regs.size (); idx++)
+    {
+      if (! result.empty ())
+	result += ", ";
+
+      result += reg_name (regs[idx]);
+    }
+
+  return result;
+}
+
+
 
 // Text writer methods
 
@@ -136,11 +158,9 @@ InsnTextWriter::write_copy (Insn *insn)
   if (CopyInsn *copy_insn = dynamic_cast<CopyInsn *> (insn))
     {
       std::ostream &out = fun_writer.output_stream ();
-
-      const std::vector<Reg *> &args = copy_insn->args ();
-      const std::vector<Reg *> &results = copy_insn->results ();
-
-      out << reg_name (results[0]) << " := " << reg_name (args[0]);
+      out << reg_names (copy_insn->results ())
+	  << " := "
+	  << reg_names (copy_insn->args ());
     }
   else
     invalid_write_method (insn, "CopyInsn");

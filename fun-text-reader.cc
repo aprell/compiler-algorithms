@@ -104,6 +104,19 @@ FunTextReader::get_reg (const std::string &name)
   return reg_it->second;
 }
 
+// Read a comma-separated list of lvalue registers, as for
+// FunTextReader::read_lvalue_reg, and return them as a vector.
+//
+std::vector<Reg *>
+FunTextReader::read_lvalue_reg_list ()
+{
+  std::vector<Reg *> regs;
+  do
+    regs.push_back (read_lvalue_reg ());
+  while (input ().skip (','));
+  return regs;
+}
+
 
 // Read either a register (which must exist), or a constant value
 // (which will be added to the current function if necessary), and
@@ -131,6 +144,20 @@ FunTextReader::read_rvalue_reg ()
 
       return new Reg (new Value (int_value, cur_fun));
     }
+}
+
+
+// Read a comma-separated list of rvalue registers, as for
+// FunTextReader::read_rvalue_reg, and return them as a vector.
+//
+std::vector<Reg *>
+FunTextReader::read_rvalue_reg_list ()
+{
+  std::vector<Reg *> regs;
+  do
+    regs.push_back (read_rvalue_reg ());
+  while (input ().skip (','));
+  return regs;
 }
 
 

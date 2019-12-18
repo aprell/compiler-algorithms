@@ -50,12 +50,22 @@ public:
   //
   Reg *get_reg (const std::string &name);
 
+  // Read a comma-separated list of lvalue registers, as for
+  // FunTextReader::read_lvalue_reg, and return them as a vector.
+  //
+  std::vector<Reg *> read_lvalue_reg_list ();
+
 
   // Read either a register (which must exist), or a constant value
   // (which will be added to the current function if necessary), and
   // return the resulting register.
   //
   Reg *read_rvalue_reg ();
+
+  // Read a comma-separated list of rvalue registers, as for
+  // FunTextReader::read_rvalue_reg, and return them as a vector.
+  //
+  std::vector<Reg *> read_rvalue_reg_list ();
 
 
   // Return the block corresponding to the label LABEL.  If no such

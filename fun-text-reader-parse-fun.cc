@@ -171,18 +171,21 @@ FunTextReader::parse_fun ()
       // of the form "REG1, REG2, ... := ..."
       //
 
-      std::vector<Reg *> results;
-
-      do
-	results.push_back (read_lvalue_reg ());
-      while (inp.skip (','));
-
-      // Right now we only support single-result statements.
+      // Vector of result registers for this statement.
       //
-      if (results.size () != 1)
-	inp.error ("Multiple results unsupported");
+      std::vector<Reg *> results = read_lvalue_reg_list ();
+
+      // Source-location after reading the result registers, used for
+      // an error message below.
+      //
+      SrcContext::Loc after_results_src_loc = inp.cur_src_loc ();
 
       inp.expect (":=");
+
+      // By default, we assume multiple results are not allowed.
+      // Instructions that do allow them will turn this off.
+      //
+      bool multiple_results_ok = false;
 
       if (inp.skip ('-'))
 	{
@@ -196,16 +199,24 @@ FunTextReader::parse_fun ()
 	{
 	  // Copy insn or binary calc insn
 
-	  Reg *arg1 = read_rvalue_reg ();
+	  std::vector<Reg *> args = read_rvalue_reg_list ();
 
 	  inp.skip_whitespace ();
 
 	  if (inp.at_eol ())
 	    {
-	      new CopyInsn (arg1, results[0], cur_block);
+	      if (results.size () != args.size ())
+		inp.error ("Number of sources does not match number of destinations",
+			   after_results_src_loc);
+
+	      multiple_results_ok = true;
+	      new CopyInsn (args, results, cur_block);
 	    }
 	  else
 	    {
+	      if (args.size () != 1)
+		inp.error ("Multiple values not allowed here");
+
 	      char calc_op_char = inp.read_char ();
 	      CalcInsn::Op calc_op;
 	      switch (calc_op_char)
@@ -222,9 +233,13 @@ FunTextReader::parse_fun ()
 
 	      Reg *arg2 = read_rvalue_reg ();
 
-	      new CalcInsn (calc_op, arg1, arg2, results[0], cur_block);
+	      new CalcInsn (calc_op, args[0], arg2, results[0], cur_block);
 	    }
 	}
+
+      if (!multiple_results_ok && results.size () != 1)
+	inp.error ("Multiple results not valid for this operation",
+		   after_results_src_loc);
     }
 
   if (cur_block)

@@ -24,6 +24,16 @@ public:
   CopyInsn (Reg *from, Reg *to, BB *block = 0)
     : Insn (block, { from }, { to })
   { }
+
+  // Make a new copy instruction, which copies the registers in FROM
+  // to the corresponding registers in TO, in parallel.
+  // If BLOCK is non-NULL, the instruction is appended to it.
+  //
+  CopyInsn (const std::vector<Reg *> &from,
+	    const std::vector<Reg *> &to,
+	    BB *block = 0)
+    : Insn (block, from, to)
+  { }
 };
 
 

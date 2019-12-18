@@ -37,6 +37,13 @@ private:
   //
   std::string reg_name (Reg *reg) const;
 
+  // Return a string representation of the registers in the vector
+  // REGS, starting from index START_IDX (default 0).
+  //
+  std::string reg_names (const std::vector<Reg *> &regs,
+			 unsigned start_idx = 0)
+    const;
+
 
   // Text writer for the function we're associated with.
   //
