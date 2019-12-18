@@ -111,6 +111,10 @@ protected:
 	std::initializer_list<Reg *> init_args = {},
 	std::initializer_list<Reg *> init_results = {});
 
+  Insn (BB *block,
+	const std::vector<Reg *> &args,
+	const std::vector<Reg *> &results);
+
   // Add an argument.
   //
   void add_arg (Reg *arg);

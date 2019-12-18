@@ -30,6 +30,22 @@ Insn::Insn (BB *block,
     block->add_insn (this);
 }
 
+Insn::Insn (BB *block,
+	    const std::vector<Reg *> &args,
+	    const std::vector<Reg *> &results)
+  : _args (args), _results (results)
+{
+  for (auto arg : _args)
+    if (arg)
+      arg->add_use (this);
+  for (auto result : _results)
+    if (result)
+      result->add_def (this);
+
+  if (block)
+    block->add_insn (this);
+}
+
 Insn::~Insn ()
 {
   if (_block)
