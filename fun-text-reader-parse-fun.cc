@@ -95,21 +95,16 @@ FunTextReader::parse_fun ()
 	  continue;
 	}
 
-      // All other command forms start with an ID, which may be a
-      // register name or a command name.
-      //
-      std::string id = inp.read_id ();
-
       // Register declaration
       //
-      if (id == "reg" && inp.peek () != ':')
+      if (inp.skip ("reg"))
 	{
 	  std::string reg_name = inp.read_id ();
 
 	  Reg *&reg = registers[reg_name];
 	  if (reg)
 	    inp.error (std::string ("Duplicate register declaration \"")
-		       + id + "\"");
+		       + reg_name + "\"");
 
 	  reg = new Reg (reg_name, cur_fun);
 
@@ -121,67 +116,9 @@ FunTextReader::parse_fun ()
       if (! cur_block)
 	inp.error ("Expected label");
 
-      inp.skip_whitespace ();
-
-      // Assignment, of the form "REG := ..."
-      //
-      if (inp.peek () == ':')
-	{
-	  Reg *result = get_reg (id);
-
-	  inp.skip (':');
-	  inp.expect ('=');
-
-	  inp.skip_whitespace ();
-
-	  if (inp.skip ('-'))
-	    {
-	      // Unary calc insn
-
-	      Reg *arg = read_rvalue_reg ();
-
-	      new CalcInsn (CalcInsn::Op::NEG, arg, result, cur_block);
-	    }
-	  else
-	    {
-	      // Copy insn or binary calc insn
-
-	      Reg *arg1 = read_rvalue_reg ();
-
-	      inp.skip_whitespace ();
-
-	      if (inp.at_eol ())
-		{
-		  new CopyInsn (arg1, result, cur_block);
-		}
-	      else
-		{
-		  char calc_op_char = inp.read_char ();
-		  CalcInsn::Op calc_op;
-		  switch (calc_op_char)
-		    {
-		    case '+': calc_op = CalcInsn::Op::ADD; break;
-		    case '-': calc_op = CalcInsn::Op::SUB; break;
-		    case '*': calc_op = CalcInsn::Op::MUL; break;
-		    case '/': calc_op = CalcInsn::Op::DIV; break;
-		    default:
-		      inp.error
-			(std::string ("Unknown calculation operation \"")
-			 + calc_op_char + "\"");
-		    }
-
-		  Reg *arg2 = read_rvalue_reg ();
-
-		  new CalcInsn (calc_op, arg1, arg2, result, cur_block);
-		}
-	    }
-
-	  continue;
-	}
-
       // Branch insn, ends the current block
       //
-      if (id == "goto")
+      if (inp.skip ("goto"))
 	{
 	  BB *target = read_label ();
 	  cur_block->set_fall_through (target);
@@ -192,7 +129,7 @@ FunTextReader::parse_fun ()
 
       // Conditional branch insn
       //
-      if (id == "if")
+      if (inp.skip ("if"))
 	{
 	  inp.expect ('(');
 	  Reg *cond = read_rvalue_reg ();
@@ -208,7 +145,7 @@ FunTextReader::parse_fun ()
 
       // No-operation insn
       //
-      if (id == "nop")
+      if (inp.skip ("nop"))
 	{
 	  new NopInsn (cur_block);
 	  continue;
@@ -216,7 +153,7 @@ FunTextReader::parse_fun ()
 
       // Function-argument insn
       //
-      if (id == "fun_arg")
+      if (inp.skip ("fun_arg"))
 	{
 	  if (saw_label)
 	    inp.error
@@ -229,7 +166,65 @@ FunTextReader::parse_fun ()
 	  continue;
 	}
 
-      inp.error ("Unknown instruction");
+      //
+      // We didn't see any recognized keywords, so assume the input is
+      // of the form "REG1, REG2, ... := ..."
+      //
+
+      std::vector<Reg *> results;
+
+      do
+	results.push_back (read_lvalue_reg ());
+      while (inp.skip (','));
+
+      // Right now we only support single-result statements.
+      //
+      if (results.size () != 1)
+	inp.error ("Multiple results unsupported");
+
+      inp.expect (":=");
+
+      if (inp.skip ('-'))
+	{
+	  // Unary calc insn
+
+	  Reg *arg = read_rvalue_reg ();
+
+	  new CalcInsn (CalcInsn::Op::NEG, arg, results[0], cur_block);
+	}
+      else
+	{
+	  // Copy insn or binary calc insn
+
+	  Reg *arg1 = read_rvalue_reg ();
+
+	  inp.skip_whitespace ();
+
+	  if (inp.at_eol ())
+	    {
+	      new CopyInsn (arg1, results[0], cur_block);
+	    }
+	  else
+	    {
+	      char calc_op_char = inp.read_char ();
+	      CalcInsn::Op calc_op;
+	      switch (calc_op_char)
+		{
+		case '+': calc_op = CalcInsn::Op::ADD; break;
+		case '-': calc_op = CalcInsn::Op::SUB; break;
+		case '*': calc_op = CalcInsn::Op::MUL; break;
+		case '/': calc_op = CalcInsn::Op::DIV; break;
+		default:
+		  inp.error
+		    (std::string ("Unknown calculation operation \"")
+		     + calc_op_char + "\"");
+		}
+
+	      Reg *arg2 = read_rvalue_reg ();
+
+	      new CalcInsn (calc_op, arg1, arg2, results[0], cur_block);
+	    }
+	}
     }
 
   if (cur_block)
