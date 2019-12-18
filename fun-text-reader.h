@@ -40,7 +40,7 @@ public:
 
   // Read a block label.
   //
-  BB *read_label () { return label_block (input ().read_id ()); }
+  BB *read_label ();
 
   // Read a register (which must exist).
   //

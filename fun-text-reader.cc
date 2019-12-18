@@ -74,6 +74,17 @@ FunTextReader::read ()
 }
 
 
+// Read a block label.
+//
+BB *
+FunTextReader::read_label ()
+{
+  SrcFileInput &inp = input ();
+  inp.skip ('<');
+  return label_block (inp.read_delimited_string ('>'));
+}
+
+
 // Read a register (which must exist).
 //
 Reg *

@@ -143,8 +143,9 @@ FunTextWriter::write (Fun *fun)
 std::string
 FunTextWriter::block_label (const BB *block)
 {
-  std::string label ("_");
+  std::string label ("<");
   label += std::to_string (block->num ());
+  label += '>';
   return label;
 }
 

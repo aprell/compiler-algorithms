@@ -34,7 +34,7 @@ BBTextWriter::write (BB *block, BB *next_block)
   std::ostream &out = fun_writer.output_stream ();
   InsnTextWriter &insn_writer = fun_writer.insn_writer;
 
-  out << fun_writer.block_label (block) << ":\n";
+  out << fun_writer.block_label (block) << "\n";
 
   Fun *fun = block->fun ();
 

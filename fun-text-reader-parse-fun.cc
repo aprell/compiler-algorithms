@@ -77,7 +77,7 @@ FunTextReader::parse_fun ()
 
       // Label (starts a new block)
       //
-      if (inp.eol_skip_backwards (':'))
+      if (inp.peek () == '<')
 	{
 	  BB *prev_block = cur_block;
 
