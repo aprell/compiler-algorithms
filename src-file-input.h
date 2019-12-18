@@ -50,6 +50,12 @@ public:
   std::string read_id ();
 
 
+  // Read and return a string terminated by TERMINATOR.
+  // TERMINATOR is consumed, but not put into the returned string.
+  //
+  std::string read_delimited_string (char terminator);
+
+
   // If the character CH is the next unread character, do nothing,
   // otherwise signal an error.
   //

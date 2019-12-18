@@ -3,7 +3,7 @@
 // Copyright © 2019  Miles Bader
 //
 // Author: Miles Bader <snogglethorpe@gmail.com>
-// Created: 2019-12-13
+// Created: 2019-11-03
 //
 
 #include "src-file-input.h"
@@ -81,6 +81,26 @@ SrcFileInput::read_id ()
     {
       error ("Expected identifier");
     }
+}
+
+
+// Read and return a string terminated by TERMINATOR.
+// TERMINATOR is consumed, but not put into the returned string.
+//
+std::string
+SrcFileInput::read_delimited_string (char terminator)
+{
+  std::string value;
+
+  while (! skip (terminator))
+    {
+      if (at_eof ())
+	error (std::string ("Missing terminator '") + terminator + "'");
+
+      value += read_char ();
+    }
+
+  return value;
 }
 
 
