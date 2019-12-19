@@ -245,7 +245,7 @@ InsnTextWriter::write_phi_fun_inp (Insn *insn)
       PhiFunInsn *phi_fun = phi_fun_inp_insn->phi_fun ();
 
       out << "phi_fun_inp "
-	  << reg_name (phi_fun->results ()[0])
+	  << (phi_fun ? reg_name (phi_fun->results ()[0]) : "-")
 	  << " := "
 	  << reg_name (args[0]);
     }
