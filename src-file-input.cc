@@ -147,6 +147,12 @@ SrcFileInput::skip (char ch)
 // If the keyword KEYW follows the current position, skip it, and
 // return true, otherwise return false.
 //
+// KEYW does not actually have to be a real keyword; that is, it
+// doesn't have to begin with a valid identifier character.  The
+// only difference in the way non-keywords are handled is that they
+// can be immediately (without any whitespace) followed by an
+// identifier.
+//
 bool
 SrcFileInput::skip (const char *keyw)
 {
@@ -157,7 +163,11 @@ SrcFileInput::skip (const char *keyw)
   if (! avail_in_line (keyw_len))
     return false;
 
-  if (is_id_cont_char (peek_in_line (keyw_len)))
+  // If KEYW is an identifier keyword, make sure it's followed by some
+  // non-identifier character.  For non-identifier "keywords", this
+  // doesn't matter.
+  //
+  if (is_id_start_char (*keyw) && is_id_cont_char (peek_in_line (keyw_len)))
     return false;
 
   for (unsigned i = 0; i < keyw_len; i++)

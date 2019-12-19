@@ -64,6 +64,12 @@ public:
   // If the keyword KEYW follows the current position, skip it, 
   // otherwise signal an error.
   //
+  // KEYW does not actually have to be a real keyword; that is, it
+  // doesn't have to begin with a valid identifier character.  The
+  // only difference in the way non-keywords are handled is that they
+  // can be immediately (without any whitespace) followed by an
+  // identifier.
+  //
   void expect (const char *keyw);
 
 
@@ -74,6 +80,12 @@ public:
 
   // If the keyword KEYW follows the current position, skip it, and
   // return true, otherwise return false.
+  //
+  // KEYW does not actually have to be a real keyword; that is, it
+  // doesn't have to begin with a valid identifier character.  The
+  // only difference in the way non-keywords are handled is that they
+  // can be immediately (without any whitespace) followed by an
+  // identifier.
   //
   bool skip (const char *keyw);
 
