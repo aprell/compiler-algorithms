@@ -10,7 +10,9 @@
 
 #include "check-assertion.h"
 
+#include "reg.h"
 #include "insn.h"
+#include "copy-insn.h"
 
 #include "fun.h"
 
@@ -32,7 +34,7 @@ Fun::remove_unreachable ()
 
       //
       // Use a funny loop (instead of "for (... : ...)") because we'd
-      // like to remove elements while we're iterator over them.  So
+      // like to remove elements while we're iterating over them.  So
       // we increment the list pointer before possibly removing what
       // it used to point to.
       //
@@ -176,3 +178,96 @@ Fun::combine_blocks ()
   check_assertion (_exit_block != _entry_block && ! _entry_block->successors ().empty (),
 		   "Entry block has no successors after combine_blocks");
 }
+
+
+// Where possible, replace uses of registers defined in a copy
+// instruction with the register they're copied from.
+//
+void
+Fun::propagate_through_copies ()
+{
+  for (auto reg : _regs)
+    {
+      auto &defs = reg->defs ();
+      if (defs.size () == 1)
+	if (CopyInsn *copy_insn = dynamic_cast<CopyInsn *> (defs.front ()))
+	  {
+	    // Where REG is copied from.
+	    //
+	    auto &copy_from = copy_insn->args ();
+	    auto &copy_to = copy_insn->results ();
+
+	    for (unsigned i = 0; i < copy_to.size (); i++)
+	      if (copy_to[i] == reg)
+		{
+		  // REG_SRC is where REG is copied from.
+		  //
+		  // See if REG_SRC has a single definition, in which
+		  // case the definition of REG_SRC must dominate COPY
+		  // (otherwise the copy would be invalid), and thus
+		  // transitively must dominate all uses of REG, as
+		  // REG also has only a single definition, by COPY.
+		  //
+		  // When that is true, REG can simply be replaced by
+		  // REG_SRC.
+
+		  Reg *reg_src = copy_from[i];
+		  if (reg_src->defs ().size () == 1)
+		    {
+		      // Replace all uses of REG by REG_SRC.  Note
+		      // that doing this replacement in an instruction
+		      // will remove a use of REG from REG_USES, and
+		      // so we just iterate changing the first element
+		      // of REG_USES until it is empty (iterating
+		      // directly over REG_USES would be problematic
+		      // because we're mutating the list at the same
+		      // time).
+		      //
+		      auto &reg_uses = reg->uses ();
+		      while (! reg_uses.empty ())
+			reg_uses.front ()->change_arg (reg, reg_src);
+		    }
+		}
+	  }
+    }
+}
+
+// Remove all copy instructions whose results are unused.
+//
+void
+Fun::remove_useless_copies ()
+{
+  for (auto bb : _blocks)
+    {
+      //
+      // Use a funny loop (instead of "for (... : ...)") because we'd
+      // like to remove elements while we're iterating over them.  So
+      // we increment the list pointer before possibly removing what
+      // it used to point to.
+      //
+
+      const std::list<Insn *> &insns = bb->insns ();
+
+      auto insnp = insns.begin ();
+      while (insnp != insns.end ())
+	{
+	  Insn *insn = *insnp;
+	  ++insnp;
+
+	  if (CopyInsn *copy_insn = dynamic_cast<CopyInsn *> (insn))
+	    {
+	      bool result_used = false;
+	      for (auto result : copy_insn->results ())
+		if (! result->uses ().empty ())
+		  {
+		    result_used = true;
+		    break;
+		  }
+
+	      if (! result_used)
+		delete copy_insn;
+	    }
+	}
+    }
+}
+

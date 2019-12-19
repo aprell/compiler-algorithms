@@ -152,6 +152,15 @@ public:
   //
   void combine_blocks ();
 
+  // Where possible, replace uses of registers defined in a copy
+  // instruction with the register they're copied from.
+  //
+  void propagate_through_copies ();
+
+  // Remove all copy instructions whose results are unused.
+  //
+  void remove_useless_copies ();
+
 
 private:
 
