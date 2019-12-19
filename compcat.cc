@@ -33,7 +33,10 @@ int main (int argc, const char *const *argv)
 	  fun->update_post_dominators ();
 
 	  fun->convert_to_ssa_form ();
+	  fun->propagate_through_copies ();
 	  fun->convert_from_ssa_form ();
+
+	  fun->remove_useless_copies ();
 	}
 
       ProgTextWriter prog_writer (std::cout);
