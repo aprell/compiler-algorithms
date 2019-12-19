@@ -52,13 +52,15 @@ public:
   bool is_constant () const { return _name.size () == 0 && _value; }
 
 
-  // Return a list of places this register is used.
+  // Return a reference to a read-only list of places this register is
+  // used.
   //
-  const std::list<Insn *> uses () const { return _uses; }
+  const std::list<Insn *> &uses () const { return _uses; }
 
-  // Return a list of places this register is set.
+  // Return a reference to a read-only list of places this register is
+  // set.
   //
-  const std::list<Insn *> defs () const { return _defs; }
+  const std::list<Insn *> &defs () const { return _defs; }
 
 
   // Remember that this register is used in instruction INSN.
