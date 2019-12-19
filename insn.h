@@ -119,6 +119,10 @@ protected:
   //
   void add_arg (Reg *arg);
 
+  // Add a result.
+  //
+  void add_result (Reg *result);
+
 
 private:
 

@@ -72,6 +72,18 @@ Insn::add_arg (Reg *arg)
 }
 
 
+// Add an result.
+//
+void
+Insn::add_result (Reg *result)
+{
+  _results.push_back (result);
+
+  if (result)
+    result->add_def (this);
+}
+
+
 // Change each use of the argument register FROM in this instruction
 // to TO.  TO may be NULL.  This will update FROM and TO accordingly
 // to reflect the new state.
