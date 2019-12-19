@@ -37,6 +37,13 @@ public:
   ~PhiFunInpInsn ();
 
 
+  // Return true if this instruction has a visible side-effect other
+  // than reading from its argument registers and writing to its
+  // result registers.
+  //
+  virtual bool has_side_effect () const { return true; }
+
+
   // Return the phi-function instruction this input is for.
   //
   PhiFunInsn *phi_fun () const { return _phi_fun; }

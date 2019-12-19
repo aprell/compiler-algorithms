@@ -28,6 +28,13 @@ public:
   { }
 
 
+  // Return true if this instruction has a visible side-effect other
+  // than reading from its argument registers and writing to its
+  // result registers.
+  //
+  virtual bool has_side_effect () const { return true; }
+
+
   // Return the number of the function result which this instruction
   // represents.
   //
