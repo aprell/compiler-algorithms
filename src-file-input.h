@@ -9,6 +9,7 @@
 #ifndef __SRC_FILE_INPUT_H__
 #define __SRC_FILE_INPUT_H__
 
+#include <cstring>
 #include <string>
 
 #include "file-input.h"

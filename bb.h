@@ -9,6 +9,7 @@
 #ifndef __BB_H__
 #define __BB_H__
 
+#include <algorithm>
 #include <list>
 
 

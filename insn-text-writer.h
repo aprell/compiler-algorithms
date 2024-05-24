@@ -9,9 +9,10 @@
 #ifndef __INSN_TEXT_WRITER_H__
 #define __INSN_TEXT_WRITER_H__
 
-#include <unordered_map>
-#include <typeinfo>
 #include <typeindex>
+#include <typeinfo>
+#include <unordered_map>
+#include <vector>
 
 
 class Insn;
