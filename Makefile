@@ -5,42 +5,43 @@ PROGS = compcat
 all: $(PROGS)
 
 
-OBJS = prog.o fun.o fun-opt.o fun-ssa.o bb.o bb-dom-tree.o		\
-	insn.o cond-branch-insn.o calc-insn.o				\
-	phi-fun-insn.o phi-fun-inp-insn.o				\
-	reg.o value.o							\
-	prog-text-writer.o						\
-	fun-text-writer.o bb-text-writer.o insn-text-writer.o		\
-	prog-text-reader.o						\
-	fun-text-reader.o						\
-	fun-text-reader-parse-fun.o					\
-	src-file-input.o file-input.o file-src-context.o		\
-	check-assertion.o
+OBJS = prog.o fun.o fun-opt.o fun-ssa.o bb.o bb-dom-tree.o \
+    insn.o cond-branch-insn.o calc-insn.o                  \
+    phi-fun-insn.o phi-fun-inp-insn.o                      \
+    reg.o value.o                                          \
+    prog-text-writer.o                                     \
+    fun-text-writer.o bb-text-writer.o insn-text-writer.o  \
+    prog-text-reader.o                                     \
+    fun-text-reader.o                                      \
+    fun-text-reader-parse-fun.o                            \
+    src-file-input.o file-input.o file-src-context.o       \
+    check-assertion.o
+
 
 compcat: compcat.o $(OBJS)
-	$(CXX) -o $@ $(CXXFLAGS) $^
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
 
 # Include file dependencies, which should be transitively used by
 # dependent source files.
 #
-calc-insn.h-DEPS = insn.h $(insn.h-DEPS)
+calc-insn.h-DEPS        = insn.h $(insn.h-DEPS)
 cond-branch-insn.h-DEPS = insn.h $(insn.h-DEPS)
-copy-insn.h-DEPS = insn.h $(insn.h-DEPS)
-file-input.h-DEPS = file-src-context.h $(file-src-context.h-DEPS)
+copy-insn.h-DEPS        = insn.h $(insn.h-DEPS)
+file-input.h-DEPS       = file-src-context.h $(file-src-context.h-DEPS)
 file-src-context.h-DEPS = src-context.h $(src-context.h-DEPS)
-fun-arg-insn.h-DEPS = insn.h $(insn.h-DEPS)
-fun-result-insn.h-DEPS = insn.h $(insn.h-DEPS)
-fun-text-writer.h-DEPS = insn-text-writer.h $(insn-text-writer.h-DEPS) \
-    bb-text-writer.h $(bb-text-writer.h-DEPS)
-fun.h-DEPS = bb.h $(bb.h-DEPS)
-nop-insn.h-DEPS = insn.h $(insn.h-DEPS)
+fun-arg-insn.h-DEPS     = insn.h $(insn.h-DEPS)
+fun-result-insn.h-DEPS  = insn.h $(insn.h-DEPS)
+fun-text-writer.h-DEPS  = insn-text-writer.h $(insn-text-writer.h-DEPS) \
+                          bb-text-writer.h $(bb-text-writer.h-DEPS)
+fun.h-DEPS              = bb.h $(bb.h-DEPS)
+nop-insn.h-DEPS         = insn.h $(insn.h-DEPS)
 phi-fun-inp-insn.h-DEPS = insn.h $(insn.h-DEPS)
-phi-fun-insn.h-DEPS = insn.h $(insn.h-DEPS)
+phi-fun-insn.h-DEPS     = insn.h $(insn.h-DEPS)
 prog-text-reader.h-DEPS = fun-text-reader.h $(fun-text-reader.h-DEPS)
 prog-text-writer.h-DEPS = fun-text-writer.h $(fun-text-writer.h-DEPS)
-prog.h-DEPS = fun.h $(fun.h-DEPS)
-src-file-input.h-DEPS = file-input.h $(file-input.h-DEPS)
+prog.h-DEPS             = fun.h $(fun.h-DEPS)
+src-file-input.h-DEPS   = file-input.h $(file-input.h-DEPS)
 
 
 # Object file dependencies, basically the corresponding source file
@@ -180,4 +181,7 @@ value.o: value.cc                                   \
 
 
 clean:
-	rm -f $(PROGS) *.o
+	$(RM) $(PROGS) *.o
+
+
+.PHONY: all clean
