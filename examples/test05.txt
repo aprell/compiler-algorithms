@@ -1,0 +1,23 @@
+fun test05
+{
+    reg x
+    reg y
+    reg z
+    reg t0
+    reg t1
+
+    x := 1
+    t0 := 2
+    t1 := t0 - x
+    if (t1) goto <L1>
+    goto <L2>
+<L1>
+    y := 5 + x
+    goto <L3>
+<L2>
+    y := x - 42
+    goto <L3>
+<L3>
+    z := y * y
+    fun_result 0 z
+}
