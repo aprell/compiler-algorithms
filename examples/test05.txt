@@ -1,10 +1,10 @@
 fun test05
 {
-    reg x
-    reg y
-    reg z
-    reg t0
-    reg t1
+    reg x               # CHECK: 3 uses, 1 def
+    reg y               # CHECK: 2 uses, 2 defs
+    reg z               # CHECK: 1 use, 1 def
+    reg t0              # CHECK: 1 use, 1 def
+    reg t1              # CHECK: 1 use, 1 def
 
     x := 1
     t0 := 2

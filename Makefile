@@ -19,7 +19,7 @@ OBJS = prog.o fun.o fun-opt.o fun-ssa.o bb.o bb-dom-tree.o \
 
 
 compcat: compcat.o $(OBJS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 
 # Include file dependencies, which should be transitively used by
@@ -180,8 +180,15 @@ value.o: value.cc                                   \
     value.h $(value.h-DEPS)
 
 
+check: compcat
+	@for x in $(sort examples/*.txt); do \
+	    echo "./$< $$x | FileCheck $$x"; \
+	    ./$< $$x | FileCheck $$x; \
+	done
+
+
 clean:
 	$(RM) $(PROGS) *.o
 
 
-.PHONY: all clean
+.PHONY: all check clean

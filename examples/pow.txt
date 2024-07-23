@@ -1,12 +1,12 @@
 fun pow
 {
-    reg b
-    reg e
+    reg b               # CHECK: 1 use, 1 def
+    reg e               # CHECK: 2 uses, 2 defs
     fun_arg 0 b
     fun_arg 1 e
-    reg r
-    reg t0
-    reg t1
+    reg r               # CHECK: 2 uses, 2 defs
+    reg t0              # CHECK: 2 uses, 2 defs
+    reg t1              # CHECK: 1 use, 1 def
 
     r := 1
     t0 := 0
